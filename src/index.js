@@ -5,14 +5,17 @@ import App from "./App"
 import reportWebVitals from "./reportWebVitals"
 import { Web3Provider } from "web3-hooks"
 import { ChakraProvider } from "@chakra-ui/react"
+import { BrowserRouter as Router } from "react-router-dom"
 
 ReactDOM.render(
   <React.StrictMode>
-    <ChakraProvider>
-      <Web3Provider>
-        <App />
-      </Web3Provider>
-    </ChakraProvider>
+    <Router>
+      <ChakraProvider>
+        <Web3Provider>
+          <App />
+        </Web3Provider>
+      </ChakraProvider>
+    </Router>
   </React.StrictMode>,
   document.getElementById("root")
 )
