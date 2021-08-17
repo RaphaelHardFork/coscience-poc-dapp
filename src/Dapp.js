@@ -6,27 +6,39 @@ import Terms from "./components/Terms"
 import Privacy from "./components/Privacy"
 import { useContext } from "react"
 import { Web3Context } from "web3-hooks"
+import ListOfUsers from "./components/ListOfUsers"
+import { Box, Spacer } from "@chakra-ui/react"
+import About from "./components/About"
+import Profile from "./components/Profile"
 
 const Dapp = () => {
   return (
     <>
-      <Header />
-      <Switch>
-        <Route exact path="/">
-          <SignUp />
-        </Route>
-        <Route exact path="/about"></Route>
-        <Route exact path="/sign-up"></Route>
-        <Route exact path="/upload-article"></Route>
-        <Route exact path="/profile"></Route>
-        <Route exact path="/terms">
-          <Terms />
-        </Route>
-        <Route exact path="/privacy">
-          <Privacy />
-        </Route>
-      </Switch>
-      <Footer />
+      <Box minH="100vh" direction="column">
+        <Header />
+        <Switch>
+          <Route exact path="/">
+            <ListOfUsers />
+          </Route>
+          <Route exact path="/about">
+            <About />
+          </Route>
+          <Route exact path="/sign-up">
+            <SignUp />
+          </Route>
+          <Route exact path="/upload-article"></Route>
+          <Route exact path="/profile">
+            <Profile />
+          </Route>
+          <Route exact path="/terms">
+            <Terms />
+          </Route>
+          <Route exact path="/privacy">
+            <Privacy />
+          </Route>
+        </Switch>
+        <Footer />
+      </Box>
     </>
   )
 }

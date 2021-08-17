@@ -21,13 +21,11 @@ const SignUp = () => {
   const [laboratory, setLaboratory] = useState("")
   const [password, setPassword] = useState("")
 
-  async function debug() {
+  async function register() {
     const CID = "Qmfdfjdofkodzndskdosdnwkccccd"
     const hashedPassword = await ethers.utils.id(password)
 
-    console.log(await users.userProfile(1))
-    console.log(await users.userProfile(2))
-    console.log(await users.userProfile(3))
+    await users.register(hashedPassword, CID)
   }
 
   return (
@@ -71,7 +69,7 @@ const SignUp = () => {
                 <FormLabel>Confirm password</FormLabel>
                 <Input value={password} placeholder="**********" />
               </FormControl>
-              <Button onClick={debug} colorScheme="orange">
+              <Button onClick={register} colorScheme="orange">
                 Register
               </Button>
             </Box>

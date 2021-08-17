@@ -5,7 +5,7 @@ const Terms = () => {
   return (
     <>
       <Box>
-        <Text as="h1">The Collective Science Platform</Text>
+        <Text as="h1">This is the term of use page</Text>
       </Box>
     </>
   )
