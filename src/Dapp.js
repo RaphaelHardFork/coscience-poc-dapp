@@ -1,20 +1,23 @@
-import { Switch, Route, Link } from "react-router-dom"
+import { Switch, Route } from "react-router-dom"
+import { Flex, useColorModeValue } from "@chakra-ui/react"
 import Header from "./components/Header"
 import Footer from "./components/Footer"
-import SignUp from "./components/SignUp"
 import Terms from "./components/Terms"
 import Privacy from "./components/Privacy"
-import { useContext } from "react"
-import { Web3Context } from "web3-hooks"
 import ListOfUsers from "./components/ListOfUsers"
-import { Box, Spacer } from "@chakra-ui/react"
-import About from "./components/About"
-import Profile from "./components/Profile"
+
+import SignUp from "./pages/SignUp"
+import About from "./pages/About"
+import Profile from "./pages/Profile"
+import UploadArticle from "./pages/UploadArticle"
 
 const Dapp = () => {
+  // color Mode
+  const bg = useColorModeValue("gray.200", "gray.500")
+
   return (
     <>
-      <Box minH="100vh" direction="column">
+      <Flex minH="100vh" direction="column" alignItems="space-around" bg={bg}>
         <Header />
         <Switch>
           <Route exact path="/">
@@ -26,7 +29,10 @@ const Dapp = () => {
           <Route exact path="/sign-up">
             <SignUp />
           </Route>
-          <Route exact path="/upload-article"></Route>
+          <Route exact path="/recover"></Route>
+          <Route exact path="/upload-article">
+            <UploadArticle />
+          </Route>
           <Route exact path="/profile">
             <Profile />
           </Route>
@@ -38,7 +44,7 @@ const Dapp = () => {
           </Route>
         </Switch>
         <Footer />
-      </Box>
+      </Flex>
     </>
   )
 }

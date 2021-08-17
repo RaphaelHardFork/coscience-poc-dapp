@@ -21,6 +21,7 @@ import { Web3Context } from "web3-hooks"
 import { useColorMode } from "@chakra-ui/react"
 import { Link } from "react-router-dom"
 
+//in small sizeburgerMenu, close not only with cross but add a component for clicking outside menu too.
 const Header = () => {
   //login for the sign up to add.
   const [web3state, login] = useContext(Web3Context)
@@ -68,8 +69,12 @@ const Header = () => {
                 Profile
               </Button>
 
-              <Button variant="ghost">Upload Article</Button>
-              <Button variant="ghost">About</Button>
+              <Button variant="ghost" as={Link} to="/upload-article">
+                Upload Article
+              </Button>
+              <Button variant="ghost" as={Link} to="/about">
+                About
+              </Button>
               <Button as={Link} to="/sign-up" colorScheme="teal" size="sm">
                 Sign up
               </Button>
@@ -78,7 +83,7 @@ const Header = () => {
               </IconButton>
             </HStack>
 
-            <Box display={{ base: "inline-flex", md: "none" }}>
+            <Box display={{ base: "inline-flex", md: "none" }} zIndex="sticky">
               <IconButton
                 display={{ base: "flex", md: "none" }}
                 aria-label="Open menu"

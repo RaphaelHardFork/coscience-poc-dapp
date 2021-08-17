@@ -5,9 +5,11 @@ import { Box, Flex } from "@chakra-ui/react"
 
 const App = () => {
   return (
-    <UsersContextProvider>
-      <Dapp />
-    </UsersContextProvider>
+    <>
+      <UsersContextProvider>
+        <Dapp />
+      </UsersContextProvider>
+    </>
   )
 }
 

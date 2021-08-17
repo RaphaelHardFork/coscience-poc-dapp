@@ -8,9 +8,11 @@ import {
 } from "@chakra-ui/react"
 
 const Footer = () => {
+  //color Mode
+  const bg = useColorModeValue("white", "gray.800")
   return (
     <>
-      <Box mt="auto">
+      <Box mt="auto" bg={bg}>
         <Container
           as={Stack}
           maxW={"6xl"}
