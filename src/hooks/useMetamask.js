@@ -6,7 +6,7 @@ export const useMetamask = () => {
   const toast = useToast()
 
   // function to call blockchain function
-  const web3Function = async (contract, functionName, params) => {
+  const contractCall = async (contract, functionName, params) => {
     const nbOfParam = params.length
     let tx
     try {
@@ -18,7 +18,7 @@ export const useMetamask = () => {
           tx = await contract[functionName]()
           break
         case 1:
-          tx = await contract[functionName](params[0])
+          tx = await contract[functionName](params[0]) // .functionName
           break
         case 2:
           tx = await contract[functionName](params[0], params[1])
@@ -90,5 +90,5 @@ export const useMetamask = () => {
     return tx
   }
 
-  return [status, web3Function]
+  return [status, contractCall] // = useMetamask()
 }

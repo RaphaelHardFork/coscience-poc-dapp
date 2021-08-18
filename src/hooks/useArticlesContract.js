@@ -4,21 +4,17 @@ import { ArticlesContext } from "../contexts/ArticlesContext"
 
 // Pure function
 const getArticleData = async (articles, id) => {
-  const contentCID = await articles.articleContent(id)
-  const abstractCID = await articles.articleAbstract(id)
-  const author = await articles.author(id)
-  const coAuthor = await articles.coAuthor(id)
-  const comments = await articles.comments(id)
-  const reviews = await articles.reviews(id)
+  const a = await articles.articleInfo(id)
 
   const articleObj = {
-    id,
-    contentCID,
-    abstractCID,
-    author,
-    coAuthor,
-    comments,
-    reviews,
+    id: a.id.toString(),
+    author: a.author,
+    coAuthor: a.coAuthor,
+    contentBanned: a.contentBanned,
+    abstractCID: a.abstractCID,
+    contentCID: a.contentCID,
+    comments: a.comments,
+    reviews: a.reviews,
   }
   return articleObj
 }
@@ -30,21 +26,22 @@ export const useArticlesContract = () => {
 
   // utils
   const [web3State] = useContext(Web3Context)
-  const [articleData, setArticleData] = useState({})
-  // const [articleId, setArticleId] = useState(null)
   const [articleList, setArticleList] = useState([])
 
-  //get article data
   useEffect(() => {
-    const connectedArticle = async () => {}
-    connectedArticle()
-  }, [web3State.account, articles])
-
-  // list of article
-  useEffect(() => {})
-
-  // list of article of one user
-  useEffect(() => {})
+    if (articles) {
+      const createArticleList = async () => {
+        const nb = await articles.nbOfArticles()
+        const articlesList = []
+        for (let i = 1; i <= nb; i++) {
+          const obj = await getArticleData(articles, i)
+          articlesList.push(obj)
+        }
+        setArticleList(articlesList)
+      }
+      createArticleList()
+    }
+  }, [articles])
 
   // control call of the hook
   if (articles === undefined) {
@@ -54,5 +51,5 @@ export const useArticlesContract = () => {
   }
 
   // first: return contract for utilisation
-  return [articles, articleData, articleList]
+  return [articles, articleList]
 }

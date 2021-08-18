@@ -20,7 +20,7 @@ const Dashboard = () => {
   const [addInput, setAddInput] = useState({ address: false, password: false })
   const [input, setInput] = useState("")
 
-  const [status, web3Function] = useMetamask()
+  const [status, contractCall] = useMetamask()
 
   async function addWallet(code) {
     switch (code) {
@@ -28,7 +28,7 @@ const Dashboard = () => {
         setAddInput({ address: true, password: false })
         break
       case 1:
-        const tx = await web3Function(users, "addWallet", [input])
+        const tx = await contractCall(users, "addWallet", [input])
         setAddInput({ ...addInput, address: false })
         break
       case 2:
@@ -45,7 +45,7 @@ const Dashboard = () => {
         setAddInput({ address: false, password: true })
         break
       case 1:
-        const tx = await web3Function(users, "changePassword", [
+        const tx = await contractCall(users, "changePassword", [
           ethers.utils.id(input),
         ])
         console.log(tx)
@@ -89,9 +89,9 @@ const Dashboard = () => {
           {user.walletList !== undefined
             ? user.walletList.map((wallet) => {
                 return (
-                  <>
-                    <Text as="li"> {wallet} </Text>
-                  </>
+                  <Text key={wallet} as="li">
+                    {wallet}
+                  </Text>
                 )
               })
             : ""}

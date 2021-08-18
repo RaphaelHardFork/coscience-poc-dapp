@@ -69,6 +69,10 @@ const Header = () => {
                 Profile
               </Button>
 
+              <Button as={Link} to="/list-of-users" variant="ghost">
+                List of users
+              </Button>
+
               <Button variant="ghost" as={Link} to="/upload-article">
                 Upload Article
               </Button>

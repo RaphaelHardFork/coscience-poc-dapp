@@ -1,13 +1,16 @@
 import "./App.css"
 import Dapp from "./Dapp"
 import UsersContextProvider from "./contexts/UsersContext.js"
+import ArticlesContextProvider from "./contexts/ArticlesContext"
 
 const App = () => {
   return (
     <>
-      <UsersContextProvider>
-        <Dapp />
-      </UsersContextProvider>
+      <ArticlesContextProvider>
+        <UsersContextProvider>
+          <Dapp />
+        </UsersContextProvider>
+      </ArticlesContextProvider>
     </>
   )
 }

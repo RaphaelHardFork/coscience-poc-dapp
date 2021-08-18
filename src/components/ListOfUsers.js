@@ -63,10 +63,12 @@ const ListOfUsers = () => {
   return (
     <>
       <Box p="10">
-        <Container maxW="container.xl">
+        <Container maxW="container.lg">
           <Box shadow="lg" borderRadius="50" py="10" bg={bg}>
-            <Heading textAlign="center">List of users </Heading>
-            <Box mx="auto" maxW="50%" display="flex" flexDirection="column">
+            <Heading textAlign="center" mb="2">
+              List of users{" "}
+            </Heading>
+            <Box mx="auto" maxW="75%" display="flex" flexDirection="column">
               <UnorderedList listStyleType="none">
                 {userList.map((user) => {
                   return (

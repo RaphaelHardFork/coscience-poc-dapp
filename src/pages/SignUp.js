@@ -22,16 +22,16 @@ const SignUp = () => {
   return (
     <>
       <Box p="10">
-        <Container maxW="container.xl">
+        <Container maxW="container.lg">
           <Box borderRadius="50" py="10" bg={bg}>
             {web3State.isLogged ? (
               user.id !== 0 ? (
-                <>
+                <Box>
                   <Text>Your account is succesfully created.</Text>
                   <Button as={Link} to="/profile">
                     My profile
                   </Button>
-                </>
+                </Box>
               ) : (
                 <>
                   <AccountForm />

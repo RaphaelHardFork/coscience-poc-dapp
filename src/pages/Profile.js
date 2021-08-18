@@ -7,7 +7,7 @@ import {
 } from "@chakra-ui/react"
 
 import { useContext } from "react"
-import { Link, useParams } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { Web3Context } from "web3-hooks"
 import Dashboard from "../components/Dashboard"
 import { useUsersContract } from "../hooks/useUsersContract"
@@ -21,7 +21,7 @@ const Profile = () => {
   return (
     <>
       <Box p="10">
-        <Container fontSize="3xl" maxW="container.xl">
+        <Container fontSize="3xl" maxW="container.lg">
           <Box shadow="lg" borderRadius="50" px="6" py="10" bg={bg}>
             <Heading textAlign="center" p="4">
               Ethereum address: {web3State.account}

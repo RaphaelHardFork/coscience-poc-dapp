@@ -1,7 +1,6 @@
 import {
   Box,
   Flex,
-  Text,
   Heading,
   FormControl,
   FormLabel,
@@ -10,44 +9,107 @@ import {
   Container,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { ethers } from "ethers"
+import { AddIcon, MinusIcon } from "@chakra-ui/icons"
 import { useState } from "react"
-import { useUsersContract } from "../hooks/useUsersContract"
+import { useArticlesContract } from "../hooks/useArticlesContract"
+import { useMetamask } from "../hooks/useMetamask"
 
 const UploadArticle = () => {
-  //const [articles] = useArticlesContract() // [contract]
+  const [articles] = useArticlesContract()
+  const [status, contractCall] = useMetamask()
 
-  const [author, setAuthor] = useState("")
-  const [coAuthors, setCoAuthors] = useState("")
   const [laboratory, setLaboratory] = useState("")
   const [title, setTitle] = useState("")
-  const [upload, setUpload] = useState("")
+  const [coAuthors, setCoAuthors] = useState([])
 
   //Color Mode
-
   const bg = useColorModeValue("white", "gray.800")
+
+  function addCoAuthor(code, index, input) {
+    switch (code) {
+      // add co author
+      case 0:
+        const coAuthor = { address: "", active: true }
+        setCoAuthors((a) => [...a, coAuthor])
+        break
+      // change coAuthor address
+      case 1:
+        setCoAuthors((a) =>
+          a.map((coAuthor, i) => {
+            if (index === i) {
+              return { ...coAuthor, address: input }
+            } else {
+              return coAuthor
+            }
+          })
+        )
+        // index => address
+        break
+      default:
+        console.log("Wrong code")
+        break
+    }
+  }
+
+  const removeItem = (index) => {
+    setCoAuthors((a) => a.filter((coAuthor, i) => index !== i))
+  }
+
+  async function publish() {
+    const coAuthorArray = coAuthors.map((coAuthor) => {
+      return coAuthor.address
+    })
+    await contractCall(articles, "publish", [coAuthorArray, title, laboratory])
+  }
+
+  // 0x9086701Ecc7eFe724fC906DDF5Bf7D481FA3B055
+  // 0xA8674F9cEE637DD4de558D6E9B88db47225AF4C9
+  // 0xAa882FF33b967B9841cE446D6B14E0f70f584C90
 
   return (
     <>
       <Box p="10">
-        <Container maxW="container.xl" bg={bg} p="10" borderRadius="50">
+        <Container maxW="container.lg" bg={bg} p="10" borderRadius="50">
           <Heading textAlign="center" mb="2">
             Publish an article
           </Heading>
-          <Box display="flex" flexDirection="column" mx="auto" maxW="50%">
-            <FormControl mb="4">
-              <FormLabel>Author</FormLabel>
-              <Input
-                onChange={(e) => setAuthor(e.target.value)}
-                placeholder="Alice Capris"
-              />
-            </FormControl>
+          <Box display="flex" flexDirection="column" mx="auto" maxW="75%">
+            {/* CO AUTHOR */}
             <FormControl mb="4">
               <FormLabel>Co-Authors</FormLabel>
-              <Input
-                onChange={(e) => setCoAuthors(e.target.value)}
-                placeholder="Bob Vance, Charlotte Pimpon ..."
-              />
+              {coAuthors.map((coAuthor, index) => {
+                return (
+                  <>
+                    <Flex mb="4">
+                      {coAuthor.active ? (
+                        <>
+                          <Input
+                            value={coAuthor.address}
+                            onChange={(e) =>
+                              addCoAuthor(1, index, e.target.value)
+                            }
+                            placeholder="0x000000000000"
+                            borderEndRadius="0"
+                          />
+
+                          <Button
+                            borderStartRadius="0"
+                            onClick={() => removeItem(index)}
+                            colorScheme="red"
+                          >
+                            <MinusIcon />
+                          </Button>
+                        </>
+                      ) : (
+                        ""
+                      )}
+                    </Flex>
+                  </>
+                )
+              })}
+              <Button onClick={() => addCoAuthor(0)} colorScheme="green">
+                <AddIcon />
+              </Button>
             </FormControl>
             <FormControl mb="4">
               <FormLabel>Laboratory</FormLabel>
@@ -63,19 +125,23 @@ const UploadArticle = () => {
                 placeholder="Science and co."
               />
             </FormControl>
-            <FormControl mb="4">
-              <FormLabel>Send your work</FormLabel>
-              <Input
-                onChange={(e) => setUpload(e.target.value)}
-                placeholder="upload a file"
-                mb="2"
-              />
-              <Button fontFamily={"heading"} bg={"gray.200"} color={"gray.800"}>
-                Upload
-              </Button>
-            </FormControl>
 
-            <Button colorScheme="orange">Submit</Button>
+            <Button
+              isLoading={
+                status.startsWith("Waiting") || status.startsWith("Pending")
+              }
+              loadingText={status}
+              disabled={
+                !title.length ||
+                !laboratory.length ||
+                status.startsWith("Waiting") ||
+                status.startsWith("Pending")
+              }
+              onClick={publish}
+              colorScheme="orange"
+            >
+              Submit
+            </Button>
           </Box>
         </Container>
       </Box>
