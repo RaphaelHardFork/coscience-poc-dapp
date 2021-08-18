@@ -10,6 +10,7 @@ import SignUp from "./pages/SignUp"
 import About from "./pages/About"
 import Profile from "./pages/Profile"
 import UploadArticle from "./pages/UploadArticle"
+import RecoverAccount from "./components/RecoverAccount"
 
 const Dapp = () => {
   // color Mode
@@ -29,7 +30,9 @@ const Dapp = () => {
           <Route exact path="/sign-up">
             <SignUp />
           </Route>
-          <Route exact path="/recover"></Route>
+          <Route exact path="/recover">
+            <RecoverAccount />
+          </Route>
           <Route exact path="/upload-article">
             <UploadArticle />
           </Route>

@@ -15,7 +15,6 @@ import RecoverAccount from "../components/RecoverAccount"
 const SignUp = () => {
   const [web3State, login] = useContext(Web3Context)
   const [, user] = useUsersContract()
-
   //color Mode
 
   const bg = useColorModeValue("white", "gray.800")
@@ -36,7 +35,6 @@ const SignUp = () => {
               ) : (
                 <>
                   <AccountForm />
-                  <RecoverAccount />
                 </>
               )
             ) : (

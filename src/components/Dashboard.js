@@ -8,9 +8,11 @@ import {
   FormLabel,
   Input,
   Button,
+  Heading,
 } from "@chakra-ui/react"
 import { ethers } from "ethers"
 import { useState } from "react"
+import { useMetamask } from "../hooks/useMetamask"
 import { useUsersContract } from "../hooks/useUsersContract"
 
 const Dashboard = () => {
@@ -18,19 +20,19 @@ const Dashboard = () => {
   const [addInput, setAddInput] = useState({ address: false, password: false })
   const [input, setInput] = useState("")
 
+  const [status, web3Function] = useMetamask()
+
   async function addWallet(code) {
     switch (code) {
       case 0:
-        setAddInput({ ...addInput, address: true })
+        setAddInput({ address: true, password: false })
         break
       case 1:
-        try {
-          await users.addWallet(input)
-        } catch (e) {
-          console.log(e)
-          setInput("WRONG INPUT")
-        }
+        const tx = await web3Function(users, "addWallet", [input])
         setAddInput({ ...addInput, address: false })
+        break
+      case 2:
+        setAddInput({ address: false, password: false })
         break
       default:
         return false
@@ -40,16 +42,17 @@ const Dashboard = () => {
   async function changePassword(code) {
     switch (code) {
       case 0:
-        setAddInput({ ...addInput, password: true })
+        setAddInput({ address: false, password: true })
         break
       case 1:
-        try {
-          await users.changePassword(ethers.utils.id(input))
-        } catch (e) {
-          console.log(e)
-          setInput("WRONG INPUT")
-        }
+        const tx = await web3Function(users, "changePassword", [
+          ethers.utils.id(input),
+        ])
+        console.log(tx)
         setAddInput({ ...addInput, password: false })
+        break
+      case 2:
+        setAddInput({ address: false, password: false })
         break
       default:
         return false
@@ -58,10 +61,12 @@ const Dashboard = () => {
 
   return (
     <>
-      <>
+      <Box px="10">
         <Flex alignItems="center">
-          <Text>ID: {user.id} </Text>
           <Spacer />
+          <Box me="4" p="2" borderRadius="10" bg="messenger.100">
+            <Text>ID: {user.id} </Text>
+          </Box>
           <Box
             p="2"
             borderRadius="10"
@@ -76,8 +81,10 @@ const Dashboard = () => {
             <Text>Status: {user.status} </Text>
           </Box>
         </Flex>
-        <Text>ProfileCID: {user.profileCID} </Text>
-        <Text>Wallet list:</Text>
+        <Heading as="h2">User informations</Heading>
+        <Text>{user.profileCID} </Text>
+
+        <Heading as="h3">Wallet list:</Heading>
         <UnorderedList listStyleType="none">
           {user.walletList !== undefined
             ? user.walletList.map((wallet) => {
@@ -89,10 +96,30 @@ const Dashboard = () => {
               })
             : ""}
         </UnorderedList>
-        <Text>Nb of wallets: {user.nbOfWallet} </Text>
+
+        {/* SETTINGS */}
+        <Heading as="h3">Settings</Heading>
+        <Button
+          disabled={user.status !== "Approved" || addInput.address}
+          onClick={() => addWallet(0)}
+          colorScheme="messenger"
+          transition="0.3s "
+        >
+          Add wallet
+        </Button>
+        <Button
+          ms="4"
+          disabled={user.status !== "Approved" || addInput.password}
+          onClick={() => changePassword(0)}
+          colorScheme="messenger"
+          transition="0.3s "
+        >
+          Change password
+        </Button>
         {addInput.address ? (
           <>
-            <FormControl>
+            {" "}
+            <FormControl transition="0.3s ">
               <FormLabel>Ethereum address:</FormLabel>
               <Input
                 value={input}
@@ -101,18 +128,32 @@ const Dashboard = () => {
                 bg="white"
               />
             </FormControl>
-            <Button onClick={() => addWallet(1)}>Submit</Button>
+            <Button
+              isLoading={
+                status.startsWith("Waiting") || status.startsWith("Pending")
+              }
+              loadingText={status}
+              disabled={
+                !input.length ||
+                status.startsWith("Waiting") ||
+                status.startsWith("Pending")
+              }
+              onClick={() => addWallet(1)}
+              colorScheme="green"
+              transition="0.3s"
+            >
+              Submit
+            </Button>
+            <Button
+              onClick={() => addWallet(2)}
+              ms="4"
+              colorScheme="red"
+              transition="0.3s "
+            >
+              Cancel
+            </Button>
           </>
-        ) : (
-          <Button
-            disabled={user.status !== "Approved"}
-            onClick={() => addWallet(0)}
-          >
-            Add wallet
-          </Button>
-        )}
-
-        {addInput.password ? (
+        ) : addInput.password ? (
           <>
             <FormControl>
               <FormLabel>New password:</FormLabel>
@@ -123,18 +164,35 @@ const Dashboard = () => {
                 bg="white"
               />
             </FormControl>
-            <Button onClick={() => changePassword(1)}>Submit</Button>
+            <Button
+              isLoading={
+                status.startsWith("Waiting") || status.startsWith("Pending")
+              }
+              loadingText={status}
+              disabled={
+                !input.length ||
+                status.startsWith("Waiting") ||
+                status.startsWith("Pending")
+              }
+              onClick={() => changePassword(1)}
+              colorScheme="green"
+              transition="0.3s "
+            >
+              Submit
+            </Button>
+            <Button
+              onClick={() => changePassword(2)}
+              ms="4"
+              colorScheme="red"
+              transition="0.3s "
+            >
+              Cancel
+            </Button>
           </>
         ) : (
-          <Button
-            ms="4"
-            disabled={user.status !== "Approved"}
-            onClick={() => changePassword(0)}
-          >
-            Change password
-          </Button>
+          ""
         )}
-      </>
+      </Box>
     </>
   )
 }

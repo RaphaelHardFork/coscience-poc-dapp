@@ -34,7 +34,10 @@ const getUserData = async (users, id) => {
 
 // hooks
 export const useUsersContract = () => {
+  // call the context
   const [users] = useContext(UsersContext)
+
+  // utils
   const [web3State] = useContext(Web3Context)
   const [userData, setUserData] = useState({})
   const [userList, setUserList] = useState([])
@@ -64,11 +67,13 @@ export const useUsersContract = () => {
     createList()
   }, [users])
 
+  // control call of the hook
   if (users === undefined) {
     throw new Error(
       `It seems that you are trying to use UsersContext outside of its provider`
     )
   }
 
+  // first: return contract for utilisation
   return [users, userData, userList]
 }

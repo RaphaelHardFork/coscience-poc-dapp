@@ -70,47 +70,45 @@ const ListOfUsers = () => {
               <UnorderedList listStyleType="none">
                 {userList.map((user) => {
                   return (
-                    <>
-                      <Flex
-                        bg={
-                          user.status === "Pending"
-                            ? "orange.100"
-                            : user.status === "Approved"
-                            ? "green.100"
-                            : "red.100"
-                        }
-                        borderRadius="20"
-                        p="4"
-                        mb="6"
-                        as="li"
-                        key={user.id}
-                        alignItems="center"
-                        justifyContent="space-between"
-                      >
-                        <Text fontSize="3xl">{user.id}</Text>
-                        <Text> {user.walletList} </Text>
-                        <Text> {user.status} </Text>
-                        {isOwner ? (
-                          user.status === "Approved" ? (
-                            <Button
-                              onClick={() => banUser(user.id)}
-                              disabled={user.status === "Not approved"}
-                            >
-                              Ban
-                            </Button>
-                          ) : (
-                            <Button
-                              onClick={() => acceptUser(user.id)}
-                              disabled={user.status === "Not approved"}
-                            >
-                              Accept
-                            </Button>
-                          )
+                    <Flex
+                      bg={
+                        user.status === "Pending"
+                          ? "orange.100"
+                          : user.status === "Approved"
+                          ? "green.100"
+                          : "red.100"
+                      }
+                      borderRadius="20"
+                      p="4"
+                      mb="6"
+                      as="li"
+                      key={user.id}
+                      alignItems="center"
+                      justifyContent="space-between"
+                    >
+                      <Text fontSize="3xl">{user.id}</Text>
+                      <Text> {user.walletList[0]} </Text>
+                      <Text> {user.nbOfWallet} Wallet(s) </Text>
+                      {isOwner ? (
+                        user.status === "Approved" ? (
+                          <Button
+                            onClick={() => banUser(user.id)}
+                            disabled={user.status === "Not approved"}
+                          >
+                            Ban
+                          </Button>
                         ) : (
-                          ""
-                        )}
-                      </Flex>
-                    </>
+                          <Button
+                            onClick={() => acceptUser(user.id)}
+                            disabled={user.status === "Not approved"}
+                          >
+                            Accept
+                          </Button>
+                        )
+                      ) : (
+                        ""
+                      )}
+                    </Flex>
                   )
                 })}
               </UnorderedList>

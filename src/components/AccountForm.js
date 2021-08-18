@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react"
 import { ethers } from "ethers"
 import { useState } from "react"
+import { Link } from "react-router-dom"
 import { useUsersContract } from "../hooks/useUsersContract"
 
 const AccountForm = () => {
@@ -34,14 +35,6 @@ const AccountForm = () => {
     }
   }
 
-  async function forgotWallet() {
-    const hashedPassword = await ethers.utils.id(password)
-    try {
-      await users.forgotWallet(hashedPassword)
-    } catch (e) {
-      console.log(e)
-    }
-  }
   return (
     <>
       <Box borderRadius="50" bg={bg} py="10">
@@ -89,15 +82,7 @@ const AccountForm = () => {
           Or recover your profile with your password
         </Heading>
         <Box mx="auto" maxW="50%" display="flex" flexDirection="column">
-          <FormControl mb="4">
-            <FormLabel>Password</FormLabel>
-            <Input
-              onChange={(e) => setPassword(e.target.value)}
-              type="password"
-              placeholder="**********"
-            />
-          </FormControl>
-          <Button colorScheme="messenger" onClick={forgotWallet}>
+          <Button mt="6" as={Link} to="/recover" colorScheme="messenger">
             Recover account
           </Button>
         </Box>
