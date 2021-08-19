@@ -7,7 +7,7 @@ const getArticleData = async (articles, id) => {
   const a = await articles.articleInfo(id)
 
   const articleObj = {
-    id: a.id.toString(),
+    id: a.id.toNumber(),
     author: a.author,
     coAuthor: a.coAuthor,
     contentBanned: a.contentBanned,
@@ -51,5 +51,5 @@ export const useArticlesContract = () => {
   }
 
   // first: return contract for utilisation
-  return [articles, articleList]
+  return [articles, articleList, getArticleData]
 }

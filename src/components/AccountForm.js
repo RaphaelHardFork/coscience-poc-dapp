@@ -72,7 +72,12 @@ const AccountForm = () => {
           </FormControl>
           <FormControl mb="4">
             <FormLabel>Confirm password</FormLabel>
-            <Input value={password} placeholder="**********" />
+
+            <Input
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+              placeholder="**********"
+            />
           </FormControl>
           <Button onClick={register} colorScheme="orange">
             Register

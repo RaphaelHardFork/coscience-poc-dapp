@@ -20,11 +20,12 @@ import { useContext } from "react"
 import { Web3Context } from "web3-hooks"
 import { useColorMode } from "@chakra-ui/react"
 import { Link } from "react-router-dom"
+import { useUsersContract } from "../hooks/useUsersContract"
 
 //in small sizeburgerMenu, close not only with cross but add a component for clicking outside menu too.
 const Header = () => {
   //login for the sign up to add.
-  const [web3state, login] = useContext(Web3Context)
+  const [, user] = useUsersContract()
   const bg = useColorModeValue("white", "gray.800")
   const mobileNav = useDisclosure()
 
@@ -65,7 +66,7 @@ const Header = () => {
                 Home
               </Button>
 
-              <Button as={Link} to="/profile" variant="ghost">
+              <Button as={Link} to={`/profile/${user.id}`} variant="ghost">
                 Profile
               </Button>
 

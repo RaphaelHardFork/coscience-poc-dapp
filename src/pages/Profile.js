@@ -5,16 +5,32 @@ import {
   Box,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { useState } from "react"
+import { useEffect } from "react"
 
 import { useContext } from "react"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { Web3Context } from "web3-hooks"
 import Dashboard from "../components/Dashboard"
+import Loading from "../components/Loading"
 import { useUsersContract } from "../hooks/useUsersContract"
 
 const Profile = () => {
-  const [web3State] = useContext(Web3Context)
-  const [users, user, , getUserData] = useUsersContract()
+  const [web3State, login] = useContext(Web3Context)
+  const [users, , , getUserData] = useUsersContract()
+  const [user, setUser] = useState()
+
+  const { id } = useParams()
+
+  useEffect(() => {
+    if (users) {
+      const userData = async () => {
+        const userObj = await getUserData(users, id)
+        setUser(userObj)
+      }
+      userData()
+    }
+  }, [id, getUserData, users])
 
   const bg = useColorModeValue("white", "gray.800")
 
@@ -23,26 +39,47 @@ const Profile = () => {
       <Box p="10">
         <Container fontSize="3xl" maxW="container.lg">
           <Box shadow="lg" borderRadius="50" px="6" py="10" bg={bg}>
-            <Heading textAlign="center" p="4">
-              Ethereum address: {web3State.account}
-            </Heading>
-            {user !== undefined ? (
-              user.id !== 0 ? (
-                <Dashboard />
-              ) : (
+            {web3State.isLogged ? (
+              <>
+                {user ? (
+                  user.id === 0 ? (
+                    <>
+                      <Heading textAlign="center" mb="6">
+                        You don't have an account yet
+                      </Heading>
+                      <Button
+                        maxW="10%"
+                        display="flex"
+                        mx="auto"
+                        size="lg"
+                        as={Link}
+                        to="/sign-up"
+                      >
+                        Sign up
+                      </Button>
+                    </>
+                  ) : (
+                    <Dashboard user={user} />
+                  )
+                ) : (
+                  <Loading />
+                )}
+              </>
+            ) : (
+              // connect the metamask
+              <>
+                <Heading mb="6" textAlign="center">
+                  You must connect your Metamask to access your profile
+                </Heading>
                 <Button
-                  maxW="10%"
+                  colorScheme="orange"
                   display="flex"
                   mx="auto"
-                  size="lg"
-                  as={Link}
-                  to="/sign-up"
+                  onClick={login}
                 >
-                  Sign up
+                  Connect your metamask
                 </Button>
-              )
-            ) : (
-              "not charged"
+              </>
             )}
           </Box>
         </Container>

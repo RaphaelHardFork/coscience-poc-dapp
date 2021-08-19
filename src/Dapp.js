@@ -12,6 +12,7 @@ import Profile from "./pages/Profile"
 import UploadArticle from "./pages/UploadArticle"
 import RecoverAccount from "./components/RecoverAccount"
 import Home from "./pages/Home"
+import Article from "./components/Article"
 
 const Dapp = () => {
   // color Mode
@@ -40,8 +41,11 @@ const Dapp = () => {
           <Route exact path="/list-of-users">
             <ListOfUsers />
           </Route>
-          <Route exact path="/profile">
+          <Route exact path="/profile/:id">
             <Profile />
+          </Route>
+          <Route exact path="/article/:id">
+            <Article />
           </Route>
           <Route exact path="/terms">
             <Terms />

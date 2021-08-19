@@ -4,26 +4,27 @@ import {
   Text,
   Heading,
   Container,
-  List,
-  ListItem,
-  ListIcon,
+  LinkBox,
+  LinkOverlay,
   UnorderedList,
   Button,
 } from "@chakra-ui/react"
-import { useRef, useState } from "react"
+import { useState } from "react"
 import { useContext } from "react"
 import { useEffect } from "react"
 import { Web3Context } from "web3-hooks"
-import { useIsMounted } from "../hooks/useIsMounted"
 import { useUsersContract } from "../hooks/useUsersContract"
 import { useColorModeValue } from "@chakra-ui/react"
+import { Link } from "react-router-dom"
+import { useMetamask } from "../hooks/useMetamask"
 
 const ListOfUsers = () => {
   const [web3State] = useContext(Web3Context)
   const [users, , userList] = useUsersContract()
+  const [status, contractCall] = useMetamask()
+
   const [owner, setOwner] = useState("")
   const [isOwner, setIsOwner] = useState(false)
-  const isMounted = useIsMounted()
 
   // Color Mode
 
@@ -45,19 +46,11 @@ const ListOfUsers = () => {
   }, [users, web3State.account])
 
   async function acceptUser(id) {
-    try {
-      await users.acceptUser(id)
-    } catch (e) {
-      console.log(e)
-    }
+    await contractCall(users, "acceptUser", [id])
   }
 
   async function banUser(id) {
-    try {
-      await users.banUser(id)
-    } catch (e) {
-      console.log(e)
-    }
+    await contractCall(users, "banUser", [id])
   }
 
   return (
@@ -66,13 +59,14 @@ const ListOfUsers = () => {
         <Container maxW="container.lg">
           <Box shadow="lg" borderRadius="50" py="10" bg={bg}>
             <Heading textAlign="center" mb="2">
-              List of users{" "}
+              List of users
             </Heading>
             <Box mx="auto" maxW="75%" display="flex" flexDirection="column">
               <UnorderedList listStyleType="none">
                 {userList.map((user) => {
                   return (
                     <Flex
+                      key={user.id}
                       bg={
                         user.status === "Pending"
                           ? "orange.100"
@@ -81,28 +75,51 @@ const ListOfUsers = () => {
                           : "red.100"
                       }
                       borderRadius="20"
+                      shadow="lg"
                       p="4"
                       mb="6"
-                      as="li"
-                      key={user.id}
+                      as={LinkBox}
+                      display="flex"
                       alignItems="center"
                       justifyContent="space-between"
                     >
                       <Text fontSize="3xl">{user.id}</Text>
                       <Text> {user.walletList[0]} </Text>
                       <Text> {user.nbOfWallet} Wallet(s) </Text>
+                      <LinkOverlay
+                        as={Link}
+                        to={`/profile/${user.id}`}
+                      ></LinkOverlay>
                       {isOwner ? (
                         user.status === "Approved" ? (
                           <Button
                             onClick={() => banUser(user.id)}
-                            disabled={user.status === "Not approved"}
+                            isLoading={
+                              status.startsWith("Waiting") ||
+                              status.startsWith("Pending")
+                            }
+                            loadingText={status}
+                            disabled={
+                              user.status === "Not approved" ||
+                              status.startsWith("Waiting") ||
+                              status.startsWith("Pending")
+                            }
                           >
                             Ban
                           </Button>
                         ) : (
                           <Button
                             onClick={() => acceptUser(user.id)}
-                            disabled={user.status === "Not approved"}
+                            isLoading={
+                              status.startsWith("Waiting") ||
+                              status.startsWith("Pending")
+                            }
+                            loadingText={status}
+                            disabled={
+                              user.status === "Not approved" ||
+                              status.startsWith("Waiting") ||
+                              status.startsWith("Pending")
+                            }
                           >
                             Accept
                           </Button>

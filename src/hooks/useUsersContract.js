@@ -23,7 +23,7 @@ const getUserData = async (users, id) => {
   const walletList = await users.userWalletList(id)
   const nbOfWallet = await users.userNbOfWallet(id)
   const userObj = {
-    id,
+    id: Number(id),
     profileCID,
     status: enumStatus(status),
     walletList,
@@ -75,5 +75,5 @@ export const useUsersContract = () => {
   }
 
   // first: return contract for utilisation
-  return [users, userData, userList]
+  return [users, userData, userList, getUserData]
 }

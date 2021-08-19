@@ -4,41 +4,67 @@ import {
   Button,
   Text,
   useColorModeValue,
+  Heading,
 } from "@chakra-ui/react"
 import { useContext } from "react"
 import { Link } from "react-router-dom"
 import { Web3Context } from "web3-hooks"
 import { useUsersContract } from "../hooks/useUsersContract"
 import AccountForm from "../components/AccountForm"
-import RecoverAccount from "../components/RecoverAccount"
+import Loading from "../components/Loading"
 
 const SignUp = () => {
   const [web3State, login] = useContext(Web3Context)
   const [, user] = useUsersContract()
-  //color Mode
 
+  //color Mode
   const bg = useColorModeValue("white", "gray.800")
 
   return (
     <>
       <Box p="10">
         <Container maxW="container.lg">
-          <Box borderRadius="50" py="10" bg={bg}>
+          <Box shadow="lg" borderRadius="50" py="10" bg={bg}>
             {web3State.isLogged ? (
-              user.id !== 0 ? (
-                <Box>
-                  <Text>Your account is succesfully created.</Text>
-                  <Button as={Link} to="/profile">
-                    My profile
-                  </Button>
-                </Box>
+              user ? (
+                user.id !== 0 ? (
+                  <Box>
+                    <Text mb="6" textAlign="center" fontSize="3xl">
+                      Your account is successfully created.
+                    </Text>
+                    <Button
+                      maxW="30ch"
+                      display="flex"
+                      mx="auto"
+                      colorScheme="telegram"
+                      as={Link}
+                      to={`/profile/${user.id}`}
+                    >
+                      Go to your profile
+                    </Button>
+                  </Box>
+                ) : (
+                  <>
+                    <AccountForm />
+                  </>
+                )
               ) : (
-                <>
-                  <AccountForm />
-                </>
+                <Loading />
               )
             ) : (
-              <Button onClick={login}>Connect your metamask</Button>
+              <>
+                <Heading mb="6" textAlign="center">
+                  You must connect your Metamask to sign up
+                </Heading>
+                <Button
+                  colorScheme="orange"
+                  display="flex"
+                  mx="auto"
+                  onClick={login}
+                >
+                  Connect your metamask
+                </Button>
+              </>
             )}
           </Box>
         </Container>
