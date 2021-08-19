@@ -10,13 +10,16 @@ import {
   HStack,
   Tag
 } from '@chakra-ui/react';
+import CallToAction from '../components/CallToAction';
 import { useArticlesContract } from '../hooks/useArticlesContract';
 
 const Home = () => {
   const [articles, articleList] = useArticlesContract();
   return (
     <>
-      <Heading>List of articles</Heading>
+      <Heading>
+        <CallToAction />
+      </Heading>
       {articleList.map((article) => {
         return <Text> {article.abstractCID} </Text>;
       })}
@@ -107,7 +110,7 @@ const Home = () => {
                       size='sm'
                       key={name}
                       variant='solid'
-                      colorScheme='teal'
+                      colorScheme='linkedin'
                     >
                       {name}
                     </Tag>
