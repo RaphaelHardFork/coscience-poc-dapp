@@ -22,6 +22,7 @@ export const useReviewsContract = () => {
 
   const [reviewList, setReviewList] = useState([])
 
+  /*
   useEffect(() => {
     if (reviews) {
       const createReviewList = async () => {
@@ -36,6 +37,7 @@ export const useReviewsContract = () => {
       createReviewList()
     }
   }, [reviews])
+  */
 
   // control call of the hook
   if (reviews === undefined) {

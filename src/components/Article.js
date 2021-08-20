@@ -9,6 +9,7 @@ import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { useArticlesContract } from "../hooks/useArticlesContract"
 import Loading from "./Loading"
+import SendReview from "./SendReview"
 
 const Article = () => {
   const { id } = useParams()
@@ -54,6 +55,7 @@ const Article = () => {
           ) : (
             <Loading />
           )}
+          <SendReview id={id} />
         </Container>
       </Box>
     </>

@@ -53,7 +53,7 @@ const Dashboard = ({ user }) => {
         setAddInput({ address: true, password: false })
         break
       case 1:
-        const tx = await contractCall(users, "addWallet", [input])
+        await contractCall(users, "addWallet", [input])
         setAddInput({ ...addInput, address: false })
         break
       case 2:

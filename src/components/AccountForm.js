@@ -1,7 +1,5 @@
 import {
   Box,
-  Flex,
-  Text,
   Heading,
   FormControl,
   FormLabel,
@@ -26,6 +24,7 @@ const AccountForm = () => {
   const bg = useColorModeValue("white", "gray.800")
 
   async function register() {
+    //TODO change with custom hook
     const CID = "Qmfdfjdofkodzndskdosdnwkccccd"
     const hashedPassword = await ethers.utils.id(password)
     try {
@@ -47,6 +46,7 @@ const AccountForm = () => {
             <Input
               onChange={(e) => setFirstName(e.target.value)}
               placeholder="Alice"
+              value={firstName}
             />
           </FormControl>
           <FormControl mb="4">
@@ -54,6 +54,7 @@ const AccountForm = () => {
             <Input
               onChange={(e) => setLastName(e.target.value)}
               placeholder="Bob"
+              value={lastName}
             />
           </FormControl>
           <FormControl mb="4">
@@ -61,6 +62,7 @@ const AccountForm = () => {
             <Input
               onChange={(e) => setLaboratory(e.target.value)}
               placeholder="MIT"
+              value={laboratory}
             />
           </FormControl>
           <FormControl mb="4">

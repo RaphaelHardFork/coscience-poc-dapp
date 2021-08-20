@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react"
-import { Web3Context } from "web3-hooks"
 import { ArticlesContext } from "../contexts/ArticlesContext"
 
 // Pure function
@@ -36,7 +35,6 @@ export const useArticlesContract = () => {
   const [articles] = useContext(ArticlesContext)
 
   // utils
-  const [web3State] = useContext(Web3Context)
   const [articleList, setArticleList] = useState([])
 
   useEffect(() => {
@@ -44,6 +42,7 @@ export const useArticlesContract = () => {
       const createArticleList = async () => {
         const nb = await articles.nbOfArticles()
         const articlesList = []
+
         for (let i = 1; i <= nb; i++) {
           const obj = await getArticleData(articles, i)
           articlesList.push(obj)

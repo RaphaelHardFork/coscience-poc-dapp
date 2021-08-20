@@ -16,8 +16,7 @@ import {
   Input,
 } from "@chakra-ui/react"
 import { HamburgerIcon, MoonIcon, SunIcon, Search2Icon } from "@chakra-ui/icons"
-import { useContext } from "react"
-import { Web3Context } from "web3-hooks"
+
 import { useColorMode } from "@chakra-ui/react"
 import { Link } from "react-router-dom"
 import { useUsersContract } from "../hooks/useUsersContract"
