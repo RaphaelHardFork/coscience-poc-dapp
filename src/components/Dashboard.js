@@ -11,16 +11,41 @@ import {
   Heading,
 } from "@chakra-ui/react"
 import { ethers } from "ethers"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useArticlesContract } from "../hooks/useArticlesContract"
 import { useMetamask } from "../hooks/useMetamask"
 import { useUsersContract } from "../hooks/useUsersContract"
+import Loading from "./Loading"
+
+const userArticleIds = async (articles, user) => {
+  if (articles) {
+    const nb = user.walletList.length
+    const listOfId = []
+
+    for (let i = 0; i < nb; i++) {
+      const address = user.walletList[i]
+      const balance = await articles.balanceOf(address) // ERC721 => 0 -> balance
+      for (let i = 0; i < balance; i++) {
+        const id = await articles.tokenOfOwnerByIndex(address, i)
+        listOfId.push(id.toNumber())
+      }
+    }
+
+    // ERC721Enumerable
+    // tokenOfOwnerByIndex(address,index): mapping(uint256 balance => uint256 tokenID)
+    return listOfId
+  }
+}
 
 const Dashboard = ({ user }) => {
   const [users, connectedUser] = useUsersContract()
+  const [articles, , , userArticleList] = useArticlesContract()
+  const [status, contractCall] = useMetamask()
+
   const [addInput, setAddInput] = useState({ address: false, password: false })
   const [input, setInput] = useState("")
 
-  const [status, contractCall] = useMetamask()
+  const [articleList, setArticleList] = useState()
 
   async function addWallet(code) {
     switch (code) {
@@ -58,6 +83,15 @@ const Dashboard = ({ user }) => {
         return false
     }
   }
+
+  useEffect(() => {
+    // anonymous function
+    ;(async () => {
+      const listOfId = await userArticleIds(articles, user)
+      const articleList = await userArticleList(articles, listOfId)
+      setArticleList(articleList)
+    })()
+  }, [articles, user, userArticleList])
 
   return (
     <>
@@ -198,6 +232,33 @@ const Dashboard = ({ user }) => {
         ) : (
           ""
         )}
+
+        {/* ARTICLE LIST */}
+        <Heading as="h3">Articles</Heading>
+
+        {articleList === undefined ? (
+          <Loading />
+        ) : (
+          articleList.map((article) => {
+            return (
+              <Box key={article.id}>
+                <Heading textAlign="center">
+                  This the article n°{article.id}
+                </Heading>
+                <Text>ID : {article.id}</Text>
+                <Text>Author: {article.author} </Text>
+                <Text>CoAuthor: {article.CoAuthor} </Text>
+                <Text>Content banned: {article.contentBanned} </Text>
+                <Text>Abstract: {article.abstractCID} </Text>
+                <Text>Content: {article.contentCID} </Text>
+                <Text>Nb of reviews: {article.reviews.length} </Text>
+                <Text>Nb of comments: {article.comments.length} </Text>
+              </Box>
+            )
+          })
+        )}
+
+        {}
       </Box>
     </>
   )

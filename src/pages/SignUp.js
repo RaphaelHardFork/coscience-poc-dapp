@@ -39,6 +39,7 @@ const SignUp = () => {
                       colorScheme="telegram"
                       as={Link}
                       to={`/profile/${user.id}`}
+                      disabled={user.id === undefined}
                     >
                       Go to your profile
                     </Button>

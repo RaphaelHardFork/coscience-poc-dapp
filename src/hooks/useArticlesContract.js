@@ -19,6 +19,17 @@ const getArticleData = async (articles, id) => {
   return articleObj
 }
 
+const userArticleList = async (articles, listOfId) => {
+  const articleList = []
+
+  for (const id of listOfId) {
+    const articleObj = await getArticleData(articles, id)
+    articleList.push(articleObj)
+  }
+
+  return articleList
+}
+
 // hooks
 export const useArticlesContract = () => {
   // call the context
@@ -51,5 +62,5 @@ export const useArticlesContract = () => {
   }
 
   // first: return contract for utilisation
-  return [articles, articleList, getArticleData]
+  return [articles, articleList, getArticleData, userArticleList]
 }
