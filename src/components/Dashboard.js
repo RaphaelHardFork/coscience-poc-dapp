@@ -8,7 +8,14 @@ import {
   FormLabel,
   Input,
   Button,
-  Heading
+  Heading,
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogCloseButton,
+  AlertDialogBody,
+  AlertDialogOverlay,
+  useClipboard
 } from '@chakra-ui/react';
 import { PlusSquareIcon, RepeatIcon } from '@chakra-ui/icons';
 import { ethers } from 'ethers';
@@ -47,6 +54,10 @@ const Dashboard = ({ user }) => {
   const [input, setInput] = useState('');
 
   const [articleList, setArticleList] = useState();
+  const [value, setValue] = useState();
+  const { hasCopied, onCopy } = useClipboard(value);
+  const [isOpen, setIsOpen] = useState();
+  const onClose = () => setIsOpen(false);
 
   async function addWallet(code) {
     switch (code) {
@@ -118,19 +129,35 @@ const Dashboard = ({ user }) => {
         </Flex>
         <Heading as='h2'>User informations</Heading>
         <Text>{user.profileCID} </Text>
+        <>
+          <Button onClick={setIsOpen}>Wallet List</Button>
+          <AlertDialog isOpen={isOpen} onClose={onClose}>
+            <AlertDialogOverlay />
 
-        <Heading as='h3'>Wallet list:</Heading>
-        <UnorderedList listStyleType='none'>
-          {user.walletList !== undefined
-            ? user.walletList.map((wallet) => {
-                return (
-                  <Text key={wallet} as='li'>
-                    {wallet}
-                  </Text>
-                );
-              })
-            : ''}
-        </UnorderedList>
+            <AlertDialogContent>
+              <AlertDialogHeader>Here your Wallet List</AlertDialogHeader>
+              <AlertDialogCloseButton />
+              <AlertDialogBody>
+                <UnorderedList listStyleType='none'>
+                  {user.walletList !== undefined
+                    ? user.walletList.map((wallet) => {
+                        return (
+                          <>
+                            <Flex key={wallet} as='li' mb={2}>
+                              <Input value={wallet} isReadOnly />
+                              <Button onClick={onCopy} ml={2}>
+                                {hasCopied ? 'Copied' : 'Copy'}
+                              </Button>
+                            </Flex>
+                          </>
+                        );
+                      })
+                    : ''}
+                </UnorderedList>
+              </AlertDialogBody>
+            </AlertDialogContent>
+          </AlertDialog>
+        </>
 
         {/* SETTINGS */}
         {Number(user.id) === connectedUser.id ? (
