@@ -144,7 +144,12 @@ const Dashboard = ({ user }) => {
                         return (
                           <>
                             <Flex key={wallet} as='li' mb={2}>
-                              <Input value={wallet} isReadOnly />
+                              {console.log(wallet)}
+                              <Input
+                                value={wallet}
+                                isReadOnly
+                                placeholder='test'
+                              />
                               <Button onClick={onCopy} ml={2}>
                                 {hasCopied ? 'Copied' : 'Copy'}
                               </Button>
