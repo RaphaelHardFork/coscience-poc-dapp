@@ -1,18 +1,18 @@
-import { useContext, useEffect, useState } from 'react'
-import { Web3Context } from 'web3-hooks'
-import { UsersContext } from '../contexts/UsersContext'
+import { useContext, useEffect, useState } from "react"
+import { Web3Context } from "web3-hooks"
+import { UsersContext } from "../contexts/UsersContext"
 
 // Pure function
 const enumStatus = (status) => {
   switch (status) {
     case 0:
-      return 'Not approved'
+      return "Not approved"
     case 1:
-      return 'Pending'
+      return "Pending"
     case 2:
-      return 'Approved'
+      return "Approved"
     default:
-      return 'Unknown status'
+      return "Unknown status"
   }
 }
 

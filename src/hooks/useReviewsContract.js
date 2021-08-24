@@ -1,6 +1,6 @@
-import { useContext, useEffect, useState } from 'react'
-import { Web3Context } from 'web3-hooks'
-import { ReviewsContext } from '../contexts/ReviewsContext'
+import { useContext, useEffect, useState } from "react"
+import { Web3Context } from "web3-hooks"
+import { ReviewsContext } from "../contexts/ReviewsContext"
 
 const getReviewData = async (reviews, id) => {
   const r = await reviews.reviewInfo(id)

@@ -5,45 +5,45 @@ import {
   Textarea,
   Button,
   Input,
-} from '@chakra-ui/react'
-import { useState } from 'react'
-import { useMetamask } from '../hooks/useMetamask'
-import { useCommentsContract } from '../hooks/useCommentsContract'
-import { useArticlesContract } from '../hooks/useArticlesContract'
+} from "@chakra-ui/react"
+import { useState } from "react"
+import { useMetamask } from "../hooks/useMetamask"
+import { useCommentsContract } from "../hooks/useCommentsContract"
+import { useArticlesContract } from "../hooks/useArticlesContract"
 
 const SendComment = ({ id }) => {
   const [comments] = useCommentsContract()
   const [articles] = useArticlesContract()
   const [status, contractCall] = useMetamask()
-  const [comment, setComment] = useState('')
+  const [comment, setComment] = useState("")
 
   async function post() {
     // post(comment,articleAddress, articleID)
 
-    await contractCall(comments, 'post', [comment, articles.address, id])
+    await contractCall(comments, "post", [comment, articles.address, id])
   }
 
   return (
     <>
-      <Box mx='auto' maxW='50%' display='flex' flexDirection='column'>
-        <FormControl mb='4'>
+      <Box mx="auto" maxW="50%" display="flex" flexDirection="column">
+        <FormControl mb="4">
           <FormLabel>Write a comment</FormLabel>
           <Textarea
-            placeholder='Your comment...'
+            placeholder="Your comment..."
             onChange={(e) => setComment(e.target.value)}
           />
         </FormControl>
         <Button
-          colorScheme='orange'
+          colorScheme="orange"
           onClick={post}
           isLoading={
-            status.startsWith('Waiting') || status.startsWith('Pending')
+            status.startsWith("Waiting") || status.startsWith("Pending")
           }
           loadingText={status}
           disabled={
             !comment.length ||
-            status.startsWith('Waiting') ||
-            status.startsWith('Pending')
+            status.startsWith("Waiting") ||
+            status.startsWith("Pending")
           }
         >
           Submit

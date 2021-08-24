@@ -1,6 +1,6 @@
-import { useContext, useEffect, useState } from 'react'
-import { ArticlesContext } from '../contexts/ArticlesContext'
-import { ReviewsContext } from '../contexts/ReviewsContext'
+import { useContext, useEffect, useState } from "react"
+import { ArticlesContext } from "../contexts/ArticlesContext"
+import { ReviewsContext } from "../contexts/ReviewsContext"
 
 // Pure function
 const getArticleData = async (articles, id) => {

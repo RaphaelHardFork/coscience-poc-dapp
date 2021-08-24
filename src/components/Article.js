@@ -4,22 +4,22 @@ import {
   Heading,
   useColorModeValue,
   Container,
-} from '@chakra-ui/react'
-import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import { useArticlesContract } from '../hooks/useArticlesContract'
-import { useCommentsContract } from '../hooks/useCommentsContract'
-import { useReviewsContract } from '../hooks/useReviewsContract'
-import Loading from './Loading'
-import SendComment from './SendComment'
+} from "@chakra-ui/react"
+import { useState, useEffect } from "react"
+import { useParams } from "react-router-dom"
+import { useArticlesContract } from "../hooks/useArticlesContract"
+import { useCommentsContract } from "../hooks/useCommentsContract"
+import { useReviewsContract } from "../hooks/useReviewsContract"
+import Loading from "./Loading"
+import SendComment from "./SendComment"
 
-import SendReview from './SendReview'
+import SendReview from "./SendReview"
 
 const articleReviewIds = async (reviews, article) => {
   if (reviews) {
-    console.log('article', article)
+    console.log("article", article)
     const nb = article.reviews.length
-    console.log('nb', nb)
+    console.log("nb", nb)
     const listOfId = []
 
     for (let i = 0; i < nb; i++) {
@@ -85,17 +85,17 @@ const Article = () => {
     }
   }, [comments, userCommentList, article])
 
-  const bg = useColorModeValue('white', 'gray.800')
+  const bg = useColorModeValue("white", "gray.800")
 
   return (
     <>
-      <Box py='10' bg={bg}>
-        <Container maxW='container.xl'>
+      <Box py="10" bg={bg}>
+        <Container maxW="container.xl">
           {article ? (
             article.id !== 0 ? (
               <>
                 <Box key={article.id}>
-                  <Heading textAlign='center'>
+                  <Heading textAlign="center">
                     This is the article n°{article.id}
                   </Heading>
                   <Text>ID : {article.id}</Text>
@@ -109,7 +109,7 @@ const Article = () => {
                 </Box>
               </>
             ) : (
-              <Heading textAlign='center'>
+              <Heading textAlign="center">
                 Oups this article doesn't exist
               </Heading>
             )
@@ -123,13 +123,13 @@ const Article = () => {
             <Loading />
           ) : (
             <>
-              <Heading as='h3' mt='5'>
+              <Heading as="h3" mt="5">
                 Reviews({articlesReviewList.length})
               </Heading>
               {articlesReviewList.map((review) => {
                 return (
                   <Box key={review.id}>
-                    <Heading textAlign='center'>
+                    <Heading textAlign="center">
                       This is the review n°{review.id}
                     </Heading>
                     <Text>ID : {review.id}</Text>
@@ -150,13 +150,13 @@ const Article = () => {
             <Loading />
           ) : (
             <>
-              <Heading as='h3' mt='5'>
+              <Heading as="h3" mt="5">
                 Comments({articlesCommentList.length})
               </Heading>
               {articlesCommentList.map((comment) => {
                 return (
                   <Box key={comment.id}>
-                    <Heading textAlign='center'>
+                    <Heading textAlign="center">
                       This is the comment n°{comment.id}
                     </Heading>
                     <Text>ID : {comment.id}</Text>

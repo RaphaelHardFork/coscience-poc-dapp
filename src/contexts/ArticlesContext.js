@@ -1,6 +1,6 @@
-import { createContext } from 'react'
-import { useContract } from 'web3-hooks'
-import { contractAddress, contractABI } from '../contracts/articles'
+import { createContext } from "react"
+import { useContract } from "web3-hooks"
+import { contractAddress, contractABI } from "../contracts/articles"
 
 export const ArticlesContext = createContext(null)
 

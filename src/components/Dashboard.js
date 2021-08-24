@@ -9,15 +9,15 @@ import {
   Input,
   Button,
   Heading,
-} from '@chakra-ui/react'
-import { ethers } from 'ethers'
-import { useEffect, useState } from 'react'
-import { useArticlesContract } from '../hooks/useArticlesContract'
-import { useCommentsContract } from '../hooks/useCommentsContract'
-import { useMetamask } from '../hooks/useMetamask'
-import { useReviewsContract } from '../hooks/useReviewsContract'
-import { useUsersContract } from '../hooks/useUsersContract'
-import Loading from './Loading'
+} from "@chakra-ui/react"
+import { ethers } from "ethers"
+import { useEffect, useState } from "react"
+import { useArticlesContract } from "../hooks/useArticlesContract"
+import { useCommentsContract } from "../hooks/useCommentsContract"
+import { useMetamask } from "../hooks/useMetamask"
+import { useReviewsContract } from "../hooks/useReviewsContract"
+import { useUsersContract } from "../hooks/useUsersContract"
+import Loading from "./Loading"
 
 const userArticleIds = async (articles, user) => {
   if (articles) {
@@ -43,7 +43,7 @@ const userReviewIds = async (reviews, user) => {
   if (reviews) {
     const nb = user.walletList.length
     const listOfId = []
-    console.log('user review ids', nb)
+    console.log("user review ids", nb)
     for (let i = 0; i < nb; i++) {
       const address = user.walletList[i]
       const balance = await reviews.balanceOf(address)
@@ -83,7 +83,7 @@ const Dashboard = ({ user }) => {
   const [status, contractCall] = useMetamask()
 
   const [addInput, setAddInput] = useState({ address: false, password: false })
-  const [input, setInput] = useState('')
+  const [input, setInput] = useState("")
 
   const [articleList, setArticleList] = useState()
   const [reviewList, setReviewList] = useState()
@@ -98,7 +98,7 @@ const Dashboard = ({ user }) => {
         setAddInput({ address: true, password: false })
         break
       case 1:
-        await contractCall(users, 'addWallet', [input])
+        await contractCall(users, "addWallet", [input])
         setAddInput({ ...addInput, address: false })
         break
       case 2:
@@ -115,7 +115,7 @@ const Dashboard = ({ user }) => {
         setAddInput({ address: false, password: true })
         break
       case 1:
-        const tx = await contractCall(users, 'changePassword', [
+        const tx = await contractCall(users, "changePassword", [
           ethers.utils.id(input),
         ])
         console.log(tx)
@@ -137,14 +137,12 @@ const Dashboard = ({ user }) => {
       setArticleList(articleList)
       setUserNbArticles(articleList.length)
     })()
-
     ;(async () => {
       const listOfId = await userReviewIds(reviews, user)
       const reviewList = await userReviewList(reviews, listOfId)
       setReviewList(reviewList)
       setUserNbReviews(reviewList.length)
     })()
-
     ;(async () => {
       const listOfId = await userCommentIds(comments, user)
       const commentList = await userCommentList(comments, listOfId)
@@ -163,96 +161,96 @@ const Dashboard = ({ user }) => {
 
   return (
     <>
-      <Box px='10'>
-        <Flex alignItems='center'>
+      <Box px="10">
+        <Flex alignItems="center">
           <Spacer />
-          <Box me='4' p='2' borderRadius='10' bg='messenger.100'>
+          <Box me="4" p="2" borderRadius="10" bg="messenger.100">
             <Text>ID: {user.id} </Text>
           </Box>
           <Box
-            p='2'
-            borderRadius='10'
+            p="2"
+            borderRadius="10"
             bg={
-              user.status === 'Pending'
-                ? 'orange.200'
-                : user.status === 'Approved'
-                ? 'green.200'
-                : 'red'
+              user.status === "Pending"
+                ? "orange.200"
+                : user.status === "Approved"
+                ? "green.200"
+                : "red"
             }
           >
             <Text>Status: {user.status} </Text>
           </Box>
         </Flex>
-        <Heading as='h2'>User informations</Heading>
+        <Heading as="h2">User informations</Heading>
         <Text>{user.profileCID} </Text>
 
-        <Heading as='h3'>Wallet list:</Heading>
-        <UnorderedList listStyleType='none'>
+        <Heading as="h3">Wallet list:</Heading>
+        <UnorderedList listStyleType="none">
           {user.walletList !== undefined
             ? user.walletList.map((wallet) => {
                 return (
-                  <Text key={wallet} as='li'>
+                  <Text key={wallet} as="li">
                     {wallet}
                   </Text>
                 )
               })
-            : ''}
+            : ""}
         </UnorderedList>
 
         {/* SETTINGS */}
         {Number(user.id) === connectedUser.id ? (
           <>
-            <Heading as='h3'>Settings</Heading>
+            <Heading as="h3">Settings</Heading>
             <Button
-              disabled={user.status !== 'Approved' || addInput.address}
+              disabled={user.status !== "Approved" || addInput.address}
               onClick={() => addWallet(0)}
-              colorScheme='messenger'
-              transition='0.3s '
+              colorScheme="messenger"
+              transition="0.3s "
             >
               Add wallet
             </Button>
             <Button
-              ms='4'
-              disabled={user.status !== 'Approved' || addInput.password}
+              ms="4"
+              disabled={user.status !== "Approved" || addInput.password}
               onClick={() => changePassword(0)}
-              colorScheme='messenger'
-              transition='0.3s '
+              colorScheme="messenger"
+              transition="0.3s "
             >
               Change password
             </Button>
             {addInput.address ? (
               <>
-                {' '}
-                <FormControl transition='0.3s '>
+                {" "}
+                <FormControl transition="0.3s ">
                   <FormLabel>Ethereum address:</FormLabel>
                   <Input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    placeholder='0x0000000000000000000000000000000000000000'
-                    bg='white'
+                    placeholder="0x0000000000000000000000000000000000000000"
+                    bg="white"
                   />
                 </FormControl>
                 <Button
                   isLoading={
-                    status.startsWith('Waiting') || status.startsWith('Pending')
+                    status.startsWith("Waiting") || status.startsWith("Pending")
                   }
                   loadingText={status}
                   disabled={
                     !input.length ||
-                    status.startsWith('Waiting') ||
-                    status.startsWith('Pending')
+                    status.startsWith("Waiting") ||
+                    status.startsWith("Pending")
                   }
                   onClick={() => addWallet(1)}
-                  colorScheme='green'
-                  transition='0.3s'
+                  colorScheme="green"
+                  transition="0.3s"
                 >
                   Submit
                 </Button>
                 <Button
                   onClick={() => addWallet(2)}
-                  ms='4'
-                  colorScheme='red'
-                  transition='0.3s '
+                  ms="4"
+                  colorScheme="red"
+                  transition="0.3s "
                 >
                   Cancel
                 </Button>
@@ -264,45 +262,45 @@ const Dashboard = ({ user }) => {
                   <Input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    placeholder='************'
-                    bg='white'
+                    placeholder="************"
+                    bg="white"
                   />
                 </FormControl>
                 <Button
                   isLoading={
-                    status.startsWith('Waiting') || status.startsWith('Pending')
+                    status.startsWith("Waiting") || status.startsWith("Pending")
                   }
                   loadingText={status}
                   disabled={
                     !input.length ||
-                    status.startsWith('Waiting') ||
-                    status.startsWith('Pending')
+                    status.startsWith("Waiting") ||
+                    status.startsWith("Pending")
                   }
                   onClick={() => changePassword(1)}
-                  colorScheme='green'
-                  transition='0.3s '
+                  colorScheme="green"
+                  transition="0.3s "
                 >
                   Submit
                 </Button>
                 <Button
                   onClick={() => changePassword(2)}
-                  ms='4'
-                  colorScheme='red'
-                  transition='0.3s '
+                  ms="4"
+                  colorScheme="red"
+                  transition="0.3s "
                 >
                   Cancel
                 </Button>
               </>
             ) : (
-              ''
+              ""
             )}
           </>
         ) : (
-          ''
+          ""
         )}
 
         {/* ARTICLE LIST */}
-        <Heading as='h3' mt='5'>
+        <Heading as="h3" mt="5">
           Articles({userNbArticles})
         </Heading>
 
@@ -312,7 +310,7 @@ const Dashboard = ({ user }) => {
           articleList.map((article) => {
             return (
               <Box key={article.id}>
-                <Heading textAlign='center'>
+                <Heading textAlign="center">
                   This is the article n°{article.id}
                 </Heading>
                 <Text>ID : {article.id}</Text>
@@ -331,7 +329,7 @@ const Dashboard = ({ user }) => {
         {}
 
         {/* REVIEWS LIST */}
-        <Heading as='h3' mt='5'>
+        <Heading as="h3" mt="5">
           Reviews({userNbReviews})
         </Heading>
 
@@ -341,7 +339,7 @@ const Dashboard = ({ user }) => {
           reviewList.map((review) => {
             return (
               <Box key={review.id}>
-                <Heading textAlign='center'>
+                <Heading textAlign="center">
                   This is the review n°{review.id}
                 </Heading>
                 <Text>ID : {review.id}</Text>
@@ -355,7 +353,7 @@ const Dashboard = ({ user }) => {
         )}
 
         {/* COMMENTS LIST */}
-        <Heading as='h3' mt='5'>
+        <Heading as="h3" mt="5">
           Comments({userNbComments})
         </Heading>
 
@@ -365,7 +363,7 @@ const Dashboard = ({ user }) => {
           commentList.map((comment) => {
             return (
               <Box key={comment.id}>
-                <Heading textAlign='center'>
+                <Heading textAlign="center">
                   This is the comment n°{comment.id}
                 </Heading>
                 <Text>ID : {comment.id}</Text>
