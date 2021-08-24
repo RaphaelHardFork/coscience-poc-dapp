@@ -1,8 +1,8 @@
-import { Link, Text, useToast } from "@chakra-ui/react"
-import { useState } from "react"
+import { Link, Text, useToast } from '@chakra-ui/react'
+import { useState } from 'react'
 
 export const useMetamask = () => {
-  const [status, setStatus] = useState("")
+  const [status, setStatus] = useState('')
   const toast = useToast()
 
   // function to call blockchain function
@@ -10,7 +10,7 @@ export const useMetamask = () => {
     const nbOfParam = params.length
     let tx
     try {
-      setStatus("Waiting for confirmation") // UX
+      setStatus('Waiting for confirmation') // UX
 
       // transaction
       switch (nbOfParam) {
@@ -35,14 +35,14 @@ export const useMetamask = () => {
           )
           break
         default:
-          console.log("Wrong number of params")
+          console.log('Wrong number of params')
       }
 
-      setStatus("Pending") // UX
+      setStatus('Pending') // UX
       await tx.wait()
-      setStatus("Success") // UX
+      setStatus('Success') // UX
       toast({
-        title: "Transaction completed",
+        title: 'Transaction completed',
         description: (
           <>
             <Text isTruncated>Hash: {tx.hash})</Text>
@@ -54,7 +54,7 @@ export const useMetamask = () => {
             </Link>
           </>
         ),
-        status: "success",
+        status: 'success',
         duration: 7000,
         isClosable: true,
       })
@@ -64,24 +64,24 @@ export const useMetamask = () => {
       console.log(e.code)
       console.log(e.message)
       switch (e.code) {
-        case "UNPREDICTABLE_GAS_LIMIT":
+        case 'UNPREDICTABLE_GAS_LIMIT':
           errorMessage = e.error.message
           break
         case 4001:
           errorMessage = e.message
           break
-        case "INVALID_ARGUMENT":
-          errorMessage = "Wrong argument: " + e.message
+        case 'INVALID_ARGUMENT':
+          errorMessage = 'Wrong argument: ' + e.message
           break
         default:
-          errorMessage = "unknown error"
+          errorMessage = 'unknown error'
           break
       }
-      setStatus("Failed") // UX
+      setStatus('Failed') // UX
       toast({
-        title: "Transaction failed",
+        title: 'Transaction failed',
         description: errorMessage,
-        status: "error",
+        status: 'error',
         duration: 7000,
         isClosable: true,
       })

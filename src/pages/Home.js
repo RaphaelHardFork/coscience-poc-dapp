@@ -1,11 +1,11 @@
-import { Box, Heading, useColorModeValue, Container } from "@chakra-ui/react"
-import { useState } from "react"
-import { useEffect } from "react"
-import ArticleList from "../components/ArticleList"
-import CallToAction from "../components/CallToAction"
-import Loading from "../components/Loading"
-import { useArticlesContract } from "../hooks/useArticlesContract"
-import { useUsersContract } from "../hooks/useUsersContract"
+import { Box, Heading, useColorModeValue, Container } from '@chakra-ui/react'
+import { useState } from 'react'
+import { useEffect } from 'react'
+import ArticleList from '../components/ArticleList'
+import CallToAction from '../components/CallToAction'
+import Loading from '../components/Loading'
+import { useArticlesContract } from '../hooks/useArticlesContract'
+import { useUsersContract } from '../hooks/useUsersContract'
 
 const Home = () => {
   const [, articleList] = useArticlesContract()
@@ -13,7 +13,7 @@ const Home = () => {
 
   const [articleListAuthor, setArticleListAuthor] = useState()
 
-  const bg = useColorModeValue("white", "gray.800")
+  const bg = useColorModeValue('white', 'gray.800')
 
   useEffect(() => {
     if (users) {
@@ -35,8 +35,8 @@ const Home = () => {
         <CallToAction />
       </Heading>
 
-      <Box py="10" bg={bg}>
-        <Container maxW="container.xl">
+      <Box py='10' bg={bg}>
+        <Container maxW='container.xl'>
           {articleListAuthor === undefined ? (
             <Loading />
           ) : articleListAuthor.length === 0 ? (

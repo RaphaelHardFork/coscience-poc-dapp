@@ -1,5 +1,5 @@
-import { useContext } from "react"
-import { ContractsContext } from "../contexts/ContractsContext"
+import { useContext } from 'react'
+import { ContractsContext } from '../contexts/ContractsContext'
 
 export const useOneContract = () => {
   const [contract] = useContext(ContractsContext)

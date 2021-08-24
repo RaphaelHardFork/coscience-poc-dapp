@@ -1,26 +1,36 @@
-import { Box, FormControl, FormLabel, Textarea, Button } from '@chakra-ui/react'
+import {
+  Box,
+  FormControl,
+  FormLabel,
+  Textarea,
+  Button,
+  Input,
+} from '@chakra-ui/react'
 import { useState } from 'react'
 import { useMetamask } from '../hooks/useMetamask'
-import { useReviewsContract } from '../hooks/useReviewsContract'
+import { useCommentsContract } from '../hooks/useCommentsContract'
+import { useArticlesContract } from '../hooks/useArticlesContract'
 
-const SendReview = ({ id }) => {
-  const [reviews] = useReviewsContract()
+const SendComment = ({ id }) => {
+  const [comments] = useCommentsContract()
+  const [articles] = useArticlesContract()
   const [status, contractCall] = useMetamask()
-  const [review, setReview] = useState('')
+  const [comment, setComment] = useState('')
 
   async function post() {
-    // post(review, articleID)
-    await contractCall(reviews, 'post', [review, id])
+    // post(comment,articleAddress, articleID)
+
+    await contractCall(comments, 'post', [comment, articles.address, id])
   }
 
   return (
     <>
       <Box mx='auto' maxW='50%' display='flex' flexDirection='column'>
         <FormControl mb='4'>
-          <FormLabel>Write a review</FormLabel>
+          <FormLabel>Write a comment</FormLabel>
           <Textarea
-            placeholder='Your review...'
-            onChange={(e) => setReview(e.target.value)}
+            placeholder='Your comment...'
+            onChange={(e) => setComment(e.target.value)}
           />
         </FormControl>
         <Button
@@ -31,7 +41,7 @@ const SendReview = ({ id }) => {
           }
           loadingText={status}
           disabled={
-            !review.length ||
+            !comment.length ||
             status.startsWith('Waiting') ||
             status.startsWith('Pending')
           }
@@ -43,4 +53,4 @@ const SendReview = ({ id }) => {
   )
 }
 
-export default SendReview
+export default SendComment
