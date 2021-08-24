@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import { ArticlesContext } from "../contexts/ArticlesContext"
+import { ReviewsContext } from "../contexts/ReviewsContext"
 
 // Pure function
 const getArticleData = async (articles, id) => {
@@ -18,6 +19,7 @@ const getArticleData = async (articles, id) => {
   return articleObj
 }
 
+// return articleList of user
 const userArticleList = async (articles, listOfId) => {
   const articleList = []
 
@@ -33,6 +35,7 @@ const userArticleList = async (articles, listOfId) => {
 export const useArticlesContract = () => {
   // call the context
   const [articles] = useContext(ArticlesContext)
+  const [reviews] = useContext(ReviewsContext)
 
   // utils
   const [articleList, setArticleList] = useState([])

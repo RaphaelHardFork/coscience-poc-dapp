@@ -15,15 +15,17 @@ import {
   AlertDialogCloseButton,
   AlertDialogBody,
   AlertDialogOverlay,
-  useClipboard
-} from '@chakra-ui/react';
-import { PlusSquareIcon, RepeatIcon } from '@chakra-ui/icons';
-import { ethers } from 'ethers';
-import { useEffect, useState } from 'react';
-import { useArticlesContract } from '../hooks/useArticlesContract';
-import { useMetamask } from '../hooks/useMetamask';
-import { useUsersContract } from '../hooks/useUsersContract';
-import Loading from './Loading';
+
+  useClipboard,
+} from "@chakra-ui/react"
+import { PlusSquareIcon, RepeatIcon } from "@chakra-ui/icons"
+import { ethers } from "ethers"
+import { useEffect, useState } from "react"
+import { useArticlesContract } from "../hooks/useArticlesContract"
+import { useMetamask } from "../hooks/useMetamask"
+import { useUsersContract } from "../hooks/useUsersContract"
+import Loading from "./Loading"
+
 
 const userArticleIds = async (articles, user) => {
   if (articles) {
@@ -53,11 +55,13 @@ const Dashboard = ({ user }) => {
   const [addInput, setAddInput] = useState({ address: false, password: false });
   const [input, setInput] = useState('');
 
-  const [articleList, setArticleList] = useState();
-  const [value, setValue] = useState();
-  const { hasCopied, onCopy } = useClipboard(value);
-  const [isOpen, setIsOpen] = useState();
-  const onClose = () => setIsOpen(false);
+
+  const [articleList, setArticleList] = useState()
+  const [value, setValue] = useState()
+  const { hasCopied, onCopy } = useClipboard(value)
+  const [isOpen, setIsOpen] = useState()
+  const onClose = () => setIsOpen(false)
+
 
   async function addWallet(code) {
     switch (code) {
@@ -138,26 +142,32 @@ const Dashboard = ({ user }) => {
               <AlertDialogHeader>Here your Wallet List</AlertDialogHeader>
               <AlertDialogCloseButton />
               <AlertDialogBody>
-                <UnorderedList listStyleType='none'>
+
+                <UnorderedList listStyleType="none">
+
                   {user.walletList !== undefined
                     ? user.walletList.map((wallet) => {
                         return (
                           <>
-                            <Flex key={wallet} as='li' mb={2}>
+
+                            <Flex key={wallet} as="li" mb={2}>
+
                               {console.log(wallet)}
                               <Input
                                 value={wallet}
                                 isReadOnly
-                                placeholder='test'
+
+                                placeholder="test"
                               />
                               <Button onClick={onCopy} ml={2}>
-                                {hasCopied ? 'Copied' : 'Copy'}
+                                {hasCopied ? "Copied" : "Copy"}
                               </Button>
                             </Flex>
                           </>
-                        );
+                        )
                       })
-                    : ''}
+                    : ""}
+
                 </UnorderedList>
               </AlertDialogBody>
             </AlertDialogContent>
@@ -171,9 +181,11 @@ const Dashboard = ({ user }) => {
             <Button
               disabled={user.status !== 'Approved' || addInput.address}
               onClick={() => addWallet(0)}
-              colorScheme='messenger'
-              transition='0.3s '
-              aria-label='add Wallet'
+
+              colorScheme="messenger"
+              transition="0.3s "
+              aria-label="add Wallet"
+
               leftIcon={<PlusSquareIcon />}
             >
               Wallets
@@ -182,10 +194,12 @@ const Dashboard = ({ user }) => {
               ms='4'
               disabled={user.status !== 'Approved' || addInput.password}
               onClick={() => changePassword(0)}
-              colorScheme='messenger'
-              transition='0.3s '
-              aria-label='Change password'
-              variant='outline'
+
+              colorScheme="messenger"
+              transition="0.3s "
+              aria-label="Change password"
+              variant="outline"
+
               rightIcon={<RepeatIcon />}
             >
               Password
