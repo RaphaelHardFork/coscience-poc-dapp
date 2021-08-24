@@ -9,13 +9,19 @@ import {
   Input,
   Button,
   Heading,
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogCloseButton,
+  AlertDialogBody,
+  AlertDialogOverlay,
+  useClipboard,
 } from "@chakra-ui/react"
+import { PlusSquareIcon, RepeatIcon } from "@chakra-ui/icons"
 import { ethers } from "ethers"
 import { useEffect, useState } from "react"
 import { useArticlesContract } from "../hooks/useArticlesContract"
-import { useCommentsContract } from "../hooks/useCommentsContract"
 import { useMetamask } from "../hooks/useMetamask"
-import { useReviewsContract } from "../hooks/useReviewsContract"
 import { useUsersContract } from "../hooks/useUsersContract"
 import Loading from "./Loading"
 
@@ -39,58 +45,19 @@ const userArticleIds = async (articles, user) => {
   }
 }
 
-const userReviewIds = async (reviews, user) => {
-  if (reviews) {
-    const nb = user.walletList.length
-    const listOfId = []
-    console.log("user review ids", nb)
-    for (let i = 0; i < nb; i++) {
-      const address = user.walletList[i]
-      const balance = await reviews.balanceOf(address)
-
-      for (let i = 0; i < balance; i++) {
-        const id = await reviews.tokenOfOwnerByIndex(address, i)
-        listOfId.push(id.toNumber())
-      }
-    }
-    return listOfId
-  }
-}
-
-const userCommentIds = async (comments, user) => {
-  if (comments) {
-    const nb = user.walletList.length
-    const listOfId = []
-
-    for (let i = 0; i < nb; i++) {
-      const address = user.walletList[i]
-      const balance = await comments.balanceOf(address)
-
-      for (let i = 0; i < balance; i++) {
-        const id = await comments.tokenOfOwnerByIndex(address, i)
-        listOfId.push(id.toNumber())
-      }
-    }
-    return listOfId
-  }
-}
-
 const Dashboard = ({ user }) => {
   const [users, connectedUser] = useUsersContract()
   const [articles, , , userArticleList] = useArticlesContract()
-  const [reviews, , , userReviewList] = useReviewsContract()
-  const [comments, , , userCommentList] = useCommentsContract()
   const [status, contractCall] = useMetamask()
 
   const [addInput, setAddInput] = useState({ address: false, password: false })
   const [input, setInput] = useState("")
 
   const [articleList, setArticleList] = useState()
-  const [reviewList, setReviewList] = useState()
-  const [commentList, setCommentList] = useState()
-  const [userNbArticles, setUserNbArticles] = useState()
-  const [userNbReviews, setUserNbReviews] = useState()
-  const [userNbComments, setUserNbComments] = useState()
+  const [value, setValue] = useState()
+  const { hasCopied, onCopy } = useClipboard(value)
+  const [isOpen, setIsOpen] = useState()
+  const onClose = () => setIsOpen(false)
 
   async function addWallet(code) {
     switch (code) {
@@ -135,29 +102,8 @@ const Dashboard = ({ user }) => {
       const listOfId = await userArticleIds(articles, user)
       const articleList = await userArticleList(articles, listOfId)
       setArticleList(articleList)
-      setUserNbArticles(articleList.length)
     })()
-    ;(async () => {
-      const listOfId = await userReviewIds(reviews, user)
-      const reviewList = await userReviewList(reviews, listOfId)
-      setReviewList(reviewList)
-      setUserNbReviews(reviewList.length)
-    })()
-    ;(async () => {
-      const listOfId = await userCommentIds(comments, user)
-      const commentList = await userCommentList(comments, listOfId)
-      setCommentList(commentList)
-      setUserNbComments(commentList.length)
-    })()
-  }, [
-    articles,
-    reviews,
-    comments,
-    user,
-    userArticleList,
-    userReviewList,
-    userCommentList,
-  ])
+  }, [articles, user, userArticleList])
 
   return (
     <>
@@ -183,19 +129,40 @@ const Dashboard = ({ user }) => {
         </Flex>
         <Heading as="h2">User informations</Heading>
         <Text>{user.profileCID} </Text>
+        <>
+          <Button onClick={setIsOpen}>Wallet List</Button>
+          <AlertDialog isOpen={isOpen} onClose={onClose}>
+            <AlertDialogOverlay />
 
-        <Heading as="h3">Wallet list:</Heading>
-        <UnorderedList listStyleType="none">
-          {user.walletList !== undefined
-            ? user.walletList.map((wallet) => {
-                return (
-                  <Text key={wallet} as="li">
-                    {wallet}
-                  </Text>
-                )
-              })
-            : ""}
-        </UnorderedList>
+            <AlertDialogContent>
+              <AlertDialogHeader>Here your Wallet List</AlertDialogHeader>
+              <AlertDialogCloseButton />
+              <AlertDialogBody>
+                <UnorderedList listStyleType="none">
+                  {user.walletList !== undefined
+                    ? user.walletList.map((wallet) => {
+                        return (
+                          <>
+                            <Flex key={wallet} as="li" mb={2}>
+                              {console.log(wallet)}
+                              <Input
+                                value={wallet}
+                                isReadOnly
+                                placeholder="test"
+                              />
+                              <Button onClick={onCopy} ml={2}>
+                                {hasCopied ? "Copied" : "Copy"}
+                              </Button>
+                            </Flex>
+                          </>
+                        )
+                      })
+                    : ""}
+                </UnorderedList>
+              </AlertDialogBody>
+            </AlertDialogContent>
+          </AlertDialog>
+        </>
 
         {/* SETTINGS */}
         {Number(user.id) === connectedUser.id ? (
@@ -206,8 +173,10 @@ const Dashboard = ({ user }) => {
               onClick={() => addWallet(0)}
               colorScheme="messenger"
               transition="0.3s "
+              aria-label="add Wallet"
+              leftIcon={<PlusSquareIcon />}
             >
-              Add wallet
+              Wallets
             </Button>
             <Button
               ms="4"
@@ -215,8 +184,11 @@ const Dashboard = ({ user }) => {
               onClick={() => changePassword(0)}
               colorScheme="messenger"
               transition="0.3s "
+              aria-label="Change password"
+              variant="outline"
+              rightIcon={<RepeatIcon />}
             >
-              Change password
+              Password
             </Button>
             {addInput.address ? (
               <>
@@ -300,9 +272,7 @@ const Dashboard = ({ user }) => {
         )}
 
         {/* ARTICLE LIST */}
-        <Heading as="h3" mt="5">
-          Articles({userNbArticles})
-        </Heading>
+        <Heading as="h3">Articles</Heading>
 
         {articleList === undefined ? (
           <Loading />
@@ -311,7 +281,7 @@ const Dashboard = ({ user }) => {
             return (
               <Box key={article.id}>
                 <Heading textAlign="center">
-                  This is the article n°{article.id}
+                  This the article n°{article.id}
                 </Heading>
                 <Text>ID : {article.id}</Text>
                 <Text>Author: {article.author} </Text>
@@ -320,62 +290,13 @@ const Dashboard = ({ user }) => {
                 <Text>Abstract: {article.abstractCID} </Text>
                 <Text>Content: {article.contentCID} </Text>
                 <Text>Nb of reviews: {article.reviews.length} </Text>
-                <Text>Nb of comment(s): {article.comments.length} </Text>
+                <Text>Nb of comments: {article.comments.length} </Text>
               </Box>
             )
           })
         )}
 
         {}
-
-        {/* REVIEWS LIST */}
-        <Heading as="h3" mt="5">
-          Reviews({userNbReviews})
-        </Heading>
-
-        {reviewList === undefined ? (
-          <Loading />
-        ) : (
-          reviewList.map((review) => {
-            return (
-              <Box key={review.id}>
-                <Heading textAlign="center">
-                  This is the review n°{review.id}
-                </Heading>
-                <Text>ID : {review.id}</Text>
-                <Text>Author: {review.author} </Text>
-                <Text>Content banned: {review.contentBanned} </Text>
-                <Text>articleID: {review.targetID} </Text>
-                <Text>Nb of comment(s): {review.comments.length} </Text>
-              </Box>
-            )
-          })
-        )}
-
-        {/* COMMENTS LIST */}
-        <Heading as="h3" mt="5">
-          Comments({userNbComments})
-        </Heading>
-
-        {commentList === undefined ? (
-          <Loading />
-        ) : (
-          commentList.map((comment) => {
-            return (
-              <Box key={comment.id}>
-                <Heading textAlign="center">
-                  This is the comment n°{comment.id}
-                </Heading>
-                <Text>ID : {comment.id}</Text>
-                <Text>Author: {comment.author} </Text>
-                <Text>contentCID: {comment.contentCID} </Text>
-                <Text>Comment banned: {comment.contentBanned} </Text>
-                <Text>ArticleID: {comment.targetID} </Text>
-                {/* <Text>Nb of comment(s): {comment.comments.length} </Text> */}
-              </Box>
-            )
-          })
-        )}
       </Box>
     </>
   )
