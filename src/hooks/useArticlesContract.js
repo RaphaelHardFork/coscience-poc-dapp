@@ -54,6 +54,8 @@ export const useArticlesContract = () => {
       }
       createArticleList()
     }
+
+    return () => setArticleList(undefined)
   }, [articles])
 
   // control call of the hook
