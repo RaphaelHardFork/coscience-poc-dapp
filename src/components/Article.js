@@ -12,7 +12,6 @@ import { useCommentsContract } from "../hooks/useCommentsContract"
 import { useReviewsContract } from "../hooks/useReviewsContract"
 import Loading from "./Loading"
 import SendComment from "./SendComment"
-
 import SendReview from "./SendReview"
 
 const articleReviewIds = async (reviews, article) => {
