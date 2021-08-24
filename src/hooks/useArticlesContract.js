@@ -35,7 +35,6 @@ const userArticleList = async (articles, listOfId) => {
 export const useArticlesContract = () => {
   // call the context
   const [articles] = useContext(ArticlesContext)
-  const [reviews] = useContext(ReviewsContext)
 
   // utils
   const [articleList, setArticleList] = useState([])
