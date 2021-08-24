@@ -79,32 +79,30 @@ const UploadArticle = () => {
               <FormLabel>Co-Authors</FormLabel>
               {coAuthors.map((coAuthor, index) => {
                 return (
-                  <>
-                    <Flex mb="4">
-                      {coAuthor.active ? (
-                        <>
-                          <Input
-                            value={coAuthor.address}
-                            onChange={(e) =>
-                              addCoAuthor(1, index, e.target.value)
-                            }
-                            placeholder="0x000000000000"
-                            borderEndRadius="0"
-                          />
+                  <Flex key={index} mb="4">
+                    {coAuthor.active ? (
+                      <>
+                        <Input
+                          value={coAuthor.address}
+                          onChange={(e) =>
+                            addCoAuthor(1, index, e.target.value)
+                          }
+                          placeholder="0x000000000000"
+                          borderEndRadius="0"
+                        />
 
-                          <Button
-                            borderStartRadius="0"
-                            onClick={() => removeItem(index)}
-                            colorScheme="red"
-                          >
-                            <MinusIcon />
-                          </Button>
-                        </>
-                      ) : (
-                        ""
-                      )}
-                    </Flex>
-                  </>
+                        <Button
+                          borderStartRadius="0"
+                          onClick={() => removeItem(index)}
+                          colorScheme="red"
+                        >
+                          <MinusIcon />
+                        </Button>
+                      </>
+                    ) : (
+                      ""
+                    )}
+                  </Flex>
                 )
               })}
               <Button onClick={() => addCoAuthor(0)} colorScheme="green">

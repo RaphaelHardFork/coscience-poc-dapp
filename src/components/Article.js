@@ -9,10 +9,8 @@ import {
   DrawerContent,
   DrawerCloseButton,
   DrawerBody,
-  Input,
   DrawerHeader,
   DrawerFooter,
-  Button,
   useDisclosure,
 } from "@chakra-ui/react"
 import { useState, useEffect, useRef } from "react"
@@ -27,9 +25,7 @@ import SendReview from "./SendReview"
 
 const articleReviewIds = async (reviews, article) => {
   if (reviews) {
-    console.log("article", article)
     const nb = article.reviews.length
-    console.log("nb", nb)
     const listOfId = []
 
     for (let i = 0; i < nb; i++) {
@@ -97,6 +93,10 @@ const Article = () => {
         setArticlesCommentList(commentList)
       }
       commentData()
+    }
+
+    return () => {
+      setArticlesCommentList(undefined)
     }
   }, [comments, createCommentList, article])
 
@@ -245,7 +245,7 @@ const Article = () => {
               ) : (
                 on.obj.comments.map((comment) => {
                   return (
-                    <>
+                    <Box key={comment.id}>
                       <Heading
                         onClick={() =>
                           handleOpenDrawer(comments.address, comment)
@@ -259,7 +259,7 @@ const Article = () => {
                       <Text>Comment banned: {comment.contentBanned} </Text>
                       <Text>ArticleID: {comment.targetID} </Text>
                       <Text>Nb of comment(s): {comment.comments.length} </Text>
-                    </>
+                    </Box>
                   )
                 })
               )}
@@ -268,10 +268,10 @@ const Article = () => {
             </DrawerBody>
 
             <DrawerFooter>
-              <Button variant="outline" mr={3} onClick={onClose}>
-                Cancel
-              </Button>
-              <Button colorScheme="blue">Save</Button>
+              <Text>
+                {on.targetAddress === reviews.address ? "Review" : "Comment"} n°
+                {on.obj.id}
+              </Text>
             </DrawerFooter>
           </DrawerContent>
         </Drawer>

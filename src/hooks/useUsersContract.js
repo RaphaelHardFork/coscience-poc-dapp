@@ -52,6 +52,10 @@ export const useUsersContract = () => {
       }
     }
     connectedUser()
+
+    return () => {
+      setUserData({})
+    }
   }, [web3State.account, users])
 
   // get list of user
@@ -65,6 +69,11 @@ export const useUsersContract = () => {
       }
     }
     createList()
+
+    // clean up to set value if component is unmount
+    return () => {
+      setUserList((a) => [...a])
+    }
   }, [users])
 
   // control call of the hook

@@ -29,7 +29,6 @@ const CallToAction = () => {
             px={6}
             colorScheme={"orange"}
             bg={"orange.400"}
-            _hover={{ bg: "orange.500" }}
           >
             Get started
           </Button>

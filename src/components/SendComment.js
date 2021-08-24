@@ -1,11 +1,4 @@
-import {
-  Box,
-  FormControl,
-  FormLabel,
-  Textarea,
-  Button,
-  Input,
-} from "@chakra-ui/react"
+import { Box, FormControl, FormLabel, Textarea, Button } from "@chakra-ui/react"
 import { useState } from "react"
 import { useMetamask } from "../hooks/useMetamask"
 import { useCommentsContract } from "../hooks/useCommentsContract"
