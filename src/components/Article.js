@@ -4,8 +4,18 @@ import {
   Heading,
   useColorModeValue,
   Container,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  DrawerBody,
+  Input,
+  DrawerHeader,
+  DrawerFooter,
+  Button,
+  useDisclosure,
 } from "@chakra-ui/react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useParams } from "react-router-dom"
 import { useArticlesContract } from "../hooks/useArticlesContract"
 import { useCommentsContract } from "../hooks/useCommentsContract"
@@ -47,11 +57,16 @@ const Article = () => {
   const { id } = useParams()
   const [articles, , getArticleData] = useArticlesContract()
   const [reviews, , , createReviewsList] = useReviewsContract()
-  const [comments, , , userCommentList] = useCommentsContract()
+  const [comments, , , createCommentList] = useCommentsContract()
 
   const [article, setArticle] = useState()
   const [articlesReviewList, setArticlesReviewList] = useState()
   const [articlesCommentList, setArticlesCommentList] = useState()
+
+  const [on, setOn] = useState()
+
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const btnRef = useRef()
 
   useEffect(() => {
     if (articles) {
@@ -78,12 +93,25 @@ const Article = () => {
     if (comments && article !== undefined) {
       const commentData = async () => {
         const listOfId = await articleCommentIds(comments, article)
-        const commentList = await userCommentList(comments, listOfId)
+        const commentList = await createCommentList(comments, listOfId)
         setArticlesCommentList(commentList)
       }
       commentData()
     }
-  }, [comments, userCommentList, article])
+  }, [comments, createCommentList, article])
+
+  function handleOpenDrawer(targetAddress, obj) {
+    // is Review or Comment?
+    ;(async () => {
+      const commentList = await createCommentList(comments, obj.comments)
+      obj = { ...obj, comments: commentList }
+      setOn({ targetAddress, obj })
+    })()
+
+    if (!isOpen) {
+      onOpen()
+    }
+  }
 
   const bg = useColorModeValue("white", "gray.800")
 
@@ -118,7 +146,6 @@ const Article = () => {
           )}
 
           {/* REVIEWS LIST */}
-
           {articlesReviewList === undefined ? (
             <Loading />
           ) : (
@@ -129,8 +156,11 @@ const Article = () => {
               {articlesReviewList.map((review) => {
                 return (
                   <Box key={review.id}>
-                    <Heading textAlign="center">
-                      This is the review n°{review.id}
+                    <Heading
+                      onClick={() => handleOpenDrawer(reviews.address, review)}
+                      _hover={{ textDecoration: "underline" }}
+                    >
+                      Review n°{review.id}
                     </Heading>
                     <Text>ID : {review.id}</Text>
                     <Text>Author: {review.author} </Text>
@@ -145,7 +175,6 @@ const Article = () => {
           )}
 
           {/* COMMENTS LIST */}
-
           {articlesCommentList === undefined ? (
             <Loading />
           ) : (
@@ -156,8 +185,13 @@ const Article = () => {
               {articlesCommentList.map((comment) => {
                 return (
                   <Box key={comment.id}>
-                    <Heading textAlign="center">
-                      This is the comment n°{comment.id}
+                    <Heading
+                      onClick={() =>
+                        handleOpenDrawer(comments.address, comment)
+                      }
+                      _hover={{ textDecoration: "underline" }}
+                    >
+                      Comment n°{comment.id}
                     </Heading>
                     <Text>ID : {comment.id}</Text>
                     <Text>Author: {comment.author} </Text>
@@ -172,9 +206,78 @@ const Article = () => {
           )}
 
           <SendReview id={id} />
-          <SendComment id={id} />
+          <SendComment
+            disabled={articles === undefined}
+            targetAddress={articles ? articles.address : ""}
+            id={id}
+          />
         </Container>
       </Box>
+
+      {/* DRAWER */}
+      {on !== undefined ? (
+        <Drawer
+          isOpen={isOpen}
+          onClose={onClose}
+          finalFocusRef={btnRef}
+          placement="bottom"
+          size="xl"
+        >
+          <DrawerOverlay />
+          <DrawerContent>
+            <DrawerCloseButton />
+            <DrawerHeader>
+              {" "}
+              {on.targetAddress === reviews.address ? "Review" : "Comment"} n°
+              {on.obj.id}{" "}
+            </DrawerHeader>
+
+            <DrawerBody>
+              <Text>Author: {on.obj.author} </Text>
+              <Text>Content: {on.obj.contentCID} </Text>
+              <Text>
+                Content banned: {on.obj.contentBanned ? "true" : "false"}{" "}
+              </Text>
+              <Text>articleID: {on.obj.targetID} </Text>
+              <Text>Nb of comment(s): {on.obj.comments.length} </Text>
+              {on.obj.comments.length === 0 ? (
+                <Text fontSize="3xl">There is no comments here</Text>
+              ) : (
+                on.obj.comments.map((comment) => {
+                  return (
+                    <>
+                      <Heading
+                        onClick={() =>
+                          handleOpenDrawer(comments.address, comment)
+                        }
+                        _hover={{ textDecoration: "underline" }}
+                      >
+                        Comment n°{comment.id}{" "}
+                      </Heading>
+                      <Text>Author: {comment.author} </Text>
+                      <Text>contentCID: {comment.contentCID} </Text>
+                      <Text>Comment banned: {comment.contentBanned} </Text>
+                      <Text>ArticleID: {comment.targetID} </Text>
+                      <Text>Nb of comment(s): {comment.comments.length} </Text>
+                    </>
+                  )
+                })
+              )}
+
+              <SendComment targetAddress={on.targetAddress} id={on.obj.id} />
+            </DrawerBody>
+
+            <DrawerFooter>
+              <Button variant="outline" mr={3} onClick={onClose}>
+                Cancel
+              </Button>
+              <Button colorScheme="blue">Save</Button>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
+      ) : (
+        ""
+      )}
     </>
   )
 }
