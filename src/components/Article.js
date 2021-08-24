@@ -17,6 +17,7 @@ import { useState, useEffect, useRef } from "react"
 import { useParams } from "react-router-dom"
 import { useArticlesContract } from "../hooks/useArticlesContract"
 import { useCommentsContract } from "../hooks/useCommentsContract"
+import { useIPFS } from "../hooks/useIPFS"
 import { useReviewsContract } from "../hooks/useReviewsContract"
 import Loading from "./Loading"
 import SendComment from "./SendComment"
@@ -55,6 +56,8 @@ const Article = () => {
   const [reviews, , , createReviewsList] = useReviewsContract()
   const [comments, , , createCommentList] = useCommentsContract()
 
+  const [, readIPFS] = useIPFS()
+
   const [article, setArticle] = useState()
   const [articlesReviewList, setArticlesReviewList] = useState()
   const [articlesCommentList, setArticlesCommentList] = useState()
@@ -74,16 +77,29 @@ const Article = () => {
     }
   }, [articles, getArticleData, id])
 
+  // get review data
   useEffect(() => {
     if (reviews && article !== undefined) {
       const reviewData = async () => {
         const listOfId = await articleReviewIds(reviews, article)
         const reviewList = await createReviewsList(reviews, listOfId)
-        setArticlesReviewList(reviewList)
+
+        // get content on IPFS
+        const asyncRes = await Promise.all(
+          reviewList.map(async (review) => {
+            try {
+              const response = await readIPFS(review.contentCID)
+              return { ...review, content: response.content }
+            } catch (e) {
+              return { ...review, content: "not on IPFS" }
+            }
+          })
+        )
+        setArticlesReviewList(asyncRes)
       }
       reviewData()
     }
-  }, [reviews, createReviewsList, article])
+  }, [reviews, createReviewsList, article, readIPFS])
 
   useEffect(() => {
     if (comments && article !== undefined) {
@@ -129,7 +145,7 @@ const Article = () => {
                   <Text>ID : {article.id}</Text>
                   <Text>Author: {article.author} </Text>
                   <Text>CoAuthor: {article.CoAuthor} </Text>
-                  <Text>Content banned: {article.contentBanned} </Text>
+                  <Text>Content banned: {`${article.contentBanned}`} </Text>
                   <Text>Abstract: {article.abstractCID} </Text>
                   <Text>Content: {article.contentCID} </Text>
                   <Text>Nb of reviews: {article.reviews.length} </Text>
@@ -164,8 +180,9 @@ const Article = () => {
                     </Heading>
                     <Text>ID : {review.id}</Text>
                     <Text>Author: {review.author} </Text>
-                    <Text>Content: {review.contentCID} </Text>
-                    <Text>Content banned: {review.contentBanned} </Text>
+                    <Text>ContentCID: {review.contentCID} </Text>
+                    <Text>Content: {review.content} </Text>
+                    <Text>Content banned: {`${review.contentBanned}`} </Text>
                     <Text>articleID: {review.targetID} </Text>
                     <Text>Nb of comment(s): {review.comments.length} </Text>
                   </Box>
@@ -196,7 +213,7 @@ const Article = () => {
                     <Text>ID : {comment.id}</Text>
                     <Text>Author: {comment.author} </Text>
                     <Text>contentCID: {comment.contentCID} </Text>
-                    <Text>Comment banned: {comment.contentBanned} </Text>
+                    <Text>Comment banned: {`${comment.contentBanned}`} </Text>
                     <Text>ArticleID: {comment.targetID} </Text>
                     <Text>Nb of comment(s): {comment.comments.length} </Text>
                   </Box>

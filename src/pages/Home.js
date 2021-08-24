@@ -16,7 +16,7 @@ const Home = () => {
   const bg = useColorModeValue("white", "gray.800")
 
   useEffect(() => {
-    if (users) {
+    if (users && articleList !== undefined) {
       ;(async () => {
         const asyncRes = await Promise.all(
           articleList.map(async (article) => {
