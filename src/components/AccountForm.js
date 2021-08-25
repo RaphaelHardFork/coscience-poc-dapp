@@ -6,32 +6,45 @@ import {
   Input,
   Button,
   useColorModeValue,
+  Textarea,
 } from "@chakra-ui/react"
 import { ethers } from "ethers"
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { useUsersContract } from "../hooks/useUsersContract"
+import { useMetamask } from "../hooks/useMetamask"
+import { useIPFS } from "../hooks/useIPFS"
 
 const AccountForm = () => {
   const [users] = useUsersContract() // [contract]
+  const [status, contractCall] = useMetamask()
+  const [pinJsObject, , ipfsStatus] = useIPFS()
 
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [laboratory, setLaboratory] = useState("")
+  const [bio, setBio] = useState("")
+
   const [password, setPassword] = useState("")
 
   //color Mode
   const bg = useColorModeValue("white", "gray.800")
 
   async function register() {
-    //TODO change with custom hook
-    const CID = "Qmfdfjdofkodzndskdosdnwkccccd"
     const hashedPassword = await ethers.utils.id(password)
-    try {
-      await users.register(hashedPassword, CID)
-    } catch (e) {
-      console.log(e)
+    const obj = {
+      firstName,
+      lastName,
+      laboratory,
+      bio, // no need to load this on articles
     }
+    const hash = await pinJsObject(obj)
+    await contractCall(users, "register", [hashedPassword, hash])
+    setBio("")
+    setLaboratory("")
+    setLastName("")
+    setFirstName("")
+    setPassword("")
   }
 
   return (
@@ -66,8 +79,18 @@ const AccountForm = () => {
             />
           </FormControl>
           <FormControl mb="4">
+            <FormLabel>Bio</FormLabel>
+            <Textarea
+              minH="40"
+              onChange={(e) => setBio(e.target.value)}
+              placeholder="Your experience, ..."
+              value={bio}
+            />
+          </FormControl>
+          <FormControl mb="4">
             <FormLabel>Password</FormLabel>
             <Input
+              value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="**********"
             />
@@ -81,7 +104,26 @@ const AccountForm = () => {
               placeholder="**********"
             />
           </FormControl>
-          <Button onClick={register} colorScheme="orange">
+          <Button
+            isLoading={
+              status.startsWith("Waiting") ||
+              status.startsWith("Pending") ||
+              ipfsStatus.startsWith("Pinning")
+            }
+            loadingText={ipfsStatus.startsWith("Pinning") ? ipfsStatus : status}
+            disabled={
+              !firstName.length ||
+              !password.length ||
+              !lastName.length ||
+              !laboratory.length ||
+              !bio.length ||
+              status.startsWith("Waiting") ||
+              status.startsWith("Pending") ||
+              ipfsStatus.startsWith("Pinning")
+            }
+            onClick={register}
+            colorScheme="orange"
+          >
             Register
           </Button>
         </Box>

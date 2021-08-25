@@ -26,12 +26,11 @@ import {
   ModalBody,
   ModalCloseButton,
   useClipboard,
+  Link,
 } from "@chakra-ui/react"
 import { SettingsIcon } from "@chakra-ui/icons"
-import { ethers } from "ethers"
 import { useEffect, useState } from "react"
 import { useArticlesContract } from "../hooks/useArticlesContract"
-import { useMetamask } from "../hooks/useMetamask"
 import { useUsersContract } from "../hooks/useUsersContract"
 import { useReviewsContract } from "../hooks/useReviewsContract"
 import { useCommentsContract } from "../hooks/useCommentsContract"
@@ -60,7 +59,7 @@ const userContractIds = async (contract, user) => {
 }
 
 const Dashboard = ({ user }) => {
-  const [users, connectedUser] = useUsersContract()
+  const [, connectedUser] = useUsersContract()
   const [articles, , , createArticleList] = useArticlesContract()
   const [reviews, , , createReviewList] = useReviewsContract()
   const [comments, , , createCommentList] = useCommentsContract()
@@ -79,17 +78,17 @@ const Dashboard = ({ user }) => {
   useEffect(() => {
     // anonymous function
     ;(async () => {
-      // list of article
+      // list of articles
       let listOfId = await userContractIds(articles, user)
       const articleList = await createArticleList(articles, listOfId)
       setArticleList(articleList)
 
-      // list of review
+      // list of reviews
       listOfId = await userContractIds(reviews, user)
       const reviewList = await createReviewList(reviews, listOfId)
       setReviewList(reviewList)
 
-      // list of article
+      // list of comments
       listOfId = await userContractIds(comments, user)
       const commentList = await createCommentList(comments, listOfId)
       setCommentList(commentList)
@@ -103,10 +102,6 @@ const Dashboard = ({ user }) => {
     reviews,
     createReviewList,
   ])
-
-  function handleCopyAddress() {
-    //
-  }
 
   return (
     <>
@@ -130,14 +125,18 @@ const Dashboard = ({ user }) => {
           >
             <Text>Status: {user.status} </Text>
           </Box>
-          <IconButton
-            colorScheme="teal"
-            aria-label="Call Segun"
-            size="lg"
-            icon={<SettingsIcon />}
-            onClick={setIsOpenSetting}
-            borderRadius="100"
-          />
+          {Number(user.id) === connectedUser.id ? (
+            <IconButton
+              colorScheme="teal"
+              aria-label="Call Segun"
+              size="lg"
+              icon={<SettingsIcon />}
+              onClick={setIsOpenSetting}
+              borderRadius="100"
+            />
+          ) : (
+            ""
+          )}
         </Flex>
       </Box>
 
@@ -152,18 +151,41 @@ const Dashboard = ({ user }) => {
           <ModalHeader>Settings</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
-            {Number(user.id) === connectedUser.id ? (
-              <UserSetting user={user} />
-            ) : (
-              ""
-            )}
+            <UserSetting user={user} />
           </ModalBody>
         </ModalContent>
       </Modal>
 
       {/* USER PROFILE */}
       <Heading as="h2">User profile</Heading>
-      <Text>{user.profileCID} </Text>
+      <Link
+        isTruncated
+        isExternal
+        href={`https://ipfs.io/ipfs/${user.profileCID}`}
+      >
+        CID: {user.profileCID}
+      </Link>
+
+      {/* user.info ? = FALSE CID : OBJECT FROM IPFS
+      
+      1. useIPFS.js: function readIPFS throw CID if false
+      2. Profile.js: useEffect try to fetch IPFS with user.profileCID (readIPFS(user.profileCID))
+      3. Profile.js: wrong CIDs are catched in the key .info
+      4. SO: user.info === user.profileCID if the CID is false
+      */}
+
+      {user.info === user.profileCID ? (
+        <Text>False CID</Text>
+      ) : (
+        <>
+          <Text>
+            {user.info.firstName} {user.info.lastName}
+          </Text>
+          <Text>Laboratory: {user.info.laboratory}</Text>
+          <Text fontWeight="bold">Bio:</Text>
+          <Text>{user.info.bio ? user.info.bio : ""}</Text>
+        </>
+      )}
       <Button
         mb="6"
         rounded={"full"}
