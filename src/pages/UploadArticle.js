@@ -15,9 +15,11 @@ import { useState } from "react"
 import { useArticlesContract } from "../hooks/useArticlesContract"
 import { useMetamask } from "../hooks/useMetamask"
 import { useIPFS } from "../hooks/useIPFS"
+import { useUsersContract } from "../hooks/useUsersContract"
 
 const UploadArticle = () => {
   const [articles] = useArticlesContract()
+  const [, user] = useUsersContract()
   const [status, contractCall] = useMetamask()
   const [pinJsObject, , ipfsStatus] = useIPFS()
 
@@ -64,10 +66,14 @@ const UploadArticle = () => {
       return coAuthor.address
     })
     // transform into CID
-    const header = { title, abstract }
-    const body = { content }
-    const abstractCID = await pinJsObject(header)
-    const contentCID = await pinJsObject(body)
+    let abstractCID = ""
+    let contentCID = ""
+    if (user.status === "Approved") {
+      const header = { title, abstract }
+      const body = { content }
+      abstractCID = await pinJsObject(header)
+      contentCID = await pinJsObject(body)
+    }
     // push to the blockchain
     await contractCall(articles, "publish", [
       coAuthorArray,
@@ -79,6 +85,9 @@ const UploadArticle = () => {
     setCoAuthors([])
     setContent("")
     setTitle("")
+
+    // ADD PDF ON IPFS
+    // PDF CID will be registered in the Obj of the article
   }
 
   return (

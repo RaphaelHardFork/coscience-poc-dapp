@@ -152,6 +152,15 @@ const Article = () => {
             return { ...comment, content: cid }
           }
         })
+
+        // CRAWLER
+        // add 'anchor'
+        // path function
+        // article/:id/review/:id/comment/:id/comment/:id
+        // article/:id/comment/:id
+
+        // comment/:id => path
+        // commentID => commentID => reviewID => articleID
       )
 
       obj = { ...obj, comments: asyncRes }

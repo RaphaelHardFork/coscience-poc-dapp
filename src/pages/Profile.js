@@ -13,11 +13,13 @@ import { Link, useParams } from "react-router-dom"
 import { Web3Context } from "web3-hooks"
 import Dashboard from "../components/Dashboard"
 import Loading from "../components/Loading"
+import { useIPFS } from "../hooks/useIPFS"
 import { useUsersContract } from "../hooks/useUsersContract"
 
 const Profile = () => {
   const [web3State, login] = useContext(Web3Context)
   const [users, , , getUserData] = useUsersContract()
+  const [, readIPFS] = useIPFS()
   const [user, setUser] = useState()
 
   const { id } = useParams()
@@ -26,11 +28,18 @@ const Profile = () => {
     if (users) {
       const userData = async () => {
         const userObj = await getUserData(users, id)
-        setUser(userObj)
+        // get user info from IPFS
+        let info
+        try {
+          info = await readIPFS(userObj.profileCID) // {firstName,lastName,laboratory,bio}
+        } catch (cid) {
+          info = cid // 'Qmfdfdfdivfvfvd...'
+        }
+        setUser({ ...userObj, info })
       }
       userData()
     }
-  }, [id, getUserData, users])
+  }, [id, getUserData, users, readIPFS])
 
   const bg = useColorModeValue("white", "gray.800")
 
