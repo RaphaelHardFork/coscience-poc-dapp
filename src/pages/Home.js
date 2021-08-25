@@ -5,11 +5,13 @@ import ArticleList from "../components/ArticleList"
 import CallToAction from "../components/CallToAction"
 import Loading from "../components/Loading"
 import { useArticlesContract } from "../hooks/useArticlesContract"
+import { useIPFS } from "../hooks/useIPFS"
 import { useUsersContract } from "../hooks/useUsersContract"
 
 const Home = () => {
   const [, articleList] = useArticlesContract()
   const [users] = useUsersContract()
+  const [, readIPFS] = useIPFS()
 
   const [articleListAuthor, setArticleListAuthor] = useState()
 
@@ -21,13 +23,19 @@ const Home = () => {
         const asyncRes = await Promise.all(
           articleList.map(async (article) => {
             const userID = await users.profileID(article.author)
-            return { ...article, authorID: userID.toNumber() }
+            let header
+            try {
+              header = await readIPFS(article.abstractCID)
+            } catch (cid) {
+              header = cid
+            }
+            return { ...article, authorID: userID.toNumber(), header }
           })
         )
         setArticleListAuthor(asyncRes)
       })()
     }
-  }, [users, articleList])
+  }, [users, articleList, readIPFS])
 
   return (
     <>

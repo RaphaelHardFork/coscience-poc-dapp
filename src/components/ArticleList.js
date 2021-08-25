@@ -27,11 +27,19 @@ const ArticleList = ({ articleList }) => {
               display="block"
               as={RouterLink}
               to={`/article/${article.id}`}
+              isTruncated
+              maxW="10ch"
             >
-              {" "}
-              {article.contentCID}{" "}
+              {article.header.title === undefined
+                ? article.header
+                : article.header.title}
             </Heading>
-            <Text py="6">Abstract: {article.abstractCID} </Text>
+            <Text isTruncated maxW="30ch" py="6">
+              Abstract:{" "}
+              {article.header.title === undefined
+                ? "no abstract"
+                : article.header.abstract}
+            </Text>
             <Flex mb="4" alignItems="center">
               <Image
                 h={10}

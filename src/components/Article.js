@@ -12,6 +12,7 @@ import {
   DrawerHeader,
   DrawerFooter,
   useDisclosure,
+  Link,
 } from "@chakra-ui/react"
 import { useState, useEffect, useRef } from "react"
 import { useParams } from "react-router-dom"
@@ -70,11 +71,22 @@ const Article = () => {
     if (articles) {
       const articleData = async () => {
         const articleObj = await getArticleData(articles, id)
-        setArticle(articleObj)
+        let header, body
+        try {
+          header = await readIPFS(articleObj.abstractCID)
+        } catch (cid) {
+          header = cid
+        }
+        try {
+          body = await readIPFS(articleObj.contentCID)
+        } catch (cid) {
+          body = cid
+        }
+        setArticle({ ...articleObj, header, body })
       }
       articleData()
     }
-  }, [articles, getArticleData, id])
+  }, [articles, getArticleData, id, readIPFS])
 
   // get review data
   useEffect(() => {
@@ -83,14 +95,14 @@ const Article = () => {
         const listOfId = await articleReviewIds(reviews, article)
         const reviewList = await createReviewsList(reviews, listOfId)
 
-        // get content on IPFS
+        // get review content on IPFS, can be moved in the hooks (not now)
         const asyncRes = await Promise.all(
           reviewList.map(async (review) => {
             try {
-              const response = await readIPFS(review.contentCID)
-              return { ...review, content: response.content }
-            } catch (e) {
-              return { ...review, content: "not on IPFS" }
+              const content = await readIPFS(review.contentCID)
+              return { ...review, content }
+            } catch (cid) {
+              return { ...review, content: cid }
             }
           })
         )
@@ -105,7 +117,18 @@ const Article = () => {
       const commentData = async () => {
         const listOfId = await articleCommentIds(comments, article)
         const commentList = await createCommentList(comments, listOfId)
-        setArticlesCommentList(commentList)
+        // get comments content from IPFS
+        const asyncRes = await Promise.all(
+          commentList.map(async (comment) => {
+            try {
+              const content = await readIPFS(comment.contentCID)
+              return { ...comment, content }
+            } catch (cid) {
+              return { ...comment, content: cid }
+            }
+          })
+        )
+        setArticlesCommentList(asyncRes)
       }
       commentData()
     }
@@ -113,13 +136,25 @@ const Article = () => {
     return () => {
       setArticlesCommentList(undefined)
     }
-  }, [comments, createCommentList, article])
+  }, [comments, createCommentList, article, readIPFS])
 
   function handleOpenDrawer(targetAddress, obj) {
     // is Review or Comment?
     ;(async () => {
-      const commentList = await createCommentList(comments, obj.comments)
-      obj = { ...obj, comments: commentList }
+      const commentList = await createCommentList(comments, obj.comments) // obj.comments = [id,id,id]
+      // get comments content from IPFS
+      const asyncRes = await Promise.all(
+        commentList.map(async (comment) => {
+          try {
+            const content = await readIPFS(comment.contentCID)
+            return { ...comment, content }
+          } catch (cid) {
+            return { ...comment, content: cid }
+          }
+        })
+      )
+
+      obj = { ...obj, comments: asyncRes }
       setOn({ targetAddress, obj })
     })()
 
@@ -139,14 +174,40 @@ const Article = () => {
               <>
                 <Box key={article.id}>
                   <Heading textAlign="center">
-                    This is the article n°{article.id}
+                    {article.header.title === undefined
+                      ? "No title"
+                      : article.header.title}
                   </Heading>
                   <Text>ID : {article.id}</Text>
                   <Text>Author: {article.author} </Text>
                   <Text>CoAuthor: {article.CoAuthor} </Text>
                   <Text>Content banned: {`${article.contentBanned}`} </Text>
-                  <Text>Abstract: {article.abstractCID} </Text>
-                  <Text>Content: {article.contentCID} </Text>
+                  <Text my="4">
+                    Abstract:{" "}
+                    {article.header.title === undefined
+                      ? "No abstract"
+                      : article.header.abstract}
+                  </Text>
+                  <Link
+                    color="blue"
+                    isExternal
+                    href={`https://ipfs.io/ipfs/${article.abstractCID}`}
+                  >
+                    See on IPFS
+                  </Link>
+                  <Text my="4">
+                    Content:{" "}
+                    {article.body.content === undefined
+                      ? article.body
+                      : article.body.content}
+                  </Text>
+                  <Link
+                    color="blue"
+                    isExternal
+                    href={`https://ipfs.io/ipfs/${article.contentCID}`}
+                  >
+                    See on IPFS
+                  </Link>
                   <Text>Nb of reviews: {article.reviews.length} </Text>
                   <Text>Nb of comments: {article.comments.length} </Text>
                 </Box>
@@ -175,12 +236,25 @@ const Article = () => {
                       onClick={() => handleOpenDrawer(reviews.address, review)}
                       _hover={{ textDecoration: "underline" }}
                     >
-                      Review n°{review.id}
+                      {review.content.title === undefined
+                        ? `Review n°${review.id}`
+                        : review.content.title}
                     </Heading>
                     <Text>ID : {review.id}</Text>
                     <Text>Author: {review.author} </Text>
-                    <Text>ContentCID: {review.contentCID} </Text>
-                    <Text>Content: {review.content} </Text>
+                    <Link
+                      color="blue"
+                      isExternal
+                      href={`https://ipfs.io/ipfs/${review.contentCID}`}
+                    >
+                      See on IPFS: {review.contentCID}
+                    </Link>
+                    <Text>
+                      Content:{" "}
+                      {review.content.title === undefined
+                        ? review.content
+                        : review.content.review}{" "}
+                    </Text>
                     <Text>Content banned: {`${review.contentBanned}`} </Text>
                     <Text>articleID: {review.targetID} </Text>
                     <Text>Nb of comment(s): {review.comments.length} </Text>
@@ -189,6 +263,7 @@ const Article = () => {
               })}
             </>
           )}
+          <SendReview id={id} />
 
           {/* COMMENTS LIST */}
           {articlesCommentList === undefined ? (
@@ -212,6 +287,12 @@ const Article = () => {
                     <Text>ID : {comment.id}</Text>
                     <Text>Author: {comment.author} </Text>
                     <Text>contentCID: {comment.contentCID} </Text>
+                    <Text>
+                      Content:{" "}
+                      {comment.content.comment === undefined
+                        ? comment.content
+                        : comment.content.comment}{" "}
+                    </Text>
                     <Text>Comment banned: {`${comment.contentBanned}`} </Text>
                     <Text>ArticleID: {comment.targetID} </Text>
                     <Text>Nb of comment(s): {comment.comments.length} </Text>
@@ -221,7 +302,6 @@ const Article = () => {
             </>
           )}
 
-          <SendReview id={id} />
           <SendComment
             disabled={articles === undefined}
             targetAddress={articles ? articles.address : ""}
@@ -243,14 +323,29 @@ const Article = () => {
           <DrawerContent>
             <DrawerCloseButton />
             <DrawerHeader>
-              {" "}
               {on.targetAddress === reviews.address ? "Review" : "Comment"} n°
-              {on.obj.id}{" "}
+              {on.obj.id}
             </DrawerHeader>
 
             <DrawerBody>
+              <Heading>
+                {on.targetAddress === reviews.address
+                  ? on.obj.content.title === undefined
+                    ? `Review n°${on.obj.id}`
+                    : on.obj.content.title
+                  : `Comment n°${on.obj.id}`}
+              </Heading>
               <Text>Author: {on.obj.author} </Text>
-              <Text>Content: {on.obj.contentCID} </Text>
+              <Text>
+                Content:
+                {on.targetAddress === reviews.address
+                  ? on.obj.content.title === undefined
+                    ? on.obj.content
+                    : on.obj.content.review
+                  : on.obj.content.comment === undefined
+                  ? on.obj.content
+                  : on.obj.content.comment}
+              </Text>
               <Text>
                 Content banned: {on.obj.contentBanned ? "true" : "false"}{" "}
               </Text>
@@ -272,6 +367,12 @@ const Article = () => {
                       </Heading>
                       <Text>Author: {comment.author} </Text>
                       <Text>contentCID: {comment.contentCID} </Text>
+                      <Text>
+                        Content:{" "}
+                        {comment.content.comment === undefined
+                          ? comment.content
+                          : comment.content.comment}{" "}
+                      </Text>
                       <Text>Comment banned: {comment.contentBanned} </Text>
                       <Text>ArticleID: {comment.targetID} </Text>
                       <Text>Nb of comment(s): {comment.comments.length} </Text>
