@@ -5,6 +5,8 @@ import {
   Textarea,
   Button,
   Text,
+  Input,
+  Heading,
 } from "@chakra-ui/react"
 import { useState } from "react"
 import { useIPFS } from "../hooks/useIPFS"
@@ -15,29 +17,34 @@ const SendReview = ({ id }) => {
   const [reviews] = useReviewsContract()
   const [status, contractCall] = useMetamask()
   const [review, setReview] = useState("")
+  const [title, setTitle] = useState("")
   const [pinJsObject, , ipfsStatus] = useIPFS()
 
   async function post() {
-    const result = await pinJsObject({ on: id, content: review })
+    const reviewObj = { title, review }
+    const result = await pinJsObject(reviewObj)
     // post(review, articleID)
-    await contractCall(reviews, "post", [result.IpfsHash, id])
+    await contractCall(reviews, "post", [result, id])
+    setTitle("")
+    setReview("")
   }
-
-  /* to save on IPFS
-  const obj = {
-    title:'',
-    abstract:'', // in article
-    content:'',
-  }
-  */
 
   return (
     <>
       <Box mx="auto" maxW="50%" display="flex" flexDirection="column">
+        <Heading>Write a review</Heading>
         <FormControl mb="4">
-          <FormLabel>Write a review</FormLabel>
-          <Text> {ipfsStatus} </Text>
+          <FormLabel>Title</FormLabel>
+          <Input
+            value={title}
+            placeholder="Your review title..."
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </FormControl>
+        <FormControl mb="4">
+          <FormLabel>Content</FormLabel>
           <Textarea
+            value={review}
             placeholder="Your review..."
             onChange={(e) => setReview(e.target.value)}
           />
@@ -48,16 +55,15 @@ const SendReview = ({ id }) => {
           isLoading={
             status.startsWith("Waiting") ||
             status.startsWith("Pending") ||
-            ipfsStatus.startsWith("Pinning") ||
-            ipfsStatus.startsWith("Before")
+            ipfsStatus.startsWith("Pinning")
           }
-          loadingText={status}
+          loadingText={ipfsStatus.startsWith("Pinning") ? ipfsStatus : status}
           disabled={
+            !title.length ||
             !review.length ||
             status.startsWith("Waiting") ||
             status.startsWith("Pending") ||
-            ipfsStatus.startsWith("Pinning") ||
-            ipfsStatus.startsWith("Before")
+            ipfsStatus.startsWith("Pinning")
           }
         >
           Submit

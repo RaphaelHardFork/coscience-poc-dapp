@@ -1,3 +1,4 @@
+import { Link, Text, useToast } from "@chakra-ui/react"
 import { useCallback, useState } from "react"
 
 // yarn add dotenv
@@ -14,32 +15,70 @@ const pinata = pinataSDK(
 
 export const useIPFS = () => {
   const [status, setStatus] = useState("")
+  const toast = useToast()
 
   const pinJsObject = async (obj) => {
     let result
-    setStatus("Before pinning")
     try {
+      setStatus("Pinning to IPFS")
       result = await pinata.pinJSONToIPFS(obj, {
         pinataOptions: {
           cidVersion: 1,
         },
       })
-      setStatus("Pinning to IPFS")
     } catch (e) {
       setStatus("Failed to pin")
-      console.error(e)
+      toast({
+        title: "Content not pinned to IPFS",
+        description: (
+          <>
+            <Text>Message: {e} </Text>
+          </>
+        ),
+        status: "error",
+        duration: 7000,
+        isClosable: true,
+      })
+      throw e
     }
     setStatus("Successful pinning")
-    return result
+    toast({
+      title: "Content pinned to IPFS",
+      description: (
+        <>
+          <Text isTruncated>CID: {result.IpfsHash})</Text>
+          <Text>Time: {result.Timestamp} </Text>
+          <Text>Size: {result.PinSize} </Text>
+          <Link isExternal href={`https://ipfs.io/ipfs/${result.IpfsHash}`}>
+            See through a gateway
+          </Link>
+        </>
+      ),
+      status: "info",
+      duration: 7000,
+      isClosable: true,
+    })
+
+    // return directly the CID of the content
+    return result.IpfsHash
+    // unpin in case of TX rejected
   }
 
   // useEffect => readIPFS(cid) => change the above function in each call
   // [readIPFS]
   const readIPFS = useCallback(async (cid) => {
+    // check for the first version of the dapp (some content with false CID)
+    if (!cid.startsWith("bafk")) {
+      // to be catched in the function
+      throw cid
+    }
+
     let response
     try {
       response = await axios(`https://ipfs.io/ipfs/${cid}`) // cid : part of the function that change in each call
     } catch (e) {
+      // manage IPFS error
+
       console.error(e)
     }
     return response.data

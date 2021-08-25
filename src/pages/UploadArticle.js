@@ -8,17 +8,21 @@ import {
   Button,
   Container,
   useColorModeValue,
+  Textarea,
 } from "@chakra-ui/react"
 import { AddIcon, MinusIcon } from "@chakra-ui/icons"
 import { useState } from "react"
 import { useArticlesContract } from "../hooks/useArticlesContract"
 import { useMetamask } from "../hooks/useMetamask"
+import { useIPFS } from "../hooks/useIPFS"
 
 const UploadArticle = () => {
   const [articles] = useArticlesContract()
   const [status, contractCall] = useMetamask()
+  const [pinJsObject, , ipfsStatus] = useIPFS()
 
-  const [laboratory, setLaboratory] = useState("")
+  const [abstract, setAbstract] = useState("")
+  const [content, setContent] = useState("")
   const [title, setTitle] = useState("")
   const [coAuthors, setCoAuthors] = useState([])
 
@@ -59,12 +63,23 @@ const UploadArticle = () => {
     const coAuthorArray = coAuthors.map((coAuthor) => {
       return coAuthor.address
     })
-    await contractCall(articles, "publish", [coAuthorArray, title, laboratory])
+    // transform into CID
+    const header = { title, abstract }
+    const body = { content }
+    const abstractCID = await pinJsObject(header)
+    const contentCID = await pinJsObject(body)
+    // push to the blockchain
+    await contractCall(articles, "publish", [
+      coAuthorArray,
+      abstractCID,
+      contentCID,
+    ])
+    // reset inputs
+    setAbstract("")
+    setCoAuthors([])
+    setContent("")
+    setTitle("")
   }
-
-  // 0x9086701Ecc7eFe724fC906DDF5Bf7D481FA3B055
-  // 0xA8674F9cEE637DD4de558D6E9B88db47225AF4C9
-  // 0xAa882FF33b967B9841cE446D6B14E0f70f584C90
 
   return (
     <>
@@ -75,6 +90,10 @@ const UploadArticle = () => {
           </Heading>
           <Box display="flex" flexDirection="column" mx="auto" maxW="75%">
             {/* CO AUTHOR */}
+            <Heading fontSize="3xl" as="h3">
+              Header
+            </Heading>
+
             <FormControl mb="4">
               <FormLabel>Co-Authors</FormLabel>
               {coAuthors.map((coAuthor, index) => {
@@ -110,30 +129,50 @@ const UploadArticle = () => {
               </Button>
             </FormControl>
             <FormControl mb="4">
-              <FormLabel>Laboratory</FormLabel>
+              <FormLabel>Title</FormLabel>
               <Input
-                onChange={(e) => setLaboratory(e.target.value)}
-                placeholder="MIT"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Science and co."
               />
             </FormControl>
             <FormControl mb="4">
-              <FormLabel>Title</FormLabel>
-              <Input
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Science and co."
+              <FormLabel>Abstract</FormLabel>
+              <Textarea
+                value={abstract}
+                placeholder="Resume the article..."
+                onChange={(e) => setAbstract(e.target.value)}
+              />
+            </FormControl>
+            <Heading fontSize="3xl" as="h3">
+              Content
+            </Heading>
+            <FormControl mb="4">
+              <FormLabel>Introduction</FormLabel>
+              <Textarea
+                value={content}
+                minH="40"
+                placeholder="Content of your article..."
+                onChange={(e) => setContent(e.target.value)}
               />
             </FormControl>
 
             <Button
               isLoading={
-                status.startsWith("Waiting") || status.startsWith("Pending")
+                status.startsWith("Waiting") ||
+                status.startsWith("Pending") ||
+                ipfsStatus.startsWith("Pinning")
               }
-              loadingText={status}
+              loadingText={
+                ipfsStatus.startsWith("Pinning") ? ipfsStatus : status
+              }
               disabled={
                 !title.length ||
-                !laboratory.length ||
+                !abstract.length ||
+                !content.length ||
                 status.startsWith("Waiting") ||
-                status.startsWith("Pending")
+                status.startsWith("Pending") ||
+                ipfsStatus.startsWith("Pinning")
               }
               onClick={publish}
               colorScheme="orange"
