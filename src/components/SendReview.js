@@ -16,17 +16,17 @@ import { useReviewsContract } from "../hooks/useReviewsContract"
 const SendReview = ({ id }) => {
   const [reviews] = useReviewsContract()
   const [status, contractCall] = useMetamask()
-  const [review, setReview] = useState("")
+  const [content, setContent] = useState("")
   const [title, setTitle] = useState("")
   const [pinJsObject, , ipfsStatus] = useIPFS()
 
   async function post() {
-    const reviewObj = { title, review }
-    const result = await pinJsObject(reviewObj)
+    const reviewObj = { version: 0.1, title, content }
+    const reviewHash = await pinJsObject(reviewObj)
     // post(review, articleID)
-    await contractCall(reviews, "post", [result, id])
+    await contractCall(reviews, "post", [reviewHash, id])
     setTitle("")
-    setReview("")
+    setContent("")
   }
 
   return (
@@ -44,9 +44,9 @@ const SendReview = ({ id }) => {
         <FormControl mb="4">
           <FormLabel>Content</FormLabel>
           <Textarea
-            value={review}
+            value={content}
             placeholder="Your review..."
-            onChange={(e) => setReview(e.target.value)}
+            onChange={(e) => setContent(e.target.value)}
           />
         </FormControl>
         <Button
@@ -60,7 +60,7 @@ const SendReview = ({ id }) => {
           loadingText={ipfsStatus.startsWith("Pinning") ? ipfsStatus : status}
           disabled={
             !title.length ||
-            !review.length ||
+            !content.length ||
             status.startsWith("Waiting") ||
             status.startsWith("Pending") ||
             ipfsStatus.startsWith("Pinning")

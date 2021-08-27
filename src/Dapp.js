@@ -13,6 +13,8 @@ import UploadArticle from "./pages/UploadArticle"
 import RecoverAccount from "./components/RecoverAccount"
 import Home from "./pages/Home"
 import Article from "./components/Article"
+import { useContext } from "react"
+import { Web3Context } from "web3-hooks"
 
 const Dapp = () => {
   // color Mode

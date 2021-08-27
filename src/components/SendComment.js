@@ -9,13 +9,13 @@ const SendComment = ({ targetAddress, id }) => {
   const [status, contractCall] = useMetamask()
   const [pinJsObject, , ipfsStatus] = useIPFS()
 
-  const [comment, setComment] = useState("")
+  const [content, setContent] = useState("")
 
   async function post() {
-    const body = await pinJsObject({ comment })
+    const body = await pinJsObject({ version: 0.1, content })
     // post(comment,articleAddress, articleID)
     await contractCall(comments, "post", [body, targetAddress, id])
-    setComment("")
+    setContent("")
   }
 
   return (
@@ -24,9 +24,9 @@ const SendComment = ({ targetAddress, id }) => {
         <FormControl mb="4">
           <FormLabel>Write a comment</FormLabel>
           <Textarea
-            value={comment}
+            value={content}
             placeholder="Your comment..."
-            onChange={(e) => setComment(e.target.value)}
+            onChange={(e) => setContent(e.target.value)}
           />
         </FormControl>
         <Button
@@ -39,7 +39,7 @@ const SendComment = ({ targetAddress, id }) => {
           }
           loadingText={ipfsStatus.startsWith("Pinning") ? ipfsStatus : status}
           disabled={
-            !comment.length ||
+            !content.length ||
             status.startsWith("Waiting") ||
             status.startsWith("Pending") ||
             ipfsStatus.startsWith("Pinning")

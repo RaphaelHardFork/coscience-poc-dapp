@@ -23,6 +23,7 @@ const AccountForm = () => {
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [laboratory, setLaboratory] = useState("")
+  const [email, setEmail] = useState("")
   const [bio, setBio] = useState("")
 
   const [password, setPassword] = useState("")
@@ -32,19 +33,27 @@ const AccountForm = () => {
 
   async function register() {
     const hashedPassword = await ethers.utils.id(password)
-    const obj = {
+    const nameObj = {
+      version: 0.1,
       firstName,
       lastName,
-      laboratory,
-      bio, // no need to load this on articles
     }
-    const hash = await pinJsObject(obj)
-    await contractCall(users, "register", [hashedPassword, hash])
+    const nameHash = await pinJsObject(nameObj)
+    const userObj = {
+      version: 0.1,
+      userInfo: nameHash,
+      email,
+      laboratory,
+      bio,
+    }
+    const userHash = await pinJsObject(userObj)
+    await contractCall(users, "register", [hashedPassword, userHash, nameHash])
     setBio("")
     setLaboratory("")
     setLastName("")
     setFirstName("")
     setPassword("")
+    setEmail("")
   }
 
   return (
@@ -68,6 +77,15 @@ const AccountForm = () => {
               onChange={(e) => setLastName(e.target.value)}
               placeholder="Bob"
               value={lastName}
+            />
+          </FormControl>
+          <FormControl mb="4">
+            <FormLabel>E-mail</FormLabel>
+            <Input
+              type="email"
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Bob@alice.com"
+              value={email}
             />
           </FormControl>
           <FormControl mb="4">
@@ -117,6 +135,7 @@ const AccountForm = () => {
               !lastName.length ||
               !laboratory.length ||
               !bio.length ||
+              !email.length ||
               status.startsWith("Waiting") ||
               status.startsWith("Pending") ||
               ipfsStatus.startsWith("Pinning")
