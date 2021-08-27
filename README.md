@@ -32,11 +32,11 @@ articleInfo = {
 
 ## TODO in the backend
 
-- add nbOfUsers function
-- add edit profile function (change the CID)
-- prevent to be register two time with the same wallet
-- register CID in `bytes32`
-- deployment on several blockchain (matic & bsc) with the same address
+- add nbOfUsers function OK
+- add edit profile function (change the CID) OK
+- prevent to be register two time with the same wallet OK
+- register CID in `bytes32` NO
+- deployment on several blockchain (matic & bsc) with the same address NO
 
 ## TODO in data architecture
 
