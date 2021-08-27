@@ -1,4 +1,4 @@
-export const contractAddress = "0xd17ffCa14121cbb08d8a671751b847287C31B4D1"
+export const contractAddress = "0x7A2f775EAcA55FA6360618253CC8957Cd8501cD0"
 
 export const contractABI = [
   {
@@ -77,32 +77,6 @@ export const contractABI = [
     inputs: [
       {
         indexed: true,
-        internalType: "uint256",
-        name: "userID",
-        type: "uint256",
-      },
-    ],
-    name: "Approved",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "userID",
-        type: "uint256",
-      },
-    ],
-    name: "Banned",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
         internalType: "address",
         name: "previousOwner",
         type: "address",
@@ -147,44 +121,6 @@ export const contractABI = [
     inputs: [
       {
         indexed: true,
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "userID",
-        type: "uint256",
-      },
-    ],
-    name: "ProfileRecovered",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "user",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "userID",
-        type: "uint256",
-      },
-    ],
-    name: "Registered",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
         internalType: "uint256",
         name: "_reviewID",
         type: "uint256",
@@ -221,44 +157,6 @@ export const contractABI = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "userID_",
-        type: "uint256",
-      },
-    ],
-    name: "acceptUser",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "newAddress",
-        type: "address",
-      },
-    ],
-    name: "addWallet",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "address",
         name: "to",
         type: "address",
@@ -272,19 +170,6 @@ export const contractABI = [
     name: "approve",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "articlesAddress",
-    outputs: [
-      {
-        internalType: "contract Articles",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
   {
@@ -329,44 +214,6 @@ export const contractABI = [
     inputs: [
       {
         internalType: "uint256",
-        name: "userID_",
-        type: "uint256",
-      },
-    ],
-    name: "banUser",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "newPassword",
-        type: "bytes32",
-      },
-    ],
-    name: "changePassword",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
         name: "reviewID",
         type: "uint256",
       },
@@ -377,30 +224,6 @@ export const contractABI = [
       },
     ],
     name: "fillCommentsArray",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "password",
-        type: "bytes32",
-      },
-      {
-        internalType: "uint256",
-        name: "userID",
-        type: "uint256",
-      },
-    ],
-    name: "forgotWallet",
     outputs: [
       {
         internalType: "bool",
@@ -537,49 +360,6 @@ export const contractABI = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-    ],
-    name: "profileID",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "hashedPassword_",
-        type: "bytes32",
-      },
-      {
-        internalType: "string",
-        name: "profileCID_",
-        type: "string",
-      },
-    ],
-    name: "register",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [],
     name: "renounceOwnership",
     outputs: [],
@@ -599,9 +379,9 @@ export const contractABI = [
       {
         components: [
           {
-            internalType: "uint256",
-            name: "id",
-            type: "uint256",
+            internalType: "bool",
+            name: "contentBanned",
+            type: "bool",
           },
           {
             internalType: "address",
@@ -609,19 +389,19 @@ export const contractABI = [
             type: "address",
           },
           {
-            internalType: "string",
-            name: "contentCID",
-            type: "string",
-          },
-          {
-            internalType: "bool",
-            name: "contentBanned",
-            type: "bool",
+            internalType: "uint256",
+            name: "id",
+            type: "uint256",
           },
           {
             internalType: "uint256",
             name: "targetID",
             type: "uint256",
+          },
+          {
+            internalType: "string",
+            name: "contentCID",
+            type: "string",
           },
           {
             internalType: "uint256[]",
@@ -847,95 +627,6 @@ export const contractABI = [
     name: "transferOwnership",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "userID",
-        type: "uint256",
-      },
-    ],
-    name: "userNbOfWallet",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "userID",
-        type: "uint256",
-      },
-    ],
-    name: "userProfile",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "userID",
-        type: "uint256",
-      },
-    ],
-    name: "userStatus",
-    outputs: [
-      {
-        internalType: "enum Users.WhiteList",
-        name: "",
-        type: "uint8",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "userID",
-        type: "uint256",
-      },
-    ],
-    name: "userWalletList",
-    outputs: [
-      {
-        internalType: "address[]",
-        name: "",
-        type: "address[]",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "usersAddress",
-    outputs: [
-      {
-        internalType: "contract Users",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
 ]

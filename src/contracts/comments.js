@@ -1,4 +1,4 @@
-export const contractAddress = "0x175bAeF1584b9CBAc909111668ed769937443F81"
+export const contractAddress = "0x77943c71CF2d1da0E1678ac09581A5B149eA9454"
 
 export const contractABI = [
   {
@@ -83,32 +83,6 @@ export const contractABI = [
       {
         indexed: true,
         internalType: "uint256",
-        name: "userID",
-        type: "uint256",
-      },
-    ],
-    name: "Approved",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "userID",
-        type: "uint256",
-      },
-    ],
-    name: "Banned",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
         name: "commentID",
         type: "uint256",
       },
@@ -172,44 +146,6 @@ export const contractABI = [
       {
         indexed: true,
         internalType: "address",
-        name: "account",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "userID",
-        type: "uint256",
-      },
-    ],
-    name: "ProfileRecovered",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "user",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "userID",
-        type: "uint256",
-      },
-    ],
-    name: "Registered",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
         name: "from",
         type: "address",
       },
@@ -228,44 +164,6 @@ export const contractABI = [
     ],
     name: "Transfer",
     type: "event",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "userID_",
-        type: "uint256",
-      },
-    ],
-    name: "acceptUser",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "newAddress",
-        type: "address",
-      },
-    ],
-    name: "addWallet",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
   },
   {
     inputs: [
@@ -327,44 +225,6 @@ export const contractABI = [
     inputs: [
       {
         internalType: "uint256",
-        name: "userID_",
-        type: "uint256",
-      },
-    ],
-    name: "banUser",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "newPassword",
-        type: "bytes32",
-      },
-    ],
-    name: "changePassword",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
         name: "commentID",
         type: "uint256",
       },
@@ -374,9 +234,24 @@ export const contractABI = [
       {
         components: [
           {
+            internalType: "bool",
+            name: "contentBanned",
+            type: "bool",
+          },
+          {
             internalType: "uint256",
             name: "id",
             type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "targetID",
+            type: "uint256",
+          },
+          {
+            internalType: "address",
+            name: "target",
+            type: "address",
           },
           {
             internalType: "address",
@@ -387,21 +262,6 @@ export const contractABI = [
             internalType: "string",
             name: "contentCID",
             type: "string",
-          },
-          {
-            internalType: "bool",
-            name: "contentBanned",
-            type: "bool",
-          },
-          {
-            internalType: "address",
-            name: "target",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "targetID",
-            type: "uint256",
           },
           {
             internalType: "uint256[]",
@@ -415,30 +275,6 @@ export const contractABI = [
       },
     ],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "password",
-        type: "bytes32",
-      },
-      {
-        internalType: "uint256",
-        name: "userID",
-        type: "uint256",
-      },
-    ],
-    name: "forgotWallet",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -572,49 +408,6 @@ export const contractABI = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-    ],
-    name: "profileID",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "hashedPassword_",
-        type: "bytes32",
-      },
-      {
-        internalType: "string",
-        name: "profileCID_",
-        type: "string",
-      },
-    ],
-    name: "register",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [],
     name: "renounceOwnership",
     outputs: [],
@@ -717,25 +510,6 @@ export const contractABI = [
         internalType: "string",
         name: "",
         type: "string",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-    ],
-    name: "testUser",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -850,82 +624,6 @@ export const contractABI = [
     name: "transferOwnership",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "userID",
-        type: "uint256",
-      },
-    ],
-    name: "userNbOfWallet",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "userID",
-        type: "uint256",
-      },
-    ],
-    name: "userProfile",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "userID",
-        type: "uint256",
-      },
-    ],
-    name: "userStatus",
-    outputs: [
-      {
-        internalType: "enum Users.WhiteList",
-        name: "",
-        type: "uint8",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "userID",
-        type: "uint256",
-      },
-    ],
-    name: "userWalletList",
-    outputs: [
-      {
-        internalType: "address[]",
-        name: "",
-        type: "address[]",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
 ]
