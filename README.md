@@ -14,16 +14,16 @@
 
 ## TODO in this repo
 
-- display all IPFS data (Profile: name, Home: abstract, Article: all + name)
-- link to Etherscan => get the time stamp
-- linked profile to article/ comments ...
-- list of users use the functions
-- before sign in metamask & switch network (to rinkeby)
-- navbar profile (prevent undefined or manage)
-
-- add change profile Settings => input (bio, laboratoire)
-- get the timestamp of each Article/Review/Comment and why not Users. [Use events...]
-- add Recover account => select the ID /!\
+- display all IPFS data (Profile: name✅, Home: abstract✅, Article: all + name ❌)
+- link to Etherscan => get the time stamp ❌
+- linked profile to article/ comments ... ✅
+- list of users use the functions ✅
+- before sign in metamask & switch network (to rinkeby) ✅
+- navbar profile (prevent undefined or manage) ✅
+- problem with multiple list of user (RecoverAccount & ListOfUser)❌
+- add change profile Settings => input (bio, laboratoire)❌
+- get the timestamp of each Article/Review/Comment and why not Users. [Use events...]❌
+- add Recover account => select the ID /!\ ✅
 
 - Crawler with `react-router-dom`
 - Refactoring of components (Article in priority)

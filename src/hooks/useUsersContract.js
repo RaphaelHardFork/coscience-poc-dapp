@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { Web3Context } from "web3-hooks"
 import { UsersContext } from "../contexts/UsersContext"
+import { useIPFS } from "./useIPFS"
 
 // Pure function
 const enumStatus = (status) => {
@@ -41,6 +42,7 @@ export const useUsersContract = () => {
 
   // utils
   const [web3State] = useContext(Web3Context)
+  const [, readIPFS] = useIPFS()
   const [userData, setUserData] = useState({})
   const [userList, setUserList] = useState([])
 
@@ -64,8 +66,11 @@ export const useUsersContract = () => {
   useEffect(() => {
     const createList = async () => {
       if (users) {
-        for (let i = 1; i <= 7; i++) {
-          const userObj = await getUserData(users, i)
+        const nb = await users.nbOfUsers()
+        for (let i = 1; i <= nb; i++) {
+          let userObj = await getUserData(users, i)
+          const { firstName, lastName } = await readIPFS(userObj.nameCID)
+          userObj = { ...userObj, firstName, lastName }
           setUserList((a) => [...a, userObj])
         }
       }
@@ -76,7 +81,7 @@ export const useUsersContract = () => {
     return () => {
       setUserList((a) => [...a])
     }
-  }, [users])
+  }, [users, readIPFS])
 
   // control call of the hook
   if (users === undefined) {
