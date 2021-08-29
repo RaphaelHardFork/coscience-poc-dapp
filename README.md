@@ -14,10 +14,20 @@
 
 ## TODO in this repo
 
+- display all IPFS data (Profile: name✅, Home: abstract✅, Article: all + name ❌)
+- link to Etherscan => get the time stamp ❌
+- linked profile to article/ comments ... ✅
+- list of users use the functions ✅
+- before sign in metamask & switch network (to rinkeby) ✅
+- navbar profile (prevent undefined or manage) ✅
+- problem with multiple list of user (RecoverAccount & ListOfUser)❌
+- add change profile Settings => input (bio, laboratoire)❌
+- get the timestamp of each Article/Review/Comment and why not Users. [Use events...]❌
+- add Recover account => select the ID /!\ ✅
+
 - Crawler with `react-router-dom`
 - Refactoring of components (Article in priority)
 - Import PDF and pin it to IPFS
-- get the timestamp of each Article/Review/Comment and why not Users. Use events...
 - Unpin content if TX fail
 
 Import PDF => localStorage => IPFS pinFile => CID
@@ -32,11 +42,11 @@ articleInfo = {
 
 ## TODO in the backend
 
-- add nbOfUsers function
-- add edit profile function (change the CID)
-- prevent to be register two time with the same wallet
-- register CID in `bytes32`
-- deployment on several blockchain (matic & bsc) with the same address
+- add nbOfUsers function OK
+- add edit profile function (change the CID) OK
+- prevent to be register two time with the same wallet OK
+- register CID in `bytes32` NO
+- deployment on several blockchain (matic & bsc) with the same address NO
 
 ## TODO in data architecture
 
@@ -74,3 +84,53 @@ newUserInfo = {
 ```
 
 `userInfo` stay the same
+
+## IPFS data architecture
+
+### Version 0.1
+
+Users:
+
+```js
+{
+version: 0.1,
+userInfo: {
+  version: 0.1,
+  firstName: "Rogert",
+  lastName: "Culinaire"
+  },
+email: "rogert@food.com",
+laboratory: "Ministry of Food",
+bio: "Eat some Tacos..."
+}
+```
+
+Articles:
+
+```js
+{
+version: 0.1,
+title: "Studies on ETH providers",
+abstract: "So hard to built this....",
+content: {
+  version: 0.1,
+  content: "For the moment nothing is done..."
+  },
+}
+```
+
+Reviews:
+
+```js
+{
+version: 0.1,
+title: "Pas assez de sources",
+content: "L'article est de bonne facture mais manque cruellement de sources"
+}
+```
+
+Comments:
+
+```js
+{ version: 0.1, content: 'blabla' }
+```

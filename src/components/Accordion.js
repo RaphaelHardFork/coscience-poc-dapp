@@ -7,41 +7,109 @@ import {
   AccordionButton,
   AccordionIcon,
   AccordionPanel,
+  Button,
+  Flex,
 } from "@chakra-ui/react"
+import { useEffect } from "react"
+import { Link } from "react-router-dom"
+import { useArticlesContract } from "../hooks/useArticlesContract"
+import { useIPFS } from "../hooks/useIPFS"
+import { useReviewsContract } from "../hooks/useReviewsContract"
 
 const Accordion = ({ object, type }) => {
+  const [reviews] = useReviewsContract()
+  const [articles] = useArticlesContract()
   return (
     <ChakraAccordion allowToggle>
       <AccordionItem>
         <AccordionButton>
           <Box flex="1" textAlign="left">
-            {type} n°{object.id}
+            {type} n°{object.id} : {type === "Comment" ? "" : object.title}
           </Box>
           <AccordionIcon />
         </AccordionButton>
         <AccordionPanel pb={4}>
           <Box>
-            <Heading textAlign="center">
-              This the {type} n°{object.id}
+            <Heading>
+              {type === "Comment" ? `Comment n°${object.id}` : object.title}
             </Heading>
             {type === "Article" ? (
               <>
-                <Text>ID : {object.id}</Text>
-                <Text>Author: {object.author} </Text>
-                <Text>CoAuthor: {object.CoAuthor} </Text>
-                <Text>Content banned: {object.contentBanned} </Text>
-                <Text>Abstract: {object.abstractCID} </Text>
-                <Text>Content: {object.contentCID} </Text>
-                <Text>Nb of reviews: {object.reviews.length} </Text>
-                <Text>Nb of comments: {object.comments.length} </Text>
+                {object.coAuthor.length ? (
+                  <>
+                    <Text>Co-authors: </Text>{" "}
+                    {object.coAuthor.map((author, index) => {
+                      return (
+                        <Text key={author}>{`${index + 1}: ${author}`}</Text>
+                      )
+                    })}
+                  </>
+                ) : (
+                  "There is no co-author"
+                )}
+                <Text mt="6" textAlign="center" fontSize="md">
+                  Abstract
+                </Text>
+                <Text mb="6" textAlign="center">
+                  {object.abstract}
+                </Text>
+                <Flex alignItems="center" justifyContent="space-between">
+                  <Button
+                    as={Link}
+                    to={`/article/${object.id}`}
+                    colorScheme="orange"
+                  >
+                    Read the article
+                  </Button>
+                  <Box>
+                    <Text textAlign="end" fontSize="md">
+                      Nb of reviews: {object.reviews.length}{" "}
+                    </Text>
+                    <Text textAlign="end" fontSize="md">
+                      Nb of comments: {object.comments.length}{" "}
+                    </Text>
+                  </Box>
+                </Flex>
+              </>
+            ) : type === "Review" ? (
+              <>
+                <Text mt="6" fontSize="md">
+                  Content
+                </Text>
+                <Text>{object.content}</Text>
+                <Button
+                  colorScheme="orange"
+                  as={Link}
+                  to={`/article/${object.targetID}`}
+                >
+                  On article n°{object.targetID}
+                </Button>
               </>
             ) : (
               <>
-                <Text>ID : {object.id}</Text>
-                <Text>Author: {object.author} </Text>
-                <Text>contentCID: {object.contentCID} </Text>
-                <Text>Content banned: {object.contentBanned} </Text>
-                <Text>On: {object.targetID} </Text>
+                <Text mt="6" fontSize="md">
+                  Content
+                </Text>
+                <Text>{object.content}</Text>
+                <Button
+                  disabled={object.target !== articles.address}
+                  to={
+                    object.target === articles.address
+                      ? `/article/${object.targetID}`
+                      : ""
+                  }
+                  colorScheme="orange"
+                  as={Link}
+                >
+                  {" "}
+                  On{" "}
+                  {object.target === reviews.address
+                    ? "Review"
+                    : object.target === articles.address
+                    ? "Article"
+                    : "Comment"}{" "}
+                  n°{object.targetID}
+                </Button>
               </>
             )}
           </Box>

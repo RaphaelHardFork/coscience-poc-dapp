@@ -69,10 +69,10 @@ const UploadArticle = () => {
     let abstractCID = ""
     let contentCID = ""
     if (user.status === "Approved") {
-      const header = { title, abstract }
-      const body = { content }
-      abstractCID = await pinJsObject(header)
+      const body = { version: 0.1, content }
       contentCID = await pinJsObject(body)
+      const header = { version: 0.1, title, abstract, content: contentCID }
+      abstractCID = await pinJsObject(header)
     }
     // push to the blockchain
     await contractCall(articles, "publish", [

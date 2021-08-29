@@ -65,7 +65,12 @@ const Header = () => {
                 Home
               </Button>
 
-              <Button as={Link} to={`/profile/${user.id}`} variant="ghost">
+              <Button
+                disabled={user.id === undefined}
+                as={Link}
+                to={`/profile/${user.id}`}
+                variant="ghost"
+              >
                 Profile
               </Button>
 
