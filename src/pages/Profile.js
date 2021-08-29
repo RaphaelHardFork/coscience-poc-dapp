@@ -29,13 +29,10 @@ const Profile = () => {
       const userData = async () => {
         const userObj = await getUserData(users, id)
         // get user info from IPFS
-        let info
-        try {
-          info = await readIPFS(userObj.profileCID) // {firstName,lastName,laboratory,bio}
-        } catch (cid) {
-          info = cid // 'Qmfdfdfdivfvfvd...'
-        }
-        setUser({ ...userObj, info })
+
+        const profileInfo = await readIPFS(userObj.profileCID) // {firstName,lastName,laboratory,bio}
+        const nameInfo = await readIPFS(userObj.nameCID)
+        setUser({ ...userObj, profileInfo, nameInfo })
       }
       userData()
     }
@@ -75,7 +72,7 @@ const Profile = () => {
                 )}
               </>
             ) : (
-              // connect the metamask
+              // connect the metamask can be discarded
               <>
                 <Heading mb="6" textAlign="center">
                   You must connect your Metamask to access your profile

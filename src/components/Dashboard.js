@@ -37,6 +37,7 @@ import { useCommentsContract } from "../hooks/useCommentsContract"
 import Loading from "./Loading"
 import Accordion from "./Accordion"
 import UserSetting from "./UserSetting"
+import { useIPFS } from "../hooks/useIPFS"
 
 const userContractIds = async (contract, user) => {
   if (contract) {
@@ -63,6 +64,7 @@ const Dashboard = ({ user }) => {
   const [articles, , , createArticleList] = useArticlesContract()
   const [reviews, , , createReviewList] = useReviewsContract()
   const [comments, , , createCommentList] = useCommentsContract()
+  const [, readIFPS] = useIPFS()
 
   const [articleList, setArticleList] = useState()
   const [reviewList, setReviewList] = useState()
@@ -81,17 +83,36 @@ const Dashboard = ({ user }) => {
       // list of articles
       let listOfId = await userContractIds(articles, user)
       const articleList = await createArticleList(articles, listOfId)
-      setArticleList(articleList)
+      // get ipfs info of articles
+      const ipfsArticleInfo = await Promise.all(
+        articleList.map(async (article) => {
+          const { title, abstract } = await readIFPS(article.abstractCID) // destructuring the ipfs content
+          return { ...article, title, abstract }
+        })
+      )
+      setArticleList(ipfsArticleInfo)
 
       // list of reviews
       listOfId = await userContractIds(reviews, user)
       const reviewList = await createReviewList(reviews, listOfId)
-      setReviewList(reviewList)
+      const ipfsReviewInfo = await Promise.all(
+        reviewList.map(async (review) => {
+          const { title, content } = await readIFPS(review.contentCID)
+          return { ...review, title, content }
+        })
+      )
+      setReviewList(ipfsReviewInfo)
 
       // list of comments
       listOfId = await userContractIds(comments, user)
       const commentList = await createCommentList(comments, listOfId)
-      setCommentList(commentList)
+      const ipfsCommentInfo = await Promise.all(
+        commentList.map(async (comment) => {
+          const { content } = await readIFPS(comment.contentCID)
+          return { ...comment, content }
+        })
+      )
+      setCommentList(ipfsCommentInfo)
     })()
   }, [
     user,
@@ -101,6 +122,7 @@ const Dashboard = ({ user }) => {
     createCommentList,
     reviews,
     createReviewList,
+    readIFPS,
   ])
 
   return (
@@ -157,14 +179,18 @@ const Dashboard = ({ user }) => {
       </Modal>
 
       {/* USER PROFILE */}
-      <Heading as="h2">User profile</Heading>
-      <Link
-        isTruncated
-        isExternal
-        href={`https://ipfs.io/ipfs/${user.profileCID}`}
-      >
-        CID: {user.profileCID}
-      </Link>
+      <Heading my="4" as="h2">
+        {user.nameInfo.firstName} {user.nameInfo.lastName}{" "}
+        <Link
+          isTruncated
+          isExternal
+          href={`https://ipfs.io/ipfs/${user.profileCID}`}
+          color="teal"
+          fontWeight="bold"
+        >
+          (See on IPFS)
+        </Link>
+      </Heading>
 
       {/* user.info ? = FALSE CID : OBJECT FROM IPFS
       
@@ -174,20 +200,12 @@ const Dashboard = ({ user }) => {
       4. SO: user.info === user.profileCID if the CID is false
       */}
 
-      {user.info === user.profileCID ? (
-        <Text>False CID</Text>
-      ) : (
-        <>
-          <Text>
-            {user.info.firstName} {user.info.lastName}
-          </Text>
-          <Text>Laboratory: {user.info.laboratory}</Text>
-          <Text fontWeight="bold">Bio:</Text>
-          <Text>{user.info.bio ? user.info.bio : ""}</Text>
-        </>
-      )}
+      <Text>Laboratory: {user.profileInfo.laboratory}</Text>
+      <Text fontWeight="bold">Bio:</Text>
+      <Text>{user.profileInfo.bio}</Text>
+
       <Button
-        mb="6"
+        my="6"
         rounded={"full"}
         px={6}
         colorScheme={"orange"}
@@ -232,13 +250,13 @@ const Dashboard = ({ user }) => {
 
       <Tabs isFitted variant="enclosed">
         <TabList mb="1em">
-          <Tab>
+          <Tab fontSize="2xl">
             Articles ({articleList !== undefined ? articleList.length : "..."})
           </Tab>
-          <Tab>
+          <Tab fontSize="2xl">
             Reviews ({reviewList !== undefined ? reviewList.length : "..."})
           </Tab>
-          <Tab>
+          <Tab fontSize="2xl">
             Comments ({commentList !== undefined ? commentList.length : "..."})
           </Tab>
         </TabList>
@@ -259,7 +277,6 @@ const Dashboard = ({ user }) => {
           </TabPanel>
           <TabPanel>
             {/* REVIEW LIST */}
-            <Heading as="h3">Reviews</Heading>
             {reviewList === undefined ? (
               <Loading />
             ) : (
@@ -274,8 +291,6 @@ const Dashboard = ({ user }) => {
           </TabPanel>
           <TabPanel>
             {/* COMMENT LIST */}
-            <Heading as="h3">Comments</Heading>
-
             {commentList === undefined ? (
               <Loading />
             ) : (

@@ -68,9 +68,9 @@ export const useIPFS = () => {
   // [readIPFS]
   const readIPFS = useCallback(async (cid) => {
     // check for the first version of the dapp (some content with false CID)
-    if (!cid.startsWith("bafk")) {
-      // to be catched in the function
-      throw cid
+    if (!cid.startsWith("baf")) {
+      // by returning the cid, don't need try/catch anymore
+      return cid
     }
 
     let response

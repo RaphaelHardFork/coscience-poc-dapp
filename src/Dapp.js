@@ -28,21 +28,16 @@ const Dapp = () => {
   // color Mode
   const bg = useColorModeValue("gray.200", "gray.500")
 
-  // switch network
+  // switch network: will goes soon in a hook
   const switchNetwork = async () => {
     try {
-      const result = await web3State.provider.provider.request({
+      await web3State.provider.provider.request({
         method: "wallet_switchEthereumChain",
         params: [{ chainId: "0x4" }],
       })
-      console.log(result)
     } catch (e) {
       console.log(e)
     }
-  }
-
-  function debug() {
-    console.log(web3State)
   }
 
   return (
