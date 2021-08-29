@@ -14,6 +14,7 @@ const Home = () => {
   const [, readIPFS] = useIPFS()
 
   const [articleListAuthor, setArticleListAuthor] = useState()
+  const [user, setUser] = useState()
 
   const bg = useColorModeValue("white", "gray.800")
 
@@ -24,11 +25,9 @@ const Home = () => {
           articleList.map(async (article) => {
             const userID = await users.profileID(article.author)
             let header
-            try {
-              header = await readIPFS(article.abstractCID)
-            } catch (cid) {
-              header = cid
-            }
+
+            header = await readIPFS(article.abstractCID)
+
             return { ...article, authorID: userID.toNumber(), header }
           })
         )

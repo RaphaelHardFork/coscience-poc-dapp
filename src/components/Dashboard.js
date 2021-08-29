@@ -166,26 +166,23 @@ const Dashboard = ({ user }) => {
         CID: {user.profileCID}
       </Link>
 
-      {/* user.info ? = FALSE CID : OBJECT FROM IPFS
+      {/* user.profile ? = FALSE CID : OBJECT FROM IPFS
       
       1. useIPFS.js: function readIPFS throw CID if false
       2. Profile.js: useEffect try to fetch IPFS with user.profileCID (readIPFS(user.profileCID))
-      3. Profile.js: wrong CIDs are catched in the key .info
-      4. SO: user.info === user.profileCID if the CID is false
+      3. Profile.js: wrong CIDs are catched in the key .profile
+      4. SO: user.profile === user.profileCID if the CID is false
       */}
 
-      {user.info === user.profileCID ? (
-        <Text>False CID</Text>
-      ) : (
-        <>
-          <Text>
-            {user.info.firstName} {user.info.lastName}
-          </Text>
-          <Text>Laboratory: {user.info.laboratory}</Text>
-          <Text fontWeight="bold">Bio:</Text>
-          <Text>{user.info.bio ? user.info.bio : ""}</Text>
-        </>
-      )}
+      <>
+        <Text>
+          {user.name.firstName} {user.name.lastName}
+        </Text>
+        <Text>Laboratory: {user.profile.laboratory}</Text>
+        <Text fontWeight="bold">Bio:</Text>
+        <Text>{user.profile.bio ? user.profile.bio : ""}</Text>
+      </>
+
       <Button
         mb="6"
         rounded={"full"}

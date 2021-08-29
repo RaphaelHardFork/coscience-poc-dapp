@@ -20,6 +20,7 @@ import { useArticlesContract } from "../hooks/useArticlesContract"
 import { useCommentsContract } from "../hooks/useCommentsContract"
 import { useIPFS } from "../hooks/useIPFS"
 import { useReviewsContract } from "../hooks/useReviewsContract"
+import { useUsersContract } from "../hooks/useUsersContract"
 import Loading from "./Loading"
 import SendComment from "./SendComment"
 
@@ -56,38 +57,54 @@ const Article = () => {
   const [articles, , getArticleData] = useArticlesContract()
   const [reviews, , , createReviewsList] = useReviewsContract()
   const [comments, , , createCommentList] = useCommentsContract()
+  const [users, , , getUserData] = useUsersContract()
 
   const [, readIPFS] = useIPFS()
 
   const [article, setArticle] = useState()
   const [articlesReviewList, setArticlesReviewList] = useState()
   const [articlesCommentList, setArticlesCommentList] = useState()
+  const [user, setUser] = useState()
 
   const [on, setOn] = useState()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = useRef()
 
+  //get article
   useEffect(() => {
     if (articles) {
       const articleData = async () => {
         const articleObj = await getArticleData(articles, id)
         let header, body
-        try {
-          header = await readIPFS(articleObj.abstractCID)
-        } catch (cid) {
-          header = cid
-        }
-        try {
-          body = await readIPFS(articleObj.contentCID)
-        } catch (cid) {
-          body = cid
-        }
+
+        header = await readIPFS(articleObj.abstractCID)
+
+        body = await readIPFS(articleObj.contentCID)
+
         setArticle({ ...articleObj, header, body })
       }
       articleData()
     }
   }, [articles, getArticleData, id, readIPFS])
+
+  // get username
+  useEffect(() => {
+    if (users && articles !== undefined) {
+      const userData = async () => {
+        const articleObj = await getArticleData(articles, id)
+
+        const idAuthor = await users.profileID(articleObj.author)
+
+        const userObj = await getUserData(users, idAuthor.toString())
+
+        const name = await readIPFS(userObj.nameCID) // {firstName,lastName}
+
+        setUser({ ...userObj, name })
+      }
+      userData()
+    }
+  }, [getUserData, users, readIPFS, articles, id, getArticleData])
 
   // get review data
   useEffect(() => {
@@ -99,12 +116,8 @@ const Article = () => {
         // get review content on IPFS, can be moved in the hooks (not now)
         const asyncRes = await Promise.all(
           reviewList.map(async (review) => {
-            try {
-              const content = await readIPFS(review.contentCID)
-              return { ...review, content }
-            } catch (cid) {
-              return { ...review, content: cid }
-            }
+            const content = await readIPFS(review.contentCID)
+            return { ...review, content }
           })
         )
         setArticlesReviewList(asyncRes)
@@ -121,12 +134,8 @@ const Article = () => {
         // get comments content from IPFS
         const asyncRes = await Promise.all(
           commentList.map(async (comment) => {
-            try {
-              const content = await readIPFS(comment.contentCID)
-              return { ...comment, content }
-            } catch (cid) {
-              return { ...comment, content: cid }
-            }
+            const content = await readIPFS(comment.contentCID)
+            return { ...comment, content }
           })
         )
         setArticlesCommentList(asyncRes)
@@ -146,12 +155,8 @@ const Article = () => {
       // get comments content from IPFS
       const asyncRes = await Promise.all(
         commentList.map(async (comment) => {
-          try {
-            const content = await readIPFS(comment.contentCID)
-            return { ...comment, content }
-          } catch (cid) {
-            return { ...comment, content: cid }
-          }
+          const content = await readIPFS(comment.contentCID)
+          return { ...comment, content }
         })
 
         // CRAWLER
@@ -179,7 +184,7 @@ const Article = () => {
     <>
       <Box py="10" bg={bg}>
         <Container maxW="container.xl">
-          {article ? (
+          {article && user ? (
             article.id !== 0 ? (
               <>
                 <Box key={article.id}>
@@ -189,7 +194,11 @@ const Article = () => {
                       : article.header.title}
                   </Heading>
                   <Text>ID : {article.id}</Text>
-                  <Text>Author: {article.author} </Text>
+                  <Text>
+                    Author : {user.name.firstName} {user.name.lastName}
+                  </Text>
+                  <Text></Text>
+                  <Text>Author address: {article.author} </Text>
                   <Text>CoAuthor: {article.CoAuthor} </Text>
                   <Text>Content banned: {`${article.contentBanned}`} </Text>
                   <Text my="4">

@@ -29,13 +29,13 @@ const Profile = () => {
       const userData = async () => {
         const userObj = await getUserData(users, id)
         // get user info from IPFS
-        let info
-        try {
-          info = await readIPFS(userObj.profileCID) // {firstName,lastName,laboratory,bio}
-        } catch (cid) {
-          info = cid // 'Qmfdfdfdivfvfvd...'
-        }
-        setUser({ ...userObj, info })
+        let profile, name
+
+        name = await readIPFS(userObj.nameCID) // {firstName,lastName}
+
+        profile = await readIPFS(userObj.profileCID) // {,laboratory,bio}
+
+        setUser({ ...userObj, name, profile })
       }
       userData()
     }
