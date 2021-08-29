@@ -1,10 +1,24 @@
 # dApp Coscience
 
+## GuideLine
+
+- 15min presentation (why blockchain, add technical schema)
+- 15min Demo (prepare scenario and wallet with name)
+- 15min code presentation (make plan for what we will present):
+  - README cascade of contracts deployments schema
+  - hardhat project => contracts => test => scripts
+  - dapp:
+    - present briefly the react architecture
+    - select important component to show
+    - present hooks for IPFS & contract
+
 ## TODO in this repo
 
 - Crawler with `react-router-dom`
 - Refactoring of components (Article in priority)
 - Import PDF and pin it to IPFS
+- get the timestamp of each Article/Review/Comment and why not Users. Use events...
+- Unpin content if TX fail
 
 Import PDF => localStorage => IPFS pinFile => CID
 
@@ -22,6 +36,7 @@ articleInfo = {
 - add edit profile function (change the CID)
 - prevent to be register two time with the same wallet
 - register CID in `bytes32`
+- deployment on several blockchain (matic & bsc) with the same address
 
 ## TODO in data architecture
 
