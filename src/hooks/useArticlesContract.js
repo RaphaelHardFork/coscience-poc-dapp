@@ -30,7 +30,7 @@ const userArticleList = async (articles, listOfId) => {
   return articleList
 }
 
-// hooks
+// -----------------------------------------------------hooks
 export const useArticlesContract = () => {
   // call the context
   const [articles] = useContext(ArticlesContext)
