@@ -62,8 +62,8 @@ const userContractIds = async (contract, user) => {
 const Dashboard = ({ user }) => {
   const [, connectedUser] = useUsersContract()
   const [articles, , , createArticleList] = useArticlesContract()
-  const [reviews, , , createReviewList] = useReviewsContract()
-  const [comments, , , createCommentList] = useCommentsContract()
+  const [reviews, , createReviewList] = useReviewsContract()
+  const [comments, , createCommentList] = useCommentsContract()
   const [, readIFPS] = useIPFS()
 
   const [articleList, setArticleList] = useState()

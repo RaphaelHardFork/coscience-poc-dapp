@@ -10,10 +10,8 @@ import {
   Button,
   Flex,
 } from "@chakra-ui/react"
-import { useEffect } from "react"
 import { Link } from "react-router-dom"
 import { useArticlesContract } from "../hooks/useArticlesContract"
-import { useIPFS } from "../hooks/useIPFS"
 import { useReviewsContract } from "../hooks/useReviewsContract"
 
 const Accordion = ({ object, type }) => {

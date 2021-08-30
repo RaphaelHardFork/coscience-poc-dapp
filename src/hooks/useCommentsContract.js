@@ -1,5 +1,4 @@
-import { useContext, useEffect, useState } from "react"
-import { Web3Context } from "web3-hooks"
+import { useContext } from "react"
 import { CommentsContext } from "../contexts/CommentsContext"
 
 //pure function
@@ -31,14 +30,11 @@ const userCommentList = async (comments, listOfId) => {
 
 export const useCommentsContract = () => {
   const [comments] = useContext(CommentsContext)
-  const [web3State] = useContext(Web3Context)
-
-  const [commentList, setCommentList] = useState([])
 
   if (comments === undefined) {
     throw new Error(
       "It seems that you are trying to use CommentContext outside of its provider"
     )
   }
-  return [comments, commentList, getCommentData, userCommentList]
+  return [comments, getCommentData, userCommentList]
 }

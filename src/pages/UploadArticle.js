@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react"
 import { AddIcon, MinusIcon } from "@chakra-ui/icons"
 import { useState } from "react"
+import UploadFile from "../components/UploadFile"
 import { useArticlesContract } from "../hooks/useArticlesContract"
 import { useMetamask } from "../hooks/useMetamask"
 import { useIPFS } from "../hooks/useIPFS"
@@ -165,7 +166,7 @@ const UploadArticle = () => {
                 onChange={(e) => setContent(e.target.value)}
               />
             </FormControl>
-
+            <UploadFile />
             <Button
               isLoading={
                 status.startsWith("Waiting") ||
