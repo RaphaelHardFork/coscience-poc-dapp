@@ -14,7 +14,6 @@ import {
   useDisclosure,
   Link,
 } from "@chakra-ui/react"
-
 import { useState, useEffect, useRef } from "react"
 import { useParams } from "react-router-dom"
 import { useArticlesContract } from "../hooks/useArticlesContract"
@@ -24,6 +23,7 @@ import { useReviewsContract } from "../hooks/useReviewsContract"
 import { useUsersContract } from "../hooks/useUsersContract"
 import Loading from "./Loading"
 import SendComment from "./SendComment"
+
 import SendReview from "./SendReview"
 
 const articleReviewIds = async (reviews, article) => {
@@ -52,20 +52,6 @@ const articleCommentIds = async (comments, article) => {
   }
 }
 
-// get coAuthors Ids on article
-const coAuthorsArticleIds = async (articles, coAuthorsArrayAddress, users) => {
-  if (articles) {
-    const length = coAuthorsArrayAddress.length
-    const listOfId = []
-
-    for (let i = 0; i < length; i++) {
-      const id = await users.profileID(coAuthorsArrayAddress[i])
-      listOfId.push(id.toNumber())
-    }
-    return listOfId
-  }
-}
-
 const Article = () => {
   const { id } = useParams()
   const [articles, , getArticleData] = useArticlesContract()
@@ -76,15 +62,9 @@ const Article = () => {
   const [, readIPFS] = useIPFS()
 
   const [article, setArticle] = useState()
-<<<<<<< HEAD
-  const [user, setUser] = useState()
-  const [coAuthors, setCoAuthors] = useState()
-=======
->>>>>>> upstream/version-0.1
 
   const [articlesReviewList, setArticlesReviewList] = useState()
   const [articlesCommentList, setArticlesCommentList] = useState()
-  const [users, , , getUserData] = useUsersContract()
 
   const [on, setOn] = useState()
 
@@ -96,15 +76,6 @@ const Article = () => {
     if (articles) {
       const articleData = async () => {
         const articleObj = await getArticleData(articles, id)
-<<<<<<< HEAD
-        let header, body
-
-        header = await readIPFS(articleObj.abstractCID)
-
-        body = await readIPFS(articleObj.contentCID)
-
-        setArticle({ ...articleObj, header, body })
-=======
 
         // get content
         const { title, abstract } = await readIPFS(articleObj.abstractCID)
@@ -123,29 +94,10 @@ const Article = () => {
           firstName,
           lastName,
         })
->>>>>>> upstream/version-0.1
       }
       articleData()
     }
   }, [articles, getArticleData, id, readIPFS, users])
-
-  // get author name
-  useEffect(() => {
-    if (users && articles !== undefined) {
-      const authorData = async () => {
-        const articleObj = await getArticleData(articles, id)
-
-        const idAuthor = await users.profileID(articleObj.author)
-
-        const userObj = await getUserData(users, idAuthor.toString())
-
-        const name = await readIPFS(userObj.nameCID) // {firstName,lastName}
-
-        setUser({ ...userObj, name })
-      }
-      authorData()
-    }
-  }, [getUserData, users, readIPFS, articles, id, getArticleData])
 
   // get review data
   useEffect(() => {
@@ -179,17 +131,12 @@ const Article = () => {
         // get comments content from IPFS
         const asyncRes = await Promise.all(
           commentList.map(async (comment) => {
-<<<<<<< HEAD
-            const content = await readIPFS(comment.contentCID)
-            return { ...comment, content }
-=======
             const { content } = await readIPFS(comment.contentCID)
             const idAuthor = await users.profileID(comment.author)
             const nameCID = await users.userName(idAuthor)
             const { firstName, lastName } = await readIPFS(nameCID)
 
             return { ...comment, content, firstName, lastName }
->>>>>>> upstream/version-0.1
           })
         )
         setArticlesCommentList(asyncRes)
@@ -209,11 +156,7 @@ const Article = () => {
       // get comments content from IPFS
       const asyncRes = await Promise.all(
         commentList.map(async (comment) => {
-<<<<<<< HEAD
-          const content = await readIPFS(comment.contentCID)
-=======
           const { content } = await readIPFS(comment.contentCID)
->>>>>>> upstream/version-0.1
           return { ...comment, content }
         })
 
@@ -237,45 +180,22 @@ const Article = () => {
   }
 
   const bg = useColorModeValue("white", "gray.800")
-  console.log("article", article)
 
   return (
     <>
       <Box py="10" bg={bg}>
         <Container maxW="container.xl">
-          {article && user ? (
+          {article ? (
             article.id !== 0 ? (
               <>
                 <Box key={article.id}>
                   <Heading textAlign="center">{article.title}</Heading>
                   <Text>ID : {article.id}</Text>
                   <Text>
-<<<<<<< HEAD
-                    Author {user.name.firstName} {user.name.lastName}
-                  </Text>
-                  <Text>Author address: {article.author} </Text>
-
-                  {article.coAuthor.length ? (
-                    <>
-                      <Text>Co-authors name: </Text>{" "}
-                      {article.coAuthor.map((name) => {
-                        return <Text key={name}>{name}</Text>
-                      })}
-                      <Text>Co-authors address: </Text>{" "}
-                      {article.coAuthor.map((author) => {
-                        return <Text key={author}>{author}</Text>
-                      })}
-                    </>
-                  ) : (
-                    ""
-                  )}
-
-=======
                     Author: {article.firstName} {article.lastName}
                   </Text>
                   <Text>Author address: {article.author} </Text>
                   <Text>CoAuthor: {article.CoAuthor} </Text>
->>>>>>> upstream/version-0.1
                   <Text>Content banned: {`${article.contentBanned}`} </Text>
                   <Text my="4">Abstract: {article.abstract}</Text>
                   <Link
