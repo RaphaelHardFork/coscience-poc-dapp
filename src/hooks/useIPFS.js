@@ -67,12 +67,6 @@ export const useIPFS = () => {
   // useEffect => readIPFS(cid) => change the above function in each call
   // [readIPFS]
   const readIPFS = useCallback(async (cid) => {
-    // check for the first version of the dapp (some content with false CID)
-    if (!cid.startsWith("baf")) {
-      // by returning the cid, don't need try/catch anymore
-      return cid
-    }
-
     let response
     try {
       response = await axios(`https://ipfs.io/ipfs/${cid}`) // cid : part of the function that change in each call
