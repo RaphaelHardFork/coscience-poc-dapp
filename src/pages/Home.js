@@ -23,13 +23,17 @@ const Home = () => {
         const asyncRes = await Promise.all(
           articleList.map(async (article) => {
             const userID = await users.profileID(article.author)
-            let header
-            try {
-              header = await readIPFS(article.abstractCID)
-            } catch (cid) {
-              header = cid
+            const { title, abstract } = await readIPFS(article.abstractCID)
+            const nameCID = await users.userName(userID)
+            const { firstName, lastName } = await readIPFS(nameCID)
+            return {
+              ...article,
+              authorID: userID.toNumber(),
+              title,
+              abstract,
+              firstName,
+              lastName,
             }
-            return { ...article, authorID: userID.toNumber(), header }
           })
         )
         setArticleListAuthor(asyncRes)

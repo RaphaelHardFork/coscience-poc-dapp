@@ -14,23 +14,15 @@
 
 ## TODO in this repo
 
-- display all IPFS data (Profile: name✅, Home: abstract✅, Article: all + name ❌)
-- link to Etherscan => get the time stamp ❌
-- linked profile to article/ comments ... ✅
-- list of users use the functions ✅
-- before sign in metamask & switch network (to rinkeby) ✅
-- navbar profile (prevent undefined or manage) ✅
-- problem with multiple list of user (RecoverAccount & ListOfUser)❌
+- /article/:id => Display in a prettier way, separation between Article / Review / ...❌
 - add change profile Settings => input (bio, laboratoire)❌
 - get the timestamp of each Article/Review/Comment and why not Users. [Use events...]❌
-- add Recover account => select the ID /!\ ✅
-
-- Crawler with `react-router-dom`
-- Refactoring of components (Article in priority)
-- Import PDF and pin it to IPFS
-- Unpin content if TX fail
-
-Import PDF => localStorage => IPFS pinFile => CID
+- diplay timestamp correctly ❌
+- problem with multiple list of user (RecoverAccount & ListOfUser)❌
+- Import PDF and pin it to IPFS (use pinata.fromFS)❌
+- Unpin content if TX fail❌
+- Refactoring of components (Article in priority, with the crawler maybe)❌
+- Crawler with `react-router-dom`❌
 
 ```js
 articleInfo = {
@@ -42,11 +34,7 @@ articleInfo = {
 
 ## TODO in the backend
 
-- add nbOfUsers function OK
-- add edit profile function (change the CID) OK
-- prevent to be register two time with the same wallet OK
-- register CID in `bytes32` NO
-- deployment on several blockchain (matic & bsc) with the same address NO
+- deployment on several blockchain (matic & bsc) with the same address ❌
 
 ## TODO in data architecture
 

@@ -4,7 +4,6 @@ import {
   FormLabel,
   Textarea,
   Button,
-  Text,
   Input,
   Heading,
 } from "@chakra-ui/react"

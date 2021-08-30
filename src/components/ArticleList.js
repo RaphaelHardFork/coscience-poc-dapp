@@ -30,15 +30,10 @@ const ArticleList = ({ articleList }) => {
               isTruncated
               maxW="10ch"
             >
-              {article.header.title === undefined
-                ? article.header
-                : article.header.title}
+              {article.title}
             </Heading>
             <Text isTruncated maxW="30ch" py="6">
-              Abstract:{" "}
-              {article.header.title === undefined
-                ? "no abstract"
-                : article.header.abstract}
+              Abstract: {article.abstract}
             </Text>
             <Flex mb="4" alignItems="center">
               <Image
@@ -56,7 +51,7 @@ const ArticleList = ({ articleList }) => {
                 mx={2}
                 fontWeight="bold"
               >
-                {article.author}
+                {article.firstName} {article.lastName}
               </Link>
             </Flex>
             <Flex justifyContent="space-between">

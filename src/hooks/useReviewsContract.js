@@ -1,5 +1,4 @@
-import { useContext, useEffect, useState } from "react"
-import { Web3Context } from "web3-hooks"
+import { useContext } from "react"
 import { ReviewsContext } from "../contexts/ReviewsContext"
 
 const getReviewData = async (reviews, id) => {
@@ -29,9 +28,6 @@ const createReviewList = async (reviews, listOfId) => {
 
 export const useReviewsContract = () => {
   const [reviews] = useContext(ReviewsContext)
-  const [web3State] = useContext(Web3Context)
-
-  const [reviewList, setReviewList] = useState([])
 
   /*
   useEffect(() => {
@@ -56,5 +52,5 @@ export const useReviewsContract = () => {
       `It seems that you are trying to use ReviewsContext outside of its provider`
     )
   }
-  return [reviews, reviewList, getReviewData, createReviewList]
+  return [reviews, getReviewData, createReviewList]
 }

@@ -1,5 +1,6 @@
 import { Link, Text, useToast } from "@chakra-ui/react"
 import { useCallback, useState } from "react"
+import { createReadStream } from "fs"
 
 // yarn add dotenv
 
@@ -64,6 +65,39 @@ export const useIPFS = () => {
     // unpin in case of TX rejected
   }
 
+  const pinFile = async (file, path) => {
+    console.log(file)
+    console.log(path.slice(5))
+    // DO NOT WORK
+    const readableStreamForFile = createReadStream(
+      "https://bafybeid3j7eh7vzgxybqvloo4jxsc66uedpibjfd3qpmp3b4iwmpvdpm3u.ipfs.infura-ipfs.io/"
+    )
+    console.log(readableStreamForFile)
+    const options = {
+      pinataMetadata: {
+        name: file.name,
+        /*
+        keyvalues: {
+          customKey: "customValue",
+          customKey2: "customValue2",
+        },
+        */
+      },
+      pinataOptions: {
+        cidVersion: 1,
+      },
+    }
+
+    let result
+    try {
+      result = await pinata.pinFileToIPFS(readableStreamForFile, options)
+    } catch (e) {
+      console.error(e)
+    }
+    console.log(result)
+    return result.IpfsHash
+  }
+
   // useEffect => readIPFS(cid) => change the above function in each call
   // [readIPFS]
   const readIPFS = useCallback(async (cid) => {
@@ -78,5 +112,5 @@ export const useIPFS = () => {
     return response.data
   }, [])
 
-  return [pinJsObject, readIPFS, status]
+  return [pinJsObject, readIPFS, status, pinFile]
 }
