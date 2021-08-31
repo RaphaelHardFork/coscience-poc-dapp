@@ -37,6 +37,7 @@ export const useArticlesContract = () => {
 
   // utils
   const [articleList, setArticleList] = useState([])
+  const [articleEvents, setArticleEvents] = useState()
 
   // create list of article
   useEffect(() => {
@@ -45,9 +46,37 @@ export const useArticlesContract = () => {
         const nb = await articles.nbOfArticles()
         const articlesList = []
 
+        // in waiting for the articleID indexed
+        const eventList = [
+          { articleID: 0, txHash: null, timestamp: 0, blockNumber: 0 },
+        ]
+        const eventArray = await articles.queryFilter("Published") // EthersJS / Contract
+        for (const event of eventArray) {
+          const block = await event.getBlock()
+          const date = new Date(block.timestamp * 1000)
+          const obj = {
+            articleID: event.args.articleID.toNumber(),
+            txHash: event.transactionHash,
+            timestamp: block.timestamp,
+            blockNumber: event.blockNumber,
+            date: date.toLocaleString(),
+          }
+          eventList.push(obj)
+          // [{null},{event1 = articleID: 1}]
+        }
+        setArticleEvents(eventList)
+
         for (let i = 1; i <= nb; i++) {
-          const obj = await getArticleData(articles, i)
-          articlesList.push(obj)
+          const obj = await getArticleData(articles, i) // i = id
+          const { txHash, timestamp, blockNumber, date } = eventList[i]
+
+          articlesList.push({
+            ...obj,
+            txHash,
+            timestamp,
+            blockNumber,
+            date,
+          })
         }
         setArticleList(articlesList)
       }
@@ -55,22 +84,6 @@ export const useArticlesContract = () => {
     }
 
     return () => setArticleList(undefined)
-  }, [articles])
-
-  // Get event from Articles.sol
-  useEffect(() => {
-    if (articles) {
-      ;(async () => {
-        const eventArray = await articles.queryFilter("Published")
-        console.log("EVENTs")
-        console.log(eventArray)
-        for (const event of eventArray) {
-          const block = await event.getBlock()
-          const date = new Date(block.timestamp * 1000)
-          console.log(date)
-        }
-      })()
-    }
   }, [articles])
 
   // control call of the hook
@@ -81,5 +94,5 @@ export const useArticlesContract = () => {
   }
 
   // first: return contract for utilisation
-  return [articles, articleList, getArticleData, userArticleList]
+  return [articles, articleList, getArticleData, userArticleList, articleEvents]
 }

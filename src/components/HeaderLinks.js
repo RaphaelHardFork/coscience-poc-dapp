@@ -1,16 +1,22 @@
-import { Box, Button, useDisclosure } from "@chakra-ui/react"
+import { Button, Flex } from "@chakra-ui/react"
 import React from "react"
 import { Link } from "react-router-dom"
 
-const HeaderLinks = ({ user }) => {
-  const mobileNav = useDisclosure()
+const HeaderLinks = ({ user, isOpen, onClose }) => {
   return (
-    <Box
+    <Flex
       key={user.id}
-      flexDirection={mobileNav.isOpen ? "column" : "row"}
-      display={"flex"}
+      alignItems="center"
+      flexDirection={isOpen ? "column" : ""}
+      w={isOpen ? "full" : ""}
     >
-      <Button as={Link} to="/" variant="ghost" w="100">
+      <Button
+        w={isOpen ? "full" : ""}
+        onClick={onClose}
+        as={Link}
+        to="/"
+        variant="ghost"
+      >
         Home
       </Button>
       <Button
@@ -18,23 +24,48 @@ const HeaderLinks = ({ user }) => {
         as={Link}
         to={`/profile/${user.id}`}
         variant="ghost"
-        w="100"
+        onClick={onClose}
+        w={isOpen ? "full" : ""}
       >
         Profile
       </Button>
-      <Button as={Link} to="/list-of-users" variant="ghost" w="100">
+      <Button
+        w={isOpen ? "full" : ""}
+        onClick={onClose}
+        as={Link}
+        to="/list-of-users"
+        variant="ghost"
+      >
         List of users
       </Button>
-      <Button variant="ghost" as={Link} to="/upload-article" w="100">
+      <Button
+        w={isOpen ? "full" : ""}
+        onClick={onClose}
+        variant="ghost"
+        as={Link}
+        to="/upload-article"
+      >
         Upload Article
       </Button>
-      <Button variant="ghost" as={Link} to="/about" w="100">
+      <Button
+        w={isOpen ? "full" : ""}
+        onClick={onClose}
+        variant="ghost"
+        as={Link}
+        to="/about"
+      >
         About
       </Button>
-      <Button as={Link} to="/sign-up" colorScheme="teal" size="sm" w="100">
+      <Button
+        onClick={onClose}
+        as={Link}
+        to="/sign-up"
+        colorScheme="teal"
+        size="sm"
+      >
         Sign up
       </Button>
-    </Box>
+    </Flex>
   )
 }
 
