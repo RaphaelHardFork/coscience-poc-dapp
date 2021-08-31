@@ -30,7 +30,7 @@ const userArticleList = async (articles, listOfId) => {
   return articleList
 }
 
-// -----------------------------------------------------hooks
+// -----------------------------------------------------HOOK
 export const useArticlesContract = () => {
   // call the context
   const [articles] = useContext(ArticlesContext)
@@ -38,6 +38,7 @@ export const useArticlesContract = () => {
   // utils
   const [articleList, setArticleList] = useState([])
 
+  // create list of article
   useEffect(() => {
     if (articles) {
       const createArticleList = async () => {
@@ -54,6 +55,22 @@ export const useArticlesContract = () => {
     }
 
     return () => setArticleList(undefined)
+  }, [articles])
+
+  // Get event from Articles.sol
+  useEffect(() => {
+    if (articles) {
+      ;(async () => {
+        const eventArray = await articles.queryFilter("Published")
+        console.log("EVENTs")
+        console.log(eventArray)
+        for (const event of eventArray) {
+          const block = await event.getBlock()
+          const date = new Date(block.timestamp * 1000)
+          console.log(date)
+        }
+      })()
+    }
   }, [articles])
 
   // control call of the hook
