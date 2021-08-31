@@ -1,27 +1,43 @@
 import { PlusSquareIcon, RepeatIcon } from "@chakra-ui/icons"
-import { Button, FormControl, FormLabel, Input } from "@chakra-ui/react"
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  TagLabel,
+  Textarea,
+} from "@chakra-ui/react"
 import { ethers } from "ethers"
 import { useState } from "react"
+import { useIPFS } from "../hooks/useIPFS"
 import { useMetamask } from "../hooks/useMetamask"
 import { useUsersContract } from "../hooks/useUsersContract"
 
 const UserSetting = ({ user }) => {
   const [users] = useUsersContract()
+  const [pinJsObject, , ipfsStatus] = useIPFS()
   const [status, contractCall] = useMetamask()
-  const [addInput, setAddInput] = useState({ address: false, password: false })
+  const [addInput, setAddInput] = useState({
+    address: false,
+    password: false,
+    edit: false,
+  })
   const [input, setInput] = useState("")
+
+  const [laboratory, setLaboratory] = useState("")
+  const [bio, setBio] = useState("")
 
   async function addWallet(code) {
     switch (code) {
       case 0:
-        setAddInput({ address: true, password: false })
+        setAddInput({ address: true, password: false, edit: false })
         break
       case 1:
         await contractCall(users, "addWallet", [input])
         setAddInput({ ...addInput, address: false })
         break
       case 2:
-        setAddInput({ address: false, password: false })
+        setAddInput({ address: false, password: false, edit: false })
         break
       default:
         return false
@@ -31,22 +47,52 @@ const UserSetting = ({ user }) => {
   async function changePassword(code) {
     switch (code) {
       case 0:
-        setAddInput({ address: false, password: true })
+        setAddInput({ address: false, password: true, edit: false })
         break
       case 1:
-        const tx = await contractCall(users, "changePassword", [
-          ethers.utils.id(input),
-        ])
-        console.log(tx)
+        await contractCall(users, "changePassword", [ethers.utils.id(input)])
+
         setAddInput({ ...addInput, password: false })
+
         break
       case 2:
-        setAddInput({ address: false, password: false })
+        setAddInput({ address: false, password: false, edit: false })
         break
       default:
         return false
     }
   }
+
+  async function changeProfile(code) {
+    switch (code) {
+      case 0:
+        setAddInput({ address: false, password: false, edit: true })
+        break
+      case 1:
+        const profileObj = {
+          version: 0.1,
+          laboratory,
+          bio,
+        }
+        console.log(profileObj)
+
+        const profileCID = await pinJsObject(profileObj)
+
+        await contractCall(users, "editProfile", [profileCID])
+
+        console.log(profileObj)
+
+        setAddInput({ ...addInput, edit: false })
+
+        break
+      case 2:
+        setAddInput({ address: false, password: false, edit: false })
+        break
+      default:
+        return false
+    }
+  }
+
   return (
     <>
       <Button
@@ -70,6 +116,17 @@ const UserSetting = ({ user }) => {
         rightIcon={<RepeatIcon />}
       >
         Password
+      </Button>
+      <Button
+        ms="4"
+        disabled={user.status !== "Approved" || addInput.edit}
+        onClick={() => changeProfile(0)}
+        colorScheme="messenger"
+        transition="0.3s "
+        aria-label="edit profile"
+        rightIcon={<RepeatIcon />}
+      >
+        Profile
       </Button>
       {addInput.address ? (
         <>
@@ -139,6 +196,54 @@ const UserSetting = ({ user }) => {
           </Button>
           <Button
             onClick={() => changePassword(2)}
+            ms="4"
+            colorScheme="red"
+            transition="0.3s "
+          >
+            Cancel
+          </Button>
+        </>
+      ) : addInput.edit ? (
+        <>
+          <FormControl>
+            <FormLabel>Edit Profile</FormLabel>
+            <TagLabel>Laboratory</TagLabel>
+            <Input
+              mb="4"
+              value={laboratory}
+              onChange={(e) => setLaboratory(e.target.value)}
+              placeholder="laboratory"
+              bg="white"
+            />
+            <TagLabel>Biography</TagLabel>
+            <Textarea
+              mb="4"
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              placeholder="biography"
+              bg="white"
+            />
+          </FormControl>
+          <Button
+            isLoading={
+              status.startsWith("Waiting") || status.startsWith("Pending")
+            }
+            loadingText={status}
+            disabled={
+              !laboratory.length ||
+              !bio.length ||
+              status.startsWith("Waiting") ||
+              status.startsWith("Pending") ||
+              ipfsStatus.startsWith("Pinning")
+            }
+            onClick={() => changeProfile(1)}
+            colorScheme="green"
+            transition="0.3s "
+          >
+            Submit
+          </Button>
+          <Button
+            onClick={() => changeProfile(2)}
             ms="4"
             colorScheme="red"
             transition="0.3s "
