@@ -2,15 +2,37 @@
 
 ## GuideLine
 
-- 15min presentation (why blockchain, add technical schema)
-- 15min Demo (prepare scenario and wallet with name)
-- 15min code presentation (make plan for what we will present):
+- 5min Presentation (add architecture & technologie schema)
+- 10min Demo (register, reverts, publish, post, edit profile)
+- 15min Code (50/50 back/front)
+
   - README cascade of contracts deployments schema
   - hardhat project => contracts => test => scripts
   - dapp:
     - present briefly the react architecture
     - select important component to show
     - present hooks for IPFS & contract
+
+## Graphical charter
+
+Colors:
+Main color: `#ff5a23`  
+Secondary color: `#17b7ff`
+
+white on main: `#c42200`  
+dark on main: `#ff8d51`  
+white on secondary: `#0087cb`  
+dark on secondary: `#6ee9ff`
+
+main gray: `#FFECE6`  
+secondary gray: `#F2FBFF`
+
+Fonts:  
+Need to fetch it
+Title: `Merriweather` or more fancy like `Forum` or `Elsie` But can be only a logo ! (avoid to load too much font in the Web App)  
+Text: `Lato`  
+Read-sans-serif: `Lato`  
+Read-serif: `Merriweather`
 
 ## TODO in this repo
 
