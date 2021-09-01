@@ -36,13 +36,27 @@ Read-serif: `Merriweather`
 
 ## TODO in this repo
 
-- refactoring Profile ❌
-- add color theme in Chakra (create a little graphical charter)❌
+- refactoring Profile responsive ❌
 - problem with multiple list of user (RecoverAccount & ListOfUser in the hook)❌
-- Import PDF and pin it to IPFS (use pinata.fromFS)❌
-- Unpin content if TX fail❌
+- Import PDF and pin it to IPFS (use pinata.fromFS) INTEGRATE to function publish ❌
+- PDF hash =>
+
+```js
+header: {
+  version: 0.1,
+  title: "Studies on ETH providers",
+  abstract: "So hard to built this....",
+  content: (hash) {
+    version: 0.1,
+    content: "For the moment nothing is done...",
+    pdfFile: hash
+    },
+}
+```
+
+- manage article/undefined article❌ => 404
+- add color theme in Chakra (create a little graphical charter)❌
 - Crawler with `react-router-dom`❌
-- manage article/undefined article❌
 
 ```js
 articleInfo = {
@@ -52,11 +66,17 @@ articleInfo = {
 }
 ```
 
+- REVIEW DAPP (inspect & write comment) => Architecture
+- README
+- MERGE with main
+
 ## TODO in the backend
 
 - deployment on several blockchain (matic & bsc) with the same address ❌
 - add metrics❌
 - put articleID on indexed ! And author ID❌
+- governance (see tomorrow the openzepplin live at 9PM)
+- ++ replace [] => mapping
 
 ## TODO in data architecture
 
