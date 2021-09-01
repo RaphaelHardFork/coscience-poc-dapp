@@ -22,12 +22,13 @@ const UploadArticle = () => {
   const [articles] = useArticlesContract()
   const [, user] = useUsersContract()
   const [status, contractCall] = useMetamask()
-  const [pinJsObject, , ipfsStatus, , unPin] = useIPFS()
+  const [pinJsObject, , ipfsStatus, pinFile, unPin] = useIPFS()
 
   const [abstract, setAbstract] = useState("")
   const [content, setContent] = useState("")
   const [title, setTitle] = useState("")
   const [coAuthors, setCoAuthors] = useState([])
+  const [file, setFile] = useState()
 
   //Color Mode
   const bg = useColorModeValue("white", "gray.800")
@@ -70,7 +71,11 @@ const UploadArticle = () => {
     let abstractCID = ""
     let contentCID = ""
     if (user.status === "Approved") {
-      const body = { version: 0.1, content }
+      let hash = "No pdf joined"
+      if (file !== undefined) {
+        hash = await pinFile(file)
+      }
+      const body = { version: 0.1, content, pdfFile: hash }
       contentCID = await pinJsObject(body)
       const header = { version: 0.1, title, abstract, content: contentCID }
       abstractCID = await pinJsObject(header)
@@ -101,7 +106,13 @@ const UploadArticle = () => {
   return (
     <>
       <Box p="10">
-        <Container maxW="container.lg" bg={bg} p="10" borderRadius="50">
+        <Container
+          shadow="lg"
+          maxW="container.lg"
+          bg={bg}
+          p="10"
+          borderRadius="50"
+        >
           <Heading textAlign="center" mb="2">
             Publish an article
           </Heading>
@@ -141,7 +152,7 @@ const UploadArticle = () => {
                   </Flex>
                 )
               })}
-              <Button onClick={() => addCoAuthor(0)} colorScheme="green">
+              <Button onClick={() => addCoAuthor(0)} colorScheme="colorSecond">
                 <AddIcon />
               </Button>
             </FormControl>
@@ -173,7 +184,7 @@ const UploadArticle = () => {
                 onChange={(e) => setContent(e.target.value)}
               />
             </FormControl>
-            <UploadFile />
+            <UploadFile file={file} setFile={setFile} />
             <Button
               isLoading={
                 status.startsWith("Waiting") ||
@@ -192,7 +203,7 @@ const UploadArticle = () => {
                 ipfsStatus.startsWith("Pinning")
               }
               onClick={publish}
-              colorScheme="orange"
+              colorScheme="colorMain"
             >
               Submit
             </Button>

@@ -37,6 +37,7 @@ import { useCommentsContract } from "../hooks/useCommentsContract"
 import Loading from "./Loading"
 import Accordion from "./Accordion"
 import UserSetting from "./UserSetting"
+
 import { useIPFS } from "../hooks/useIPFS"
 
 const userContractIds = async (contract, user) => {
@@ -187,14 +188,6 @@ const Dashboard = ({ user }) => {
           (See on IPFS)
         </Link>
       </Heading>
-
-      {/* user.info ? = FALSE CID : OBJECT FROM IPFS
-      
-      1. useIPFS.js: function readIPFS throw CID if false
-      2. Profile.js: useEffect try to fetch IPFS with user.profileCID (readIPFS(user.profileCID))
-      3. Profile.js: wrong CIDs are catched in the key .info
-      4. SO: user.info === user.profileCID if the CID is false
-      */}
       <Text>E-mail: {user.email}</Text>
       <Text>Laboratory: {user.laboratory}</Text>
       <Text fontWeight="bold">Bio:</Text>

@@ -15,7 +15,7 @@ const Home = () => {
 
   const [articleListAuthor, setArticleListAuthor] = useState()
 
-  const bg = useColorModeValue("white", "gray.800")
+  const bg = useColorModeValue("white", "grayOrange.900")
 
   useEffect(() => {
     if (users && articleList !== undefined) {

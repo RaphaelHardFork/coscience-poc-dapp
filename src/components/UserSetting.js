@@ -10,6 +10,7 @@ const UserSetting = ({ user }) => {
   const [users] = useUsersContract()
   const [status, contractCall] = useMetamask()
   const [pinJsObject, , ipfsStatus] = useIPFS()
+
   const [addInput, setAddInput] = useState({
     address: false,
     password: false,

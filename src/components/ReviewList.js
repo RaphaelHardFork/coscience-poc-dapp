@@ -5,6 +5,7 @@ import { useIPFS } from "../hooks/useIPFS"
 import { useReviewsContract } from "../hooks/useReviewsContract"
 import { useUsersContract } from "../hooks/useUsersContract"
 import { Box } from "@chakra-ui/react"
+import ReviewHeader from "./ReviewHeader"
 
 const articleReviewIds = async (reviews, article) => {
   if (reviews) {
@@ -74,15 +75,9 @@ const ReviewList = ({ article }) => {
         ? reviewList.map((review) => {
             return (
               <Box key={review.id}>
-                <Heading>{review.title}</Heading>
-                <Text>
-                  {review.firstName} {review.lastName}
-                </Text>
+                <ReviewHeader review={review} />
+
                 <Text>{review.content}</Text>
-                <Text>{review.date}</Text>
-                <Text>{review.txHash}</Text>
-                <Text>{review.blockNumber}</Text>
-                <Text>Number of comments: {review.comments.length}</Text>
               </Box>
             )
           })

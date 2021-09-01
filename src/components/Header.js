@@ -26,7 +26,8 @@ import HeaderLinks from "./HeaderLinks"
 const Header = () => {
   //login for the sign up to add.
   const [, user] = useUsersContract()
-  const bg = useColorModeValue("white", "gray.800")
+  const bg = useColorModeValue("white", "grayOrange.900")
+  const co = useColorModeValue("main", "second")
   const mobileNav = useDisclosure()
 
   //Color mode
@@ -46,7 +47,7 @@ const Header = () => {
           <Flex>
             <Heading fontWeight="bold" fontFamily="title" as="h1" ml="2">
               <Link _hover={{ textDecoration: "none" }} as={RouterLink} to="/">
-                <Text as="span" color="orange.500">
+                <Text as="span" color={co}>
                   Co
                 </Text>
                 Science

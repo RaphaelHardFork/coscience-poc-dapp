@@ -9,7 +9,7 @@ const About = () => {
           <Heading my="10" textAlign="center">
             About CoScience
           </Heading>
-          <Button display="flex" mx="auto" size="lg" colorScheme="cyan">
+          <Button display="flex" mx="auto" size="lg" colorScheme="colorSecond">
             Donate
           </Button>
         </Container>

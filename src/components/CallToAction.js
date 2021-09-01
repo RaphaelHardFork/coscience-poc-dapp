@@ -6,9 +6,11 @@ import {
   Container,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { Link } from "react-router-dom"
 
 const CallToAction = () => {
-  const txt = useColorModeValue("gray.800", "white")
+  const txt = useColorModeValue("main", "second")
+  const scheme = useColorModeValue("colorMain", "colorSecond")
 
   return (
     <Container maxW={"5xl"}>
@@ -25,20 +27,23 @@ const CallToAction = () => {
           fontFamily="title"
         >
           The{" "}
-          <Text as={"span"} color="main.500">
+          <Text as={"span"} color={txt}>
             Collective
           </Text>{" "}
           Science Platform
         </Heading>
-        <Text fontFamily="text" color={txt} fontSize="lg" maxW={"3xl"}>
+        <Text fontFamily="text" fontSize="lg" maxW={"3xl"}>
           Science with collective intelligence and community governance
         </Text>
         <Stack spacing={6} direction={"row"}>
-          <Button rounded={"full"} px={6} colorScheme={"orange"}>
+          <Button
+            as={Link}
+            to="/about"
+            rounded={"full"}
+            px={6}
+            colorScheme={scheme}
+          >
             Get started
-          </Button>
-          <Button rounded={"full"} px={6}>
-            Learn more
           </Button>
         </Stack>
       </Stack>

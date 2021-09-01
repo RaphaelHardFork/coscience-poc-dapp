@@ -6,11 +6,13 @@ import {
   Link,
   Skeleton,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react"
 
 const ArticleHeader = ({ id, article, eventList }) => {
+  const bg = useColorModeValue("grayOrange.100", "grayBlue.700")
   return (
-    <Box p="10" bg="gray.200">
+    <Box p="10" bg={bg}>
       {article && eventList ? (
         <>
           <Flex
@@ -24,7 +26,7 @@ const ArticleHeader = ({ id, article, eventList }) => {
               Article n°{article.id}
             </Text>
           </Flex>
-          <Divider bg="orange" border="solid" borderColor="orange" />
+          <Divider bg="main" border="solid" borderColor="main" />
           <Flex
             flexDirection={{ base: "column", lg: "row" }}
             justifyContent={{ base: "start", lg: "space-between" }}
@@ -58,7 +60,7 @@ const ArticleHeader = ({ id, article, eventList }) => {
               <Text>
                 Address of author:{" "}
                 <Link
-                  color="blue"
+                  color="secondDark"
                   isExternal
                   href={`https://rinkeby.etherscan.io/tx/${article.author}`}
                 >
@@ -69,7 +71,7 @@ const ArticleHeader = ({ id, article, eventList }) => {
               <Text>
                 Mined in block n°
                 <Link
-                  color="blue"
+                  color="secondDark"
                   isExternal
                   href={`https://rinkeby.etherscan.io/txs?block=${eventList[id].blockNumber}`}
                 >
@@ -81,7 +83,7 @@ const ArticleHeader = ({ id, article, eventList }) => {
               <Text>
                 Transaction hash:{" "}
                 <Link
-                  color="blue"
+                  color="secondDark"
                   isExternal
                   href={`https://rinkeby.etherscan.io/tx/${eventList[id].txHash}`}
                 >
@@ -93,7 +95,7 @@ const ArticleHeader = ({ id, article, eventList }) => {
               <Text>
                 IPFS Header:{" "}
                 <Link
-                  color="blue"
+                  color="secondDark"
                   isExternal
                   href={`https://ipfs.io/ipfs/${article.abstractCID}`}
                 >
@@ -104,7 +106,7 @@ const ArticleHeader = ({ id, article, eventList }) => {
               <Text>
                 IPFS content:{" "}
                 <Link
-                  color="blue"
+                  color="secondDark"
                   isExternal
                   href={`https://ipfs.io/ipfs/${article.contentCID}`}
                 >

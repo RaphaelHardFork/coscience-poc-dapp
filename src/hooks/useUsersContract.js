@@ -52,7 +52,8 @@ export const useUsersContract = () => {
       if (users) {
         const id = await users.profileID(web3State.account)
         const userObj = await getUserData(users, id.toNumber())
-        setUserData(userObj)
+        const { firstName, lastName } = await readIPFS(userObj.nameCID)
+        setUserData({ ...userObj, firstName, lastName })
       }
     }
     connectedUser()
@@ -60,26 +61,28 @@ export const useUsersContract = () => {
     return () => {
       setUserData({})
     }
-  }, [web3State.account, users])
+  }, [web3State.account, users, readIPFS])
 
   // get list of user
   useEffect(() => {
     const createList = async () => {
       if (users) {
+        const listOfUser = []
         const nb = await users.nbOfUsers()
         for (let i = 1; i <= nb; i++) {
           let userObj = await getUserData(users, i)
           const { firstName, lastName } = await readIPFS(userObj.nameCID)
           userObj = { ...userObj, firstName, lastName }
-          setUserList((a) => [...a, userObj])
+          listOfUser.push(userObj)
         }
+        setUserList(listOfUser)
       }
     }
     createList()
 
     // clean up to set value if component is unmount
     return () => {
-      setUserList((a) => [...a])
+      setUserList([])
     }
   }, [users, readIPFS])
 

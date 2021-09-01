@@ -7,10 +7,13 @@ import {
   Image,
   Grid,
   SlideFade,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { Link as RouterLink } from "react-router-dom"
 
 const ArticleList = ({ articleList }) => {
+  const border = useColorModeValue("mainDark", "secondLight")
+
   return (
     <SlideFade transition="0.7s" in>
       <Grid
@@ -25,11 +28,17 @@ const ArticleList = ({ articleList }) => {
           return (
             <Box
               borderRadius="10"
-              shadow="lg"
+              sx={{
+                boxShadow: `3px 6px 7px ${
+                  border === "mainDark" ? "#DDDDDD" : "#333333"
+                }`,
+              }}
               key={article.id}
               p="4"
               border="gray solid"
               borderWidth="1"
+              _hover={{ borderColor: border }}
+              transition="0.3s"
             >
               <Flex justifyContent="space-between">
                 <Text

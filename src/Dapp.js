@@ -15,7 +15,7 @@ import ConfigModal from "./components/ConfigModal"
 
 const Dapp = () => {
   // color Mode
-  const bg = useColorModeValue("gray.200", "gray.500")
+  const bg = useColorModeValue("grayOrange.100", "grayBlue.800")
 
   return (
     <>

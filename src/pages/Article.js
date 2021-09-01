@@ -94,18 +94,25 @@ const Article = () => {
     }
   }, [articles, getArticleData, id, readIPFS, users])
 
-  const bg = useColorModeValue("white", "gray.800")
+  const bg = useColorModeValue("white", "grayOrange.900")
+  const button = useColorModeValue("colorSecond", "colorMain")
+
   // --------------------------------------------------------------RETURN
   return (
     <>
       <Box shadow="lg" bg={bg}>
-        <ArticleHeader id={id} article={article} eventList={eventList} />
+        {article?.id !== 0 ? (
+          <ArticleHeader id={id} article={article} eventList={eventList} />
+        ) : (
+          ""
+        )}
+
         <Container py="10" maxW="container.xl">
           {article ? (
             article.id !== 0 ? (
               <>
                 <Box key={article.id}>
-                  <Heading fontSize="8xl" textAlign="center">
+                  <Heading fontFamily="title" fontSize="8xl" textAlign="center">
                     {article.title}
                   </Heading>
 
@@ -186,10 +193,10 @@ const Article = () => {
             <Loading />
           )}
           <Flex>
-            <Button onClick={onOpen} colorScheme="teal" me="4">
+            <Button onClick={onOpen} colorScheme={button} me="4">
               Reviews ({article !== undefined ? article.reviews.length : "..."})
             </Button>
-            <Button onClick={onOpen} colorScheme="teal">
+            <Button onClick={onOpen} colorScheme={button}>
               Comments (
               {article !== undefined ? article.comments.length : "..."})
             </Button>
@@ -203,10 +210,9 @@ const Article = () => {
         onClose={onClose}
         finalFocusRef={btnRef}
         placement="bottom"
-        size="xl"
       >
         <DrawerOverlay />
-        <DrawerContent>
+        <DrawerContent maxH="60vh">
           <DrawerCloseButton />
           <DrawerHeader>Reviews & Comments</DrawerHeader>
 

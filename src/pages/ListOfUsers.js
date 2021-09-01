@@ -18,6 +18,7 @@ import { useUsersContract } from "../hooks/useUsersContract"
 import { useColorModeValue } from "@chakra-ui/react"
 import { Link } from "react-router-dom"
 import { useMetamask } from "../hooks/useMetamask"
+import Loading from "../components/Loading"
 
 const ListOfUsers = () => {
   const [web3State] = useContext(Web3Context)
@@ -28,7 +29,6 @@ const ListOfUsers = () => {
   const [isOwner, setIsOwner] = useState(false)
 
   // Color Mode
-  console.log(userList)
   const bg = useColorModeValue("white", "gray.800")
 
   useEffect(() => {
@@ -64,84 +64,88 @@ const ListOfUsers = () => {
             </Heading>
             <Box mx="auto" maxW="75%" display="flex" flexDirection="column">
               <UnorderedList listStyleType="none">
-                {userList.map((user) => {
-                  return (
-                    <SlideFade offsetY="0px" offsetX="50px" in>
-                      <Flex
-                        key={user.id}
-                        bg={
-                          user.status === "Pending"
-                            ? "orange.100"
-                            : user.status === "Approved"
-                            ? "green.100"
-                            : "red.100"
-                        }
-                        borderRadius="20"
-                        shadow="lg"
-                        p="4"
-                        mb="6"
-                        as={LinkBox}
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="space-between"
-                        _hover={{ bg: "purple.100" }}
-                        transition="0.3s"
-                      >
-                        <Text fontSize="3xl">{user.id}</Text>
-                        <Flex flexDirection="column">
-                          <Text fontWeight="bold">
-                            {user.firstName} {user.lastName}
-                          </Text>
-                          <Text> {user.walletList[0]} </Text>
-                        </Flex>
-                        <Text> {user.nbOfWallet} Wallet(s) </Text>
-                        <LinkOverlay
-                          as={Link}
-                          to={`/profile/${user.id}`}
-                        ></LinkOverlay>
+                {userList.length === 0 ? (
+                  <Loading />
+                ) : (
+                  userList.map((user) => {
+                    return (
+                      <SlideFade key={user.id} offsetY="0px" offsetX="50px" in>
+                        <Flex
+                          key={user.id}
+                          bg={
+                            user.status === "Pending"
+                              ? "orange.100"
+                              : user.status === "Approved"
+                              ? "green.100"
+                              : "red.100"
+                          }
+                          borderRadius="20"
+                          shadow="lg"
+                          p="4"
+                          mb="6"
+                          as={LinkBox}
+                          display="flex"
+                          alignItems="center"
+                          justifyContent="space-between"
+                          _hover={{ bg: "purple.100" }}
+                          transition="0.3s"
+                        >
+                          <Text fontSize="3xl">{user.id}</Text>
+                          <Flex flexDirection="column">
+                            <Text fontWeight="bold">
+                              {user.firstName} {user.lastName}
+                            </Text>
+                            <Text> {user.walletList[0]} </Text>
+                          </Flex>
+                          <Text> {user.nbOfWallet} Wallet(s) </Text>
+                          <LinkOverlay
+                            as={Link}
+                            to={`/profile/${user.id}`}
+                          ></LinkOverlay>
 
-                        {/* OWNER OPTIONS */}
-                        {isOwner ? (
-                          user.status === "Approved" ? (
-                            <Button
-                              onClick={() => banUser(user.id)}
-                              isLoading={
-                                status.startsWith("Waiting") ||
-                                status.startsWith("Pending")
-                              }
-                              loadingText={status}
-                              disabled={
-                                user.status === "Not approved" ||
-                                status.startsWith("Waiting") ||
-                                status.startsWith("Pending")
-                              }
-                            >
-                              Ban
-                            </Button>
+                          {/* OWNER OPTIONS */}
+                          {isOwner ? (
+                            user.status === "Approved" ? (
+                              <Button
+                                onClick={() => banUser(user.id)}
+                                isLoading={
+                                  status.startsWith("Waiting") ||
+                                  status.startsWith("Pending")
+                                }
+                                loadingText={status}
+                                disabled={
+                                  user.status === "Not approved" ||
+                                  status.startsWith("Waiting") ||
+                                  status.startsWith("Pending")
+                                }
+                              >
+                                Ban
+                              </Button>
+                            ) : (
+                              <Button
+                                onClick={() => acceptUser(user.id)}
+                                isLoading={
+                                  status.startsWith("Waiting") ||
+                                  status.startsWith("Pending")
+                                }
+                                loadingText={status}
+                                disabled={
+                                  user.status === "Not approved" ||
+                                  status.startsWith("Waiting") ||
+                                  status.startsWith("Pending")
+                                }
+                              >
+                                Accept
+                              </Button>
+                            )
                           ) : (
-                            <Button
-                              onClick={() => acceptUser(user.id)}
-                              isLoading={
-                                status.startsWith("Waiting") ||
-                                status.startsWith("Pending")
-                              }
-                              loadingText={status}
-                              disabled={
-                                user.status === "Not approved" ||
-                                status.startsWith("Waiting") ||
-                                status.startsWith("Pending")
-                              }
-                            >
-                              Accept
-                            </Button>
-                          )
-                        ) : (
-                          ""
-                        )}
-                      </Flex>
-                    </SlideFade>
-                  )
-                })}
+                            ""
+                          )}
+                        </Flex>
+                      </SlideFade>
+                    )
+                  })
+                )}
               </UnorderedList>
             </Box>
             <Heading textAlign="center">Owner of the contract</Heading>
