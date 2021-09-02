@@ -11,7 +11,6 @@ import { Link as RouterLink } from "react-router-dom"
 const Footer = () => {
   //color Mode
   const bg = useColorModeValue("white", "grayOrange.900")
-  const shadow = useColorModeValue("grayOrange.100", "grayOrange.600")
   return (
     <>
       <Box
@@ -19,8 +18,8 @@ const Footer = () => {
         sx={{
           boxShadow: `0px -1px 7px ${bg === "white" ? "#DDDDDD" : "#444444"}`,
         }}
-        mt="auto"
         bg={bg}
+        mt="auto"
       >
         <Container
           as={Stack}

@@ -28,7 +28,7 @@
 
 Users:
 
-```ts
+```js
 profileCID: String {
   version: 0.1,
   email: "rogert@food.com",
@@ -44,7 +44,7 @@ profileCID: String {
 
 Articles:
 
-```ts
+```js
 abstractCID: String {
   version: 0.1,
   title: "Studies on ETH providers",
@@ -59,7 +59,7 @@ abstractCID: String {
 
 Reviews:
 
-```ts
+```js
 contentCID: String {
   version: 0.1,
   title: "Pas assez de sources",
