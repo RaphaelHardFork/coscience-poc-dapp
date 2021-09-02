@@ -28,7 +28,6 @@ const getUserData = async (users, id) => {
     id: Number(id),
     nameCID,
     profileCID,
-    nameCID,
     status: enumStatus(status),
     walletList,
     nbOfWallet: nbOfWallet.toNumber(),
