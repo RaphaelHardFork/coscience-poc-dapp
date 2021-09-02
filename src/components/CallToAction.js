@@ -1,6 +1,17 @@
-import { Button, Stack, Heading, Text, Container } from "@chakra-ui/react"
+import {
+  Button,
+  Stack,
+  Heading,
+  Text,
+  Container,
+  useColorModeValue,
+} from "@chakra-ui/react"
+import { Link } from "react-router-dom"
 
 const CallToAction = () => {
+  const txt = useColorModeValue("main", "second")
+  const scheme = useColorModeValue("colorMain", "colorSecond")
+
   return (
     <Container maxW={"5xl"}>
       <Stack
@@ -13,27 +24,26 @@ const CallToAction = () => {
           fontWeight={600}
           fontSize={{ base: "3xl", sm: "4xl", md: "6xl" }}
           lineHeight={"110%"}
+          fontFamily="title"
         >
           The{" "}
-          <Text as={"span"} color={"orange.400"}>
+          <Text as={"span"} color={txt}>
             Collective
           </Text>{" "}
           Science Platform
         </Heading>
-        <Text color={"gray.500"} maxW={"3xl"}>
+        <Text fontFamily="text" fontSize="lg" maxW={"3xl"}>
           Science with collective intelligence and community governance
         </Text>
         <Stack spacing={6} direction={"row"}>
           <Button
+            as={Link}
+            to="/about"
             rounded={"full"}
             px={6}
-            colorScheme={"orange"}
-            bg={"orange.400"}
+            colorScheme={scheme}
           >
             Get started
-          </Button>
-          <Button rounded={"full"} px={6}>
-            Learn more
           </Button>
         </Stack>
       </Stack>

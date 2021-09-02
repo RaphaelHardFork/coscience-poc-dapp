@@ -4,7 +4,7 @@ const Loading = () => {
   return (
     <Center>
       <Flex alignItems="center" flexDirection="column">
-        <CircularProgress isIndeterminate color="green.300" />
+        <CircularProgress isIndeterminate color="second" />
         <Heading mt="6">Loading...</Heading>
       </Flex>
     </Center>

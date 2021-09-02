@@ -1,136 +1,157 @@
-# dApp Coscience
+# dApp Coscience version 0.1
 
-## GuideLine
+## Architecture
 
-- 15min presentation (why blockchain, add technical schema)
-- 15min Demo (prepare scenario and wallet with name)
-- 15min code presentation (make plan for what we will present):
-  - README cascade of contracts deployments schema
-  - hardhat project => contracts => test => scripts
-  - dapp:
-    - present briefly the react architecture
-    - select important component to show
-    - present hooks for IPFS & contract
+**Schema**
 
 ## TODO in this repo
 
-- display all IPFS data (Profile: name, Home: abstract, Article: all + name)
-- link to Etherscan => get the time stamp
-- linked profile to article/ comments ...
-- list of users use the functions
-- before sign in metamask & switch network (to rinkeby)
-- navbar profile (prevent undefined or manage)
+- refactoring Profile responsive ❌
+- Crawler with `react-router-dom`❌ (Not in this version)
+- REVIEW DAPP (write comments & create architecture schema)
+- MERGE with main
 
-- add change profile Settings => input (bio, laboratoire)
-- get the timestamp of each Article/Review/Comment and why not Users. [Use events...]
-- add Recover account => select the ID /!\
+## TODO in the backend (Not in this version)
 
-- Crawler with `react-router-dom`
-- Refactoring of components (Article in priority)
-- Import PDF and pin it to IPFS
-- Unpin content if TX fail
-
-Import PDF => localStorage => IPFS pinFile => CID
-
-```js
-articleInfo = {
-  title: "",
-  content: "",
-  pdfFile: "bafkreibbo5dlexsozwr5ac34lfuy6bwq4ixcj5wx5injqa74mlq5wybgs4",
-}
-```
-
-## TODO in the backend
-
-- add nbOfUsers function OK
-- add edit profile function (change the CID) OK
-- prevent to be register two time with the same wallet OK
-- register CID in `bytes32` NO
-- deployment on several blockchain (matic & bsc) with the same address NO
-
-## TODO in data architecture
-
-- create standard for object keys stored in IPFS
-
-Exemple:
-
-```js
-userInfo = { firstName: "", lastName: "", email: "" }
-```
-
-- keep standards working with a version of this standard
-
-```js
-userInfo = { version: 0.1, firstName: "", lastName: "" }
-userInfo = { version: 0.2, firstName: "", lastName: "", bio: "" }
-```
-
-- save permanent information like name
-
-```js
-userInfo = {
-  version: 0.3,
-  bio: "A",
-  laboratory: "A",
-  userInfo: "bafkreibbo5dlexsozwr5ac34lfuy6bwq4ixcj5wx5injqa74mlq5wybgs4",
-}
-
-newUserInfo = {
-  version: 0.3,
-  bio: "B",
-  laboratory: "B",
-  userInfo: "bafkreibbo5dlexsozwr5ac34lfuy6bwq4ixcj5wx5injqa74mlq5wybgs4",
-}
-```
-
-`userInfo` stay the same
+- deployment on several blockchain (matic & bsc) with the same address ❌
+- add metrics❌
+- put articleID on indexed ! And author ID❌
+- governance (see tomorrow the openzepplin live at 9PM)
+- ++ replace [] => mapping
 
 ## IPFS data architecture
+
+`String` correspond to a IPFS hash like:  
+`bafkreigvjwq6z6tf34cxysyyriq6a7y7fyggpzryfvych6qorpzxjsls6u`
 
 ### Version 0.1
 
 Users:
 
 ```js
-{
-version: 0.1,
-userInfo: {
+profileCID: String {
   version: 0.1,
-  firstName: "Rogert",
-  lastName: "Culinaire"
+  email: "rogert@food.com",
+  laboratory: "Ministry of Food",
+  bio: "Eat some Tacos...",
+  nameCID: String {
+    version: 0.1,
+    firstName: "Rogert",
+    lastName: "Culinaire"
   },
-email: "rogert@food.com",
-laboratory: "Ministry of Food",
-bio: "Eat some Tacos..."
 }
 ```
 
 Articles:
 
 ```js
-{
-version: 0.1,
-title: "Studies on ETH providers",
-abstract: "So hard to built this....",
-content: {
+abstractCID: String {
   version: 0.1,
-  content: "For the moment nothing is done..."
-  },
+  title: "Studies on ETH providers",
+  abstract: "So hard to built this....",
+  content: String {
+    version: 0.1,
+    content: "For the moment nothing is done...",
+    pdfFile: String // new feature, almost all articles in this version do not have this key
+    },
 }
 ```
 
 Reviews:
 
 ```js
-{
-version: 0.1,
-title: "Pas assez de sources",
-content: "L'article est de bonne facture mais manque cruellement de sources"
+contentCID: String {
+  version: 0.1,
+  title: "Pas assez de sources",
+  content: "L'article est de bonne facture mais manque cruellement de sources"
 }
 ```
 
 Comments:
 
 ```js
-{ version: 0.1, content: 'blabla' }
+ContentCID: String {
+  version: 0.1,
+  content: 'blabla'
+}
 ```
+
+## Graphical charter
+
+**Made with [Coolers](https://coolors.co/) & [ColorTool](https://material.io/resources/color/#!/?view.left=0&view.right=0)**
+
+```js
+styles = {
+  colors: {
+    main: "#ff5a23",
+    mainLight: "#ff8d51",
+    mainDark: "#c42200",
+    second: "#17b7ff",
+    secondLight: "#6ee9ff",
+    secondDark: "#0087cb",
+    colorMain: {
+      50: "#ff9877",
+      100: "#ff8e69",
+      200: "#ff835a",
+      300: "#ff7749",
+      400: "#ff6937",
+      500: "#ff5a23",
+      600: "#e85220",
+      700: "#d34b1d",
+      800: "#c0441a",
+      900: "#af3e18",
+    },
+    colorSecond: {
+      50: "#60ceff",
+      100: "#50c9ff",
+      200: "#3fc4ff",
+      300: "#2cbeff",
+      400: "#17b7ff",
+      500: "#15a6e8",
+      600: "#1397d3",
+      700: "#1189c0",
+      800: "#0f7daf",
+      900: "#0e729f",
+    },
+    grayOrange: {
+      100: "#E7E5E4",
+      200: "#CFCBC9",
+      300: "#B6B1AF",
+      400: "#9E9694",
+      500: "#867C79",
+      600: "#6B6361",
+      700: "#504B49",
+      800: "#363230",
+      900: "#1B1918",
+    },
+    grayBlue: {
+      100: "#E4E6E7",
+      200: "#C9CDCF",
+      300: "#AFB4B6",
+      400: "#949B9E",
+      500: "#798286",
+      600: "#61686B",
+      700: "#494E50",
+      800: "#303436",
+      900: "#181A1B",
+    },
+  },
+  fonts: {
+    text: "Lato, sans-serif",
+    title: "Merriweather, serif",
+  },
+}
+```
+
+## GuideLine
+
+- 5min Presentation (add architecture & technologie schema)
+- 10min Demo (register, reverts, publish, post, edit profile)
+- 15min Code (50/50 back/front)
+
+  - README cascade of contracts deployments schema
+  - hardhat project => contracts => test => scripts
+  - dapp:
+    - present briefly the react architecture
+    - select important component to show
+    - present hooks for IPFS & contract
