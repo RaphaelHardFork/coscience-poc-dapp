@@ -26,7 +26,7 @@ import HeaderLinks from "./HeaderLinks"
 const Header = () => {
   //login for the sign up to add.
   const [, user] = useUsersContract()
-  const bg = useColorModeValue("white", "grayOrange.900")
+  const bg = useColorModeValue("white", "grayBlue.900")
   const co = useColorModeValue("main", "second")
   const mobileNav = useDisclosure()
 

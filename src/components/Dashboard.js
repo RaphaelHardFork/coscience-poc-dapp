@@ -86,6 +86,11 @@ const Dashboard = ({ user }) => {
     readIFPS,
   ])
 
+  //                  Color Value
+  // const bg = useColorModeValue("white", "grayBlue.900")
+  // const txt = useColorModeValue("main", "second")
+  // const scheme = useColorModeValue("colorMain", "colorSecond")
+
   return (
     <>
       <Tabs isFitted variant="enclosed">

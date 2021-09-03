@@ -1,4 +1,4 @@
-import { Box, useColorModeValue, Container } from "@chakra-ui/react"
+import { Box, useColorModeValue, Container, Divider } from "@chakra-ui/react"
 import { useState } from "react"
 import { useEffect } from "react"
 import ArticleList from "../components/ArticleList"
@@ -15,7 +15,7 @@ const Home = () => {
 
   const [articleListAuthor, setArticleListAuthor] = useState()
 
-  const bg = useColorModeValue("white", "grayOrange.900")
+  const bg = useColorModeValue("grayOrange.100", "grayBlue.800")
 
   useEffect(() => {
     if (users && articleList !== undefined) {
@@ -44,6 +44,7 @@ const Home = () => {
   return (
     <>
       <CallToAction />
+
       <Box py="10" bg={bg}>
         <Container maxW={{ base: "container.sm", lg: "container.xl" }}>
           {articleListAuthor === undefined ? (

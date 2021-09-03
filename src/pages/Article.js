@@ -54,8 +54,10 @@ const Article = () => {
         const articleObj = await getArticleData(articles, id);
 
         // get content
-        const { title, abstract } = await readIPFS(articleObj.abstractCID);
-        const { content } = await readIPFS(articleObj.contentCID);
+
+        const { title, abstract } = await readIPFS(articleObj.abstractCID)
+        const { content, pdfFile } = await readIPFS(articleObj.contentCID)
+
 
         // get user info
         const idAuthor = await users.profileID(articleObj.author);
@@ -85,6 +87,7 @@ const Article = () => {
           title,
           abstract,
           content,
+          pdfFile,
           authorID: idAuthor,
           firstName,
           lastName,
@@ -96,8 +99,12 @@ const Article = () => {
     }
   }, [articles, getArticleData, id, readIPFS, users]);
 
-  const bg = useColorModeValue('white', 'grayOrange.900');
-  const button = useColorModeValue('colorSecond', 'colorMain');
+
+  //                  Color Value
+  const bg = useColorModeValue("white", "grayOrange.900")
+  const txt = useColorModeValue("main", "second")
+  const scheme = useColorModeValue("colorMain", "colorSecond")
+
 
   // --------------------------------------------------------------RETURN
   return (
@@ -151,6 +158,21 @@ const Article = () => {
                       </Text>
                     );
                   })}
+                  {article.pdfFile !== undefined ? (
+                    <Link
+                      isExternal
+                      href={`https://ipfs.io/ipfs/${article.pdfFile}`}
+                    >
+                      <Button mt="4" variant="link" color={txt}>
+                        PDF Link
+                      </Button>
+                    </Link>
+                  ) : (
+                    <Text color={txt} mt="4">
+                      No PDF File
+                    </Text>
+                  )}
+
                   <Heading
                     fontSize='lg'
                     as='h3'
@@ -187,6 +209,26 @@ const Article = () => {
                     Not implemented yet...
                   </Text>
 
+                  <Flex mb="10">
+                    <Button
+                      onClick={onOpen}
+                      colorScheme={scheme}
+                      me="4"
+                      variant="link"
+                    >
+                      Reviews (
+                      {article !== undefined ? article.reviews.length : "..."})
+                    </Button>
+                    <Button
+                      onClick={onOpen}
+                      colorScheme={scheme}
+                      variant="link"
+                    >
+                      Comments (
+                      {article !== undefined ? article.comments.length : "..."})
+                    </Button>
+                  </Flex>
+
                   <Flex
                     flexDirection={{ base: 'column', lg: 'row' }}
                     justifyContent='space-between'
@@ -205,6 +247,8 @@ const Article = () => {
           ) : (
             <Loading />
           )}
+
+
           <Flex>
             <Button onClick={onOpen} colorScheme={button} me='4'>
               Reviews ({article !== undefined ? article.reviews.length : '...'})
@@ -214,6 +258,7 @@ const Article = () => {
               {article !== undefined ? article.comments.length : '...'})
             </Button>
           </Flex>
+
         </Container>
       </Box>
 

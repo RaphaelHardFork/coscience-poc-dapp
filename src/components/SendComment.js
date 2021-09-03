@@ -7,6 +7,7 @@ import {
   useDisclosure,
   Collapse,
   Heading,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { useState } from "react"
 import { useMetamask } from "../hooks/useMetamask"
@@ -36,6 +37,7 @@ const SendComment = ({ targetAddress, id }) => {
     }
     setContent("")
   }
+  const scheme = useColorModeValue("colorMain", "colorSecond")
 
   return (
     <>
@@ -44,7 +46,7 @@ const SendComment = ({ targetAddress, id }) => {
           display="flex"
           ms={{ base: "", lg: "auto" }}
           onClick={onToggle}
-          colorScheme="orange"
+          colorScheme={scheme}
         >
           {isOpen ? "X" : "Add comment"}
         </Button>
@@ -63,7 +65,7 @@ const SendComment = ({ targetAddress, id }) => {
                 />
               </FormControl>
               <Button
-                colorScheme="orange"
+                colorScheme={scheme}
                 onClick={post}
                 isLoading={
                   status.startsWith("Waiting") ||

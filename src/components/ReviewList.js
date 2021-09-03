@@ -1,4 +1,3 @@
-import { Text } from "@chakra-ui/react"
 import { useState } from "react"
 import { useEffect } from "react"
 import { useIPFS } from "../hooks/useIPFS"
@@ -77,7 +76,6 @@ const ReviewList = ({ article }) => {
               <Box key={review.id}>
                 <Review review={review} />
 
-                <Text>{review.content}</Text>
                 <SendComment />
               </Box>
             )

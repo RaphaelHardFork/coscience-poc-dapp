@@ -8,6 +8,7 @@ import {
   Heading,
   useDisclosure,
   Collapse,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { useState } from "react"
 import { useIPFS } from "../hooks/useIPFS"
@@ -36,10 +37,12 @@ const SendReview = ({ id }) => {
     setContent("")
   }
 
+  const scheme = useColorModeValue("colorMain", "colorSecond")
+
   return (
     <>
       <Box minW="49%">
-        <Button onClick={onToggle} colorScheme="orange">
+        <Button onClick={onToggle} colorScheme={scheme}>
           {isOpen ? "X" : "Add review"}
         </Button>
 
@@ -64,7 +67,7 @@ const SendReview = ({ id }) => {
                 />
               </FormControl>
               <Button
-                colorScheme="orange"
+                colorScheme={scheme}
                 onClick={post}
                 isLoading={
                   status.startsWith("Waiting") ||

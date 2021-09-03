@@ -9,6 +9,7 @@ import {
   AccordionPanel,
   Button,
   Flex,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { Link } from "react-router-dom"
 import { useArticlesContract } from "../hooks/useArticlesContract"
@@ -17,6 +18,10 @@ import { useReviewsContract } from "../hooks/useReviewsContract"
 const Accordion = ({ object, type }) => {
   const [reviews] = useReviewsContract()
   const [articles] = useArticlesContract()
+
+  //                  Color Value
+  const scheme = useColorModeValue("colorMain", "colorSecond")
+
   return (
     <ChakraAccordion allowToggle>
       <AccordionItem>
@@ -55,7 +60,7 @@ const Accordion = ({ object, type }) => {
                   <Button
                     as={Link}
                     to={`/article/${object.id}`}
-                    colorScheme="orange"
+                    colorScheme={scheme}
                   >
                     Read the article
                   </Button>
@@ -76,7 +81,7 @@ const Accordion = ({ object, type }) => {
                 </Text>
                 <Text>{object.content}</Text>
                 <Button
-                  colorScheme="orange"
+                  colorScheme={scheme}
                   as={Link}
                   to={`/article/${object.targetID}`}
                 >
@@ -96,7 +101,7 @@ const Accordion = ({ object, type }) => {
                       ? `/article/${object.targetID}`
                       : ""
                   }
-                  colorScheme="orange"
+                  colorScheme={scheme}
                   as={Link}
                 >
                   {" "}

@@ -19,15 +19,15 @@ const enumStatus = (status) => {
 
 // Pure function
 const getUserData = async (users, id) => {
-  const profileCID = await users.userProfile(id)
   const nameCID = await users.userName(id)
+  const profileCID = await users.userProfile(id)
   const status = await users.userStatus(id)
   const walletList = await users.userWalletList(id)
   const nbOfWallet = await users.userNbOfWallet(id)
   const userObj = {
     id: Number(id),
-    profileCID,
     nameCID,
+    profileCID,
     status: enumStatus(status),
     walletList,
     nbOfWallet: nbOfWallet.toNumber(),

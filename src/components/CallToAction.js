@@ -5,20 +5,22 @@ import {
   Text,
   Container,
   useColorModeValue,
+  Divider,
 } from "@chakra-ui/react"
 import { Link } from "react-router-dom"
 
 const CallToAction = () => {
   const txt = useColorModeValue("main", "second")
   const scheme = useColorModeValue("colorMain", "colorSecond")
+  const divider = useColorModeValue("main", "second")
 
   return (
-    <Container maxW={"5xl"}>
+    <Container maxW={"5xl"} mb="5">
       <Stack
         textAlign="center"
         align="center"
         spacing={{ base: 8, md: 10 }}
-        py={{ base: 20, md: 28 }}
+        py={{ base: 16, md: 24 }}
       >
         <Heading
           fontWeight={600}
@@ -47,6 +49,7 @@ const CallToAction = () => {
           </Button>
         </Stack>
       </Stack>
+      <Divider bg={divider} borderColor={divider} border="1px" />
     </Container>
   )
 }
