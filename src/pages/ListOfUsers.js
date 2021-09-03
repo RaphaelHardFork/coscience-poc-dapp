@@ -9,6 +9,7 @@ import {
   UnorderedList,
   Button,
   SlideFade,
+  Tag,
 } from "@chakra-ui/react"
 import { useState } from "react"
 import { useContext } from "react"
@@ -28,8 +29,10 @@ const ListOfUsers = () => {
   const [owner, setOwner] = useState("")
   const [isOwner, setIsOwner] = useState(false)
 
-  // Color Mode
-  const bg = useColorModeValue("white", "gray.800")
+  //                  Color Value
+  const bg = useColorModeValue("white", "grayBlue.900")
+  const bgUser = useColorModeValue("grayOrange.100", "grayBlue.800")
+  const txt = useColorModeValue("mainLight", "second")
 
   useEffect(() => {
     const getOwner = async () => {
@@ -59,7 +62,7 @@ const ListOfUsers = () => {
       <Box p="10">
         <Container maxW="container.lg">
           <Box shadow="lg" borderRadius="50" py="10" bg={bg}>
-            <Heading textAlign="center" mb="2">
+            <Heading textAlign="center" mb="5">
               List of users
             </Heading>
             <Box mx="auto" maxW="75%" display="flex" flexDirection="column">
@@ -69,39 +72,52 @@ const ListOfUsers = () => {
                 ) : (
                   userList.map((user) => {
                     return (
-                      <SlideFade key={user.id} offsetY="0px" offsetX="50px" in>
+                      <SlideFade key={user.id} offsetY="100px" offsetX="0px" in>
                         <Flex
                           key={user.id}
-                          bg={
-                            user.status === "Pending"
-                              ? "orange.100"
-                              : user.status === "Approved"
-                              ? "green.100"
-                              : "red.100"
-                          }
-                          borderRadius="20"
+                          borderRadius="10"
                           shadow="lg"
                           p="4"
-                          mb="6"
+                          mb="5"
                           as={LinkBox}
-                          display="flex"
-                          alignItems="center"
-                          justifyContent="space-between"
-                          _hover={{ bg: "purple.100" }}
+                          alignItems={{ base: "space-around", lg: "center" }}
+                          justifyContent={"space-around"}
+                          _hover={{ backgroundColor: txt }}
                           transition="0.3s"
+                          bg={bgUser}
+                          direction={{ base: "column", lg: "row" }}
                         >
-                          <Text fontSize="3xl">{user.id}</Text>
+                          <Text fontSize="3xl">#{user.id}</Text>
                           <Flex flexDirection="column">
                             <Text fontWeight="bold">
                               {user.firstName} {user.lastName}
                             </Text>
-                            <Text> {user.walletList[0]} </Text>
+                            <Text wrap="wrap"> {user.walletList[0]} </Text>
                           </Flex>
                           <Text> {user.nbOfWallet} Wallet(s) </Text>
                           <LinkOverlay
                             as={Link}
                             to={`/profile/${user.id}`}
                           ></LinkOverlay>
+
+                          <Flex direction="column" width="75px">
+                            {user.status === "Pending"
+                              ? "Pending"
+                              : user.status === "Approved"
+                              ? "Approved"
+                              : "Banned"}
+                            <Tag
+                              borderRadius="full"
+                              variant="solid"
+                              bg={
+                                user.status === "Pending"
+                                  ? "orange.500"
+                                  : user.status === "Approved"
+                                  ? "green.400"
+                                  : "red.400"
+                              }
+                            ></Tag>
+                          </Flex>
 
                           {/* OWNER OPTIONS */}
                           {isOwner ? (

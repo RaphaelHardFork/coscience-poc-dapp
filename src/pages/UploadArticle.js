@@ -31,7 +31,7 @@ const UploadArticle = () => {
   const [file, setFile] = useState()
 
   //Color Mode
-  const bg = useColorModeValue("white", "gray.800")
+  const bg = useColorModeValue("white", "grayBlue.900")
 
   function addCoAuthor(code, index, input) {
     switch (code) {
@@ -103,6 +103,8 @@ const UploadArticle = () => {
     setTitle("")
   }
 
+  const scheme = useColorModeValue("colorMain", "colorSecond")
+
   return (
     <>
       <Box p="10">
@@ -152,7 +154,7 @@ const UploadArticle = () => {
                   </Flex>
                 )
               })}
-              <Button onClick={() => addCoAuthor(0)} colorScheme="colorSecond">
+              <Button onClick={() => addCoAuthor(0)} colorScheme={scheme}>
                 <AddIcon />
               </Button>
             </FormControl>
@@ -203,7 +205,7 @@ const UploadArticle = () => {
                 ipfsStatus.startsWith("Pinning")
               }
               onClick={publish}
-              colorScheme="colorMain"
+              colorScheme={scheme}
             >
               Submit
             </Button>

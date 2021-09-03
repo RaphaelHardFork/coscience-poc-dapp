@@ -10,7 +10,7 @@ import { Link as RouterLink } from "react-router-dom"
 
 const Footer = () => {
   //color Mode
-  const bg = useColorModeValue("white", "grayOrange.900")
+  const bg = useColorModeValue("white", "grayBlue.900")
   return (
     <>
       <Box

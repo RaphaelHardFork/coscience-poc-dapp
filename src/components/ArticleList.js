@@ -1,3 +1,4 @@
+import { LinkIcon } from "@chakra-ui/icons"
 import {
   Box,
   Flex,
@@ -8,11 +9,17 @@ import {
   Grid,
   SlideFade,
   useColorModeValue,
+  Divider,
+  Icon,
 } from "@chakra-ui/react"
 import { Link as RouterLink } from "react-router-dom"
 
 const ArticleList = ({ articleList }) => {
-  const border = useColorModeValue("mainDark", "secondLight")
+  const border = useColorModeValue("white", "grayBlue.900")
+  const hover = useColorModeValue("main", "second")
+  const txt = useColorModeValue("grayOrange.800", "grayBlue.200")
+  const bgUser = useColorModeValue("white", "grayBlue.900")
+  const bg = useColorModeValue("grayOrange.100", "grayBlue.800")
 
   return (
     <SlideFade transition="0.7s" in>
@@ -22,23 +29,23 @@ const ArticleList = ({ articleList }) => {
           lg: "repeat(3, 1fr)",
           xl: "repeat(4, 1fr)",
         }}
-        gap="4"
+        gap="3"
+        bg={bg}
+        mb="10"
       >
         {articleList.map((article) => {
           return (
             <Box
-              borderRadius="10"
-              sx={{
-                boxShadow: `3px 6px 7px ${
-                  border === "mainDark" ? "#DDDDDD" : "#333333"
-                }`,
-              }}
+              borderRadius="7"
+              boxShadow="lg"
               key={article.id}
-              p="4"
-              border="gray solid"
-              borderWidth="1"
-              _hover={{ borderColor: border }}
+              p="5"
+              // border="solid"
+              _hover={{ border: "2px", borderColor: hover }}
               transition="0.3s"
+              bg={bgUser}
+              border="2px"
+              borderColor={border}
             >
               <Flex justifyContent="space-between">
                 <Text
@@ -59,18 +66,24 @@ const ArticleList = ({ articleList }) => {
                 </Text>
               </Flex>
               <Heading
-                _hover={{ textDecoration: "underline" }}
+                py="2"
+                fontSize="2xl"
+                _hover={{ color: hover }}
                 display="block"
                 as={RouterLink}
                 to={`/article/${article.id}`}
                 isTruncated
-                maxW="12ch"
+                maxW="20ch"
+                color={txt}
+                textAlign="center"
               >
                 {article.title}
               </Heading>
+              <Divider border="1px" />
               <Text isTruncated maxW="30ch" py="6">
                 Abstract: {article.abstract}
               </Text>
+
               <Flex mb="4" alignItems="center">
                 <Image
                   h={10}
@@ -86,13 +99,14 @@ const ArticleList = ({ articleList }) => {
                   isTruncated
                   mx={2}
                   fontWeight="bold"
+                  color={txt}
                 >
                   {article.firstName} {article.lastName}
                 </Link>
               </Flex>
               <Flex justifyContent="space-between">
                 <Text>Reviews({article.reviews.length})</Text>
-                <Text>Comments: {article.comments.length}</Text>
+                <Text>Comments({article.comments.length}) </Text>
               </Flex>
             </Box>
           )

@@ -15,10 +15,12 @@ import {
   PopoverTrigger,
   Skeleton,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { Link as RouterLink } from "react-router-dom"
 
 const Review = ({ review }) => {
+  const link = useColorModeValue("main", "second")
   return (
     <Box p="5" key={review.id}>
       {review !== undefined ? (
@@ -34,7 +36,7 @@ const Review = ({ review }) => {
                 by{" "}
                 <Link
                   as={RouterLink}
-                  color="orange"
+                  color={link}
                   to={`/profile/${review.authorID}`}
                 >
                   {review.firstName} {review.lastName}
@@ -54,7 +56,7 @@ const Review = ({ review }) => {
                     <PopoverTrigger>
                       <IconButton
                         variant="Link"
-                        color="orange"
+                        color={link}
                         icon={<InfoIcon />}
                       />
                     </PopoverTrigger>
@@ -68,7 +70,7 @@ const Review = ({ review }) => {
                         <Text>
                           Address of author: {review.author}{" "}
                           <Link
-                            color="orange"
+                            color={link}
                             isExternal
                             href={`https://rinkeby.etherscan.io/address/${review.author}`}
                           >
@@ -78,7 +80,7 @@ const Review = ({ review }) => {
                         <Text>
                           Mined in block n° {review.blockNumber}{" "}
                           <Link
-                            color="orange"
+                            color={link}
                             isExternal
                             href={`https://rinkeby.etherscan.io/txs?block=${review.blockNumber}`}
                           >
@@ -89,7 +91,7 @@ const Review = ({ review }) => {
                         <Text>
                           Transaction hash: {review.txHash}{" "}
                           <Link
-                            color="orange"
+                            color={link}
                             isExternal
                             href={`https://rinkeby.etherscan.io/tx/${review.txHash}`}
                           >

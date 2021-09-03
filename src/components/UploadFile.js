@@ -1,5 +1,12 @@
 import React, { useRef, useState } from "react"
-import { Box, Button, Flex, InputGroup, Text } from "@chakra-ui/react"
+import {
+  Box,
+  Button,
+  Flex,
+  InputGroup,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import { AttachmentIcon } from "@chakra-ui/icons"
 
 const UploadFile = ({ file, setFile }) => {
@@ -13,6 +20,7 @@ const UploadFile = ({ file, setFile }) => {
     setPdfSrc(url)
   }
 
+  const scheme = useColorModeValue("colorMain", "colorSecond")
   return (
     <>
       <InputGroup>
@@ -27,7 +35,7 @@ const UploadFile = ({ file, setFile }) => {
             display="flex"
             me="4"
             leftIcon={<AttachmentIcon />}
-            colorScheme="colorSecond"
+            colorScheme={scheme}
             onClick={() => inputRef.current.click()}
           >
             Choose a file
