@@ -4,9 +4,7 @@ import {
   Box,
   Heading,
   Button,
-  Input,
   Text,
-  Icon,
   Link,
   NumberInputField,
   NumberInputStepper,
@@ -55,7 +53,13 @@ const About = () => {
   return (
     <>
       <Box m="auto">
-        <Container maxW="container.md" bg={bg} p="10" borderRadius="20">
+        <Container
+          shadow="lg"
+          maxW="container.md"
+          bg={bg}
+          p="10"
+          borderRadius="20"
+        >
           <Heading mb="4" textAlign="center">
             About CoScience
           </Heading>
@@ -69,7 +73,7 @@ const About = () => {
           >
             Github
           </Link>
-          <Text>Support CoScience</Text>
+          <Text my="2">Support CoScience</Text>
           <NumberInput
             maxW="100px"
             mr="2rem"
@@ -78,6 +82,7 @@ const About = () => {
             step={0.001}
             max={web3State.balance}
             min={0}
+            mb="2"
           >
             <NumberInputField />
             <NumberInputStepper>
@@ -97,7 +102,7 @@ const About = () => {
             <SliderTrack>
               <SliderFilledTrack />
             </SliderTrack>
-            <SliderThumb fontSize="sm" boxSize="32px" children={amount} />
+            <SliderThumb fontSize="sm" boxSize="20px" children={amount} />
           </Slider>
           <Button
             onClick={donate}

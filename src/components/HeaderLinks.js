@@ -11,9 +11,11 @@ import React from "react"
 import { Link } from "react-router-dom"
 
 const HeaderLinks = ({ user, isOpen, onClose }) => {
-  const hover = useColorModeValue("grayBlue.100", "grayOrange.600")
+  const hover = useColorModeValue("mainLight", "secondDark")
   const pill = useColorModeValue("main", "second")
   const scheme = useColorModeValue("colorMain", "colorSecond")
+  const bg = useColorModeValue("grayOrange.100", "grayBlue.800")
+
   return (
     <Flex
       key={user.id}
@@ -27,6 +29,7 @@ const HeaderLinks = ({ user, isOpen, onClose }) => {
         as={Link}
         to="/"
         variant="ghost"
+        mx="1"
       >
         Home
       </Button>
@@ -37,6 +40,7 @@ const HeaderLinks = ({ user, isOpen, onClose }) => {
         as={Link}
         to="/list-of-users"
         variant="ghost"
+        mx="1"
       >
         List of users
       </Button>
@@ -46,6 +50,7 @@ const HeaderLinks = ({ user, isOpen, onClose }) => {
         variant="ghost"
         as={Link}
         to="/upload-article"
+        mx="1"
       >
         Upload Article
       </Button>
@@ -55,6 +60,7 @@ const HeaderLinks = ({ user, isOpen, onClose }) => {
         variant="ghost"
         as={Link}
         to="/about"
+        mx="1"
       >
         About
       </Button>
@@ -67,6 +73,7 @@ const HeaderLinks = ({ user, isOpen, onClose }) => {
           to="/sign-up"
           colorScheme={scheme}
           size="sm"
+          mx="1"
         >
           Sign up
         </Button>
@@ -76,9 +83,11 @@ const HeaderLinks = ({ user, isOpen, onClose }) => {
             display="flex"
             transition="0.3s"
             borderRadius="10"
-            _hover={{ bg: hover }}
+            _hover={{ backgroundColor: hover }}
             p="2"
             alignItems="center"
+            bg={bg}
+            mx="1"
           >
             <Box
               me="4"

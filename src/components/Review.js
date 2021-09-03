@@ -1,7 +1,6 @@
 import { InfoIcon } from "@chakra-ui/icons"
 import {
   Box,
-  Container,
   Flex,
   Heading,
   IconButton,

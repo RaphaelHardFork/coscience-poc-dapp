@@ -107,7 +107,12 @@ const Header = () => {
               display={mobileNav.isOpen ? "none" : "flex"}
               alignItems="center"
             >
-              <IconButton variant="ghost" size="sm" onClick={toggleColorMode}>
+              <IconButton
+                variant="ghost"
+                size="sm"
+                onClick={toggleColorMode}
+                borderRadius="full"
+              >
                 {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
               </IconButton>
 

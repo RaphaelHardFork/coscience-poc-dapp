@@ -5,7 +5,6 @@ import {
   Text,
   useColorModeValue,
   Heading,
-  SlideFade,
 } from "@chakra-ui/react"
 import { useContext } from "react"
 import { Link } from "react-router-dom"

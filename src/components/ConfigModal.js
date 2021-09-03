@@ -1,9 +1,18 @@
-import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react"
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import { useContext } from "react"
 import { Web3Context } from "web3-hooks"
 
 const ConfigModal = () => {
   const [web3State, login] = useContext(Web3Context)
+
+  const back = useColorModeValue("white", "black")
 
   // switch network: will goes soon in a hook
   const switchNetwork = async () => {
@@ -28,7 +37,7 @@ const ConfigModal = () => {
             zIndex="400"
             minH="100vh"
             minW="100vw"
-            bg="white"
+            bg={back}
             opacity="0.8"
           ></Box>
           <Flex
@@ -46,7 +55,7 @@ const ConfigModal = () => {
               m="auto"
               height={{ base: "80%", lg: "50%" }}
               width={{ base: "80%", lg: "50%" }}
-              bgGradient="linear(to-br,white,orange.100)"
+              bgGradient={`linear(to-br,${back},main)`}
               shadow="dark-lg"
               display="flex"
             >

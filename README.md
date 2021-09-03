@@ -6,18 +6,20 @@
 
 ## TODO in this repo
 
-- organisation of folders/files ❌
 - Crawler with `react-router-dom`❌ (Not in this version)
-- REVIEW DAPP (write comments & create architecture schema)
+- REVIEW DAPP (architecture schema) !!
 - MERGE with main
 
 ## TODO in the backend (Not in this version)
 
 - deployment on several blockchain (matic & bsc) with the same address ❌
-- add metrics❌
+- add metrics❌ (vote)
 - put articleID on indexed ! And author ID❌
-- governance (see tomorrow the openzepplin live at 9PM)
-- ++ replace [] => mapping
+- governance (\_users => G(constructor set address user))
+  - voting function
+  - voting 1 article/r/c (mapping)
+  - ?? mapping address => address => uint => uint => bool (need split?)
+- ++ replace [] => mapping (compare size & gas) (ERC721Enumerable)
 
 ## IPFS data architecture
 

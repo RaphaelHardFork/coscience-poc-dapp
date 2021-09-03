@@ -3,9 +3,8 @@ import { useEffect } from "react"
 import { useIPFS } from "../hooks/useIPFS"
 import { useReviewsContract } from "../hooks/useReviewsContract"
 import { useUsersContract } from "../hooks/useUsersContract"
-import { Box, Divider } from "@chakra-ui/react"
+import { Box } from "@chakra-ui/react"
 import Review from "./Review"
-import SendComment from "./SendComment"
 import Loading from "./Loading"
 
 const articleReviewIds = async (reviews, article) => {

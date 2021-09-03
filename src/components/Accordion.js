@@ -14,13 +14,67 @@ import {
 import { Link } from "react-router-dom"
 import { useArticlesContract } from "../hooks/useArticlesContract"
 import { useReviewsContract } from "../hooks/useReviewsContract"
+import { useEffect, useState } from "react"
+import { useCommentsContract } from "../hooks/useCommentsContract"
 
 const Accordion = ({ object, type }) => {
   const [reviews] = useReviewsContract()
   const [articles] = useArticlesContract()
+  const [comments] = useCommentsContract()
+
+  const [articleID, setArticleID] = useState()
 
   //                  Color Value
   const scheme = useColorModeValue("colorMain", "colorSecond")
+
+  useEffect(() => {
+    ;(async () => {
+      switch (type) {
+        case "Article":
+          setArticleID(object.id)
+          break
+        case "Review":
+          setArticleID(object.targetID)
+          break
+        case "Comment":
+          // comment
+          // CRAWLER ------------------------------------
+          let on = object
+          while (on.target === comments.address) {
+            const onComment = await comments.commentInfo(on.targetID)
+            on = onComment
+          }
+          if (on.target === articles.address) {
+            let number
+            if (typeof on.id !== "number") {
+              number = on.id.toNumber()
+            } else {
+              number = on.id
+            }
+            setArticleID(number)
+          } else if (on.target === reviews.address) {
+            let number
+            if (typeof on.id !== "number") {
+              number = on.id.toNumber()
+            } else {
+              number = on.id
+            }
+            setArticleID(number)
+          }
+          break
+        default:
+          console.log(`Wrong type in Accordion ${type}`)
+      }
+    })()
+  }, [
+    object.id,
+    object.targetID,
+    type,
+    articles.address,
+    reviews.address,
+    comments,
+    object,
+  ])
 
   return (
     <ChakraAccordion allowToggle>
@@ -31,6 +85,7 @@ const Accordion = ({ object, type }) => {
           </Box>
           <AccordionIcon />
         </AccordionButton>
+
         <AccordionPanel pb={4}>
           <Box>
             <Heading>
@@ -95,23 +150,12 @@ const Accordion = ({ object, type }) => {
                 </Text>
                 <Text>{object.content}</Text>
                 <Button
-                  disabled={object.target !== articles.address}
-                  to={
-                    object.target === articles.address
-                      ? `/article/${object.targetID}`
-                      : ""
-                  }
+                  to={`/article/${articleID}`}
                   colorScheme={scheme}
                   as={Link}
                 >
                   {" "}
-                  On{" "}
-                  {object.target === reviews.address
-                    ? "Review"
-                    : object.target === articles.address
-                    ? "Article"
-                    : "Comment"}{" "}
-                  n°{object.targetID}
+                  On article n°{articleID}
                 </Button>
               </>
             )}

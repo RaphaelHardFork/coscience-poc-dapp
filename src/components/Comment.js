@@ -1,7 +1,6 @@
 import { InfoIcon } from "@chakra-ui/icons"
 import {
   Box,
-  Container,
   Flex,
   Heading,
   IconButton,
@@ -21,11 +20,8 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { useEffect, useState } from "react"
 import { Link as RouterLink } from "react-router-dom"
 import { useCommentsContract } from "../hooks/useCommentsContract"
-import { useIPFS } from "../hooks/useIPFS"
-import { useUsersContract } from "../hooks/useUsersContract"
 import CommentList from "./CommentList"
 import SendComment from "./SendComment"
 

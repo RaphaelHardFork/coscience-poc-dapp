@@ -39,7 +39,6 @@ import {
   ChatIcon,
   InfoIcon,
   LinkIcon,
-  ExternalLinkIcon,
   SettingsIcon,
 } from "@chakra-ui/icons"
 import { useUsersContract } from "../hooks/useUsersContract"
@@ -66,7 +65,7 @@ const DashSide = ({ user }) => {
 
   return (
     <>
-      <Box p="4" w={{ base: "full", lg: "25vw" }} bg="gray">
+      <Box p="10" w={{ base: "full", lg: "25vw" }} bg="gray">
         <Flex flexDirection="column">
           <Flex justifyContent="space-between" mb="4">
             <Avatar

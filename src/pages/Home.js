@@ -1,4 +1,4 @@
-import { Box, useColorModeValue, Container, Divider } from "@chakra-ui/react"
+import { Box, useColorModeValue, Container } from "@chakra-ui/react"
 import { useState } from "react"
 import { useEffect } from "react"
 import ArticleList from "../components/ArticleList"

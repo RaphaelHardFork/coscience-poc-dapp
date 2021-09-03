@@ -1,11 +1,10 @@
-import { Box, Divider } from "@chakra-ui/react"
+import { Box } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
 import { useCommentsContract } from "../hooks/useCommentsContract"
 import { useIPFS } from "../hooks/useIPFS"
 import { useUsersContract } from "../hooks/useUsersContract"
 import Comment from "./Comment"
 import Loading from "./Loading"
-import SendComment from "./SendComment"
 
 const onCommentIds = async (comments, on) => {
   if (comments) {
