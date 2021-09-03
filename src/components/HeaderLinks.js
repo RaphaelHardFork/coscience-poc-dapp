@@ -30,16 +30,7 @@ const HeaderLinks = ({ user, isOpen, onClose }) => {
       >
         Home
       </Button>
-      <Button
-        disabled={user.id === undefined}
-        as={Link}
-        to={`/profile/${user.id}`}
-        variant="ghost"
-        onClick={onClose}
-        w={isOpen ? "full" : ""}
-      >
-        Profile
-      </Button>
+
       <Button
         w={isOpen ? "full" : ""}
         onClick={onClose}

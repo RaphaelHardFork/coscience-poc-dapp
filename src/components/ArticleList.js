@@ -21,12 +21,13 @@ const ArticleList = ({ articleList }) => {
 
   return (
     <SlideFade
-      offsetY="500px"
-      offsetX="0px"
-      delay={{ enter: 0.5 }}
+      threshold="0.1"
+      delay={{ enter: 0.1 }}
       transition={{
         enter: { duration: 0.7 },
       }}
+      offsetY="100px"
+      offsetX="0px"
       in
     >
       <Grid

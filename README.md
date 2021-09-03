@@ -6,7 +6,7 @@
 
 ## TODO in this repo
 
-- refactoring Profile responsive ❌
+- organisation of folders/files ❌
 - Crawler with `react-router-dom`❌ (Not in this version)
 - REVIEW DAPP (write comments & create architecture schema)
 - MERGE with main

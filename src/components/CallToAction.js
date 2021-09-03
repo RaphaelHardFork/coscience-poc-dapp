@@ -18,13 +18,13 @@ const CallToAction = () => {
   return (
     <Container maxW={"5xl"} mb="5">
       <SlideFade
-        delay={{ enter: 0.5 }}
+        threshold="0.1"
+        delay={{ enter: 0.1 }}
         transition={{
           enter: { duration: 0.7 },
         }}
-        offsetY="-500px"
+        offsetY="-100px"
         offsetX="0px"
-        direction="top"
         in
       >
         <Stack

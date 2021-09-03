@@ -62,9 +62,20 @@ const ListOfUsers = () => {
       <Box p="10">
         <Container maxW="container.lg">
           <Box shadow="lg" borderRadius="50" py="10" bg={bg}>
-            <Heading textAlign="center" mb="5">
-              List of users
-            </Heading>
+            <SlideFade
+              threshold="0.1"
+              delay={{ enter: 0.1 }}
+              transition={{
+                enter: { duration: 0.7 },
+              }}
+              offsetY="-100px"
+              offsetX="0px"
+              in
+            >
+              <Heading textAlign="center" mb="5">
+                List of users
+              </Heading>
+            </SlideFade>
             <Box mx="auto" maxW="75%" display="flex" flexDirection="column">
               <UnorderedList listStyleType="none">
                 {userList.length === 0 ? (
@@ -73,17 +84,17 @@ const ListOfUsers = () => {
                   userList.map((user) => {
                     return (
                       <SlideFade
-                        key={user.id}
-                        delay={{ enter: 0.5 }}
+                        threshold="0.1"
+                        delay={{ enter: 0.1 }}
                         transition={{
                           enter: { duration: 0.7 },
                         }}
                         offsetY="0px"
-                        offsetX="500px"
+                        offsetX="100px"
                         in
+                        key={user.id}
                       >
                         <Flex
-                          key={user.id}
                           borderRadius="10"
                           shadow="lg"
                           p="4"
@@ -177,8 +188,19 @@ const ListOfUsers = () => {
                 )}
               </UnorderedList>
             </Box>
-            <Heading textAlign="center">Owner of the contract</Heading>
-            <Text textAlign="center">Address: {owner} </Text>
+            <SlideFade
+              threshold="0.1"
+              delay={{ enter: 0.1 }}
+              transition={{
+                enter: { duration: 0.7 },
+              }}
+              offsetY="100px"
+              offsetX="0px"
+              in
+            >
+              <Heading textAlign="center">Owner of the contract</Heading>
+              <Text textAlign="center">Address: {owner} </Text>
+            </SlideFade>
           </Box>
         </Container>
       </Box>
