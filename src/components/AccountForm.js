@@ -30,6 +30,7 @@ const AccountForm = () => {
 
   //color Mode
   const bg = useColorModeValue("white", "gray.800")
+  const scheme = useColorModeValue("colorMain", "colorSecond")
 
   async function register() {
     const hashedPassword = await ethers.utils.id(password)
@@ -141,7 +142,7 @@ const AccountForm = () => {
               ipfsStatus.startsWith("Pinning")
             }
             onClick={register}
-            colorScheme="orange"
+            colorScheme={scheme}
           >
             Register
           </Button>

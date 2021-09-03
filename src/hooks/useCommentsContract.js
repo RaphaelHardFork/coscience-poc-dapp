@@ -18,7 +18,7 @@ const getCommentData = async (comments, id) => {
   return commentObj
 }
 
-const userCommentList = async (comments, listOfId) => {
+const createCommentList = async (comments, listOfId) => {
   const commentList = []
 
   for (const i of listOfId) {
@@ -69,5 +69,5 @@ export const useCommentsContract = () => {
       "It seems that you are trying to use CommentContext outside of its provider"
     )
   }
-  return [comments, getCommentData, userCommentList, eventList]
+  return [comments, getCommentData, createCommentList, eventList]
 }

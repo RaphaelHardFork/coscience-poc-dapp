@@ -6,6 +6,7 @@ import {
   Container,
   useColorModeValue,
   Divider,
+  SlideFade,
 } from "@chakra-ui/react"
 import { Link } from "react-router-dom"
 
@@ -16,40 +17,51 @@ const CallToAction = () => {
 
   return (
     <Container maxW={"5xl"} mb="5">
-      <Stack
-        textAlign="center"
-        align="center"
-        spacing={{ base: 8, md: 10 }}
-        py={{ base: 16, md: 24 }}
+      <SlideFade
+        delay={{ enter: 0.5 }}
+        transition={{
+          enter: { duration: 0.7 },
+        }}
+        offsetY="-500px"
+        offsetX="0px"
+        direction="top"
+        in
       >
-        <Heading
-          fontWeight={600}
-          fontSize={{ base: "3xl", sm: "4xl", md: "6xl" }}
-          lineHeight={"110%"}
-          fontFamily="title"
+        <Stack
+          textAlign="center"
+          align="center"
+          spacing={{ base: 8, md: 10 }}
+          py={{ base: 16, md: 24 }}
         >
-          The{" "}
-          <Text as={"span"} color={txt}>
-            Collective
-          </Text>{" "}
-          Science Platform
-        </Heading>
-        <Text fontFamily="text" fontSize="lg" maxW={"3xl"}>
-          Science with collective intelligence and community governance
-        </Text>
-        <Stack spacing={6} direction={"row"}>
-          <Button
-            as={Link}
-            to="/about"
-            rounded={"full"}
-            px={6}
-            colorScheme={scheme}
+          <Heading
+            fontWeight={600}
+            fontSize={{ base: "3xl", sm: "4xl", md: "6xl" }}
+            lineHeight={"110%"}
+            fontFamily="title"
           >
-            Get started
-          </Button>
+            The{" "}
+            <Text as={"span"} color={txt}>
+              Collective
+            </Text>{" "}
+            Science Platform
+          </Heading>
+          <Text fontFamily="text" fontSize="lg" maxW={"3xl"}>
+            Science with collective intelligence and community governance
+          </Text>
+          <Stack spacing={6} direction={"row"}>
+            <Button
+              as={Link}
+              to="/about"
+              rounded={"full"}
+              px={6}
+              colorScheme={scheme}
+            >
+              Get started
+            </Button>
+          </Stack>
         </Stack>
-      </Stack>
-      <Divider bg={divider} borderColor={divider} border="1px" />
+        <Divider bg={divider} borderColor={divider} border="1px" />
+      </SlideFade>
     </Container>
   )
 }

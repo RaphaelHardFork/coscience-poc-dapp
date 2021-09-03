@@ -1,25 +1,26 @@
-import { Box } from "@chakra-ui/react"
+import { Box, Divider } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
 import { useCommentsContract } from "../hooks/useCommentsContract"
 import { useIPFS } from "../hooks/useIPFS"
 import { useUsersContract } from "../hooks/useUsersContract"
 import Comment from "./Comment"
+import Loading from "./Loading"
 import SendComment from "./SendComment"
 
-const articleCommentIds = async (comments, article) => {
+const onCommentIds = async (comments, on) => {
   if (comments) {
-    const nb = article.comments.length
+    const nb = on.comments.length
     const listOfId = []
 
     for (let i = 0; i < nb; i++) {
-      const id = await article.comments[i]
+      const id = await on.comments[i]
       listOfId.push(id.toNumber())
     }
     return listOfId
   }
 }
 
-const CommentList = ({ article }) => {
+const CommentList = ({ on }) => {
   const [comments, , createCommentList, eventList] = useCommentsContract()
   const [users] = useUsersContract()
   const [, readIPFS] = useIPFS()
@@ -28,9 +29,9 @@ const CommentList = ({ article }) => {
 
   // get comment data
   useEffect(() => {
-    if ((comments && article !== undefined, eventList)) {
+    if ((comments && on !== undefined, eventList)) {
       const commentData = async () => {
-        const listOfId = await articleCommentIds(comments, article)
+        const listOfId = await onCommentIds(comments, on)
         const commentList = await createCommentList(comments, listOfId)
         const asyncRes = await Promise.all(
           commentList.map(async (comment) => {
@@ -67,21 +68,21 @@ const CommentList = ({ article }) => {
     return () => {
       setCommentList(undefined)
     }
-  }, [article, comments, createCommentList, readIPFS, users, eventList])
+  }, [on, comments, createCommentList, readIPFS, users, eventList])
 
   return (
     <>
-      {commentList !== undefined
-        ? commentList.map((comment) => {
-            return (
-              <Box key={comment.id}>
-                <Comment comment={comment} />
-
-                <SendComment />
-              </Box>
-            )
-          })
-        : ""}
+      {commentList !== undefined ? (
+        commentList.map((comment) => {
+          return (
+            <Box key={comment.id}>
+              <Comment comment={comment} />
+            </Box>
+          )
+        })
+      ) : (
+        <Loading />
+      )}
     </>
   )
 }

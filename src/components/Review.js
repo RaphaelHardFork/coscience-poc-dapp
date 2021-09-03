@@ -6,6 +6,8 @@ import {
   Heading,
   IconButton,
   Link,
+  Divider,
+  Button,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -16,11 +18,21 @@ import {
   Skeleton,
   Text,
   useColorModeValue,
+  useDisclosure,
+  Collapse,
 } from "@chakra-ui/react"
 import { Link as RouterLink } from "react-router-dom"
+import { useReviewsContract } from "../hooks/useReviewsContract"
+import CommentList from "./CommentList"
+import SendComment from "./SendComment"
 
 const Review = ({ review }) => {
   const link = useColorModeValue("main", "second")
+  const [reviews] = useReviewsContract()
+
+  const { isOpen, onToggle } = useDisclosure()
+  const scheme = useColorModeValue("colorMain", "colorSecond")
+
   return (
     <Box p="5" key={review.id}>
       {review !== undefined ? (
@@ -106,9 +118,26 @@ const Review = ({ review }) => {
             </Box>
           </Flex>
 
-          <Container maxW="container.lg" mt="5">
-            <Text>{review.content}</Text>
-          </Container>
+          <Text mt="10">{review.content}</Text>
+          <Button colorScheme={scheme} variant="link" onClick={onToggle} mt="4">
+            {review.comments.length === 0
+              ? ""
+              : `${review.comments.length} comments`}
+          </Button>
+          <Collapse in={isOpen} animateOpacity>
+            <CommentList on={review} />
+          </Collapse>
+          <Text
+            mt="4"
+            fontSize="sm"
+            color="gray.500"
+            textAlign="end"
+            fontStyle="uppercase"
+          >
+            Review n°{review.id}{" "}
+          </Text>
+          <SendComment targetAddress={reviews.address} id={review.id} />
+          <Divider my="2" borderColor="gray.500" border="3px" mt="2" />
         </>
       ) : (
         <Skeleton height="200px" />

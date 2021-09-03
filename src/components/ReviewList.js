@@ -3,9 +3,11 @@ import { useEffect } from "react"
 import { useIPFS } from "../hooks/useIPFS"
 import { useReviewsContract } from "../hooks/useReviewsContract"
 import { useUsersContract } from "../hooks/useUsersContract"
-import { Box } from "@chakra-ui/react"
+import { Box, Divider } from "@chakra-ui/react"
 import Review from "./Review"
 import SendComment from "./SendComment"
+import Loading from "./Loading"
+
 const articleReviewIds = async (reviews, article) => {
   if (reviews) {
     const nb = article.reviews.length
@@ -70,17 +72,17 @@ const ReviewList = ({ article }) => {
 
   return (
     <>
-      {reviewList !== undefined
-        ? reviewList.map((review) => {
-            return (
-              <Box key={review.id}>
-                <Review review={review} />
-
-                <SendComment />
-              </Box>
-            )
-          })
-        : ""}
+      {reviewList !== undefined ? (
+        reviewList.map((review) => {
+          return (
+            <Box key={review.id}>
+              <Review review={review} />
+            </Box>
+          )
+        })
+      ) : (
+        <Loading />
+      )}
     </>
   )
 }

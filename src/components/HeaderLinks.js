@@ -13,6 +13,7 @@ import { Link } from "react-router-dom"
 const HeaderLinks = ({ user, isOpen, onClose }) => {
   const hover = useColorModeValue("grayBlue.100", "grayOrange.600")
   const pill = useColorModeValue("main", "second")
+  const scheme = useColorModeValue("colorMain", "colorSecond")
   return (
     <Flex
       key={user.id}
@@ -73,7 +74,7 @@ const HeaderLinks = ({ user, isOpen, onClose }) => {
           onClick={onClose}
           as={Link}
           to="/sign-up"
-          colorScheme="teal"
+          colorScheme={scheme}
           size="sm"
         >
           Sign up

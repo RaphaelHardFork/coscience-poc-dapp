@@ -72,7 +72,16 @@ const ListOfUsers = () => {
                 ) : (
                   userList.map((user) => {
                     return (
-                      <SlideFade key={user.id} offsetY="100px" offsetX="0px" in>
+                      <SlideFade
+                        key={user.id}
+                        delay={{ enter: 0.5 }}
+                        transition={{
+                          enter: { duration: 0.7 },
+                        }}
+                        offsetY="0px"
+                        offsetX="500px"
+                        in
+                      >
                         <Flex
                           key={user.id}
                           borderRadius="10"
@@ -100,7 +109,11 @@ const ListOfUsers = () => {
                             to={`/profile/${user.id}`}
                           ></LinkOverlay>
 
-                          <Flex direction="column" width="75px">
+                          <Flex
+                            alignItems="center"
+                            direction="column"
+                            width="75px"
+                          >
                             {user.status === "Pending"
                               ? "Pending"
                               : user.status === "Approved"

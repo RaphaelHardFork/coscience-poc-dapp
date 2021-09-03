@@ -1,4 +1,3 @@
-import { LinkIcon } from "@chakra-ui/icons"
 import {
   Box,
   Flex,
@@ -10,7 +9,6 @@ import {
   SlideFade,
   useColorModeValue,
   Divider,
-  Icon,
 } from "@chakra-ui/react"
 import { Link as RouterLink } from "react-router-dom"
 
@@ -22,10 +20,19 @@ const ArticleList = ({ articleList }) => {
   const bg = useColorModeValue("grayOrange.100", "grayBlue.800")
 
   return (
-    <SlideFade transition="0.7s" in>
+    <SlideFade
+      offsetY="500px"
+      offsetX="0px"
+      delay={{ enter: 0.5 }}
+      transition={{
+        enter: { duration: 0.7 },
+      }}
+      in
+    >
       <Grid
         templateColumns={{
-          base: "repeat(2, 1fr)",
+          sm: "repeat(1, 1fr)",
+          md: "repeat(2, 1fr)",
           lg: "repeat(3, 1fr)",
           xl: "repeat(4, 1fr)",
         }}
@@ -40,7 +47,6 @@ const ArticleList = ({ articleList }) => {
               boxShadow="lg"
               key={article.id}
               p="5"
-              // border="solid"
               _hover={{ border: "2px", borderColor: hover }}
               transition="0.3s"
               bg={bgUser}
