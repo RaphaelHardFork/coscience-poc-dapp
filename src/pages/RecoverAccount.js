@@ -12,13 +12,13 @@ import {
 } from "@chakra-ui/react"
 import { ethers } from "ethers"
 import { useState } from "react"
-import { useMetamask } from "../hooks/useMetamask"
 import { useUsersContract } from "../hooks/useUsersContract"
+import { useCall } from "../web3hook/useCall"
 
 const RecoverAccount = () => {
   const bg = useColorModeValue("white", "gray.800")
   const [users, , userList] = useUsersContract()
-  const [status, contractCall] = useMetamask()
+  const [status, contractCall] = useCall()
 
   const [password, setPassword] = useState("")
   const [userID, setUserID] = useState()

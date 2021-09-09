@@ -9,8 +9,8 @@ import { useIPFS } from "../hooks/useIPFS"
 import { useUsersContract } from "../hooks/useUsersContract"
 
 const Home = () => {
-  const [, articleList] = useArticlesContract()
-  const [users] = useUsersContract()
+  const { articleList } = useArticlesContract()
+  const { users } = useUsersContract()
   const [, readIPFS] = useIPFS()
 
   const [articleListAuthor, setArticleListAuthor] = useState()
@@ -24,8 +24,8 @@ const Home = () => {
           articleList.map(async (article) => {
             const userID = await users.profileID(article.author)
             const { title, abstract } = await readIPFS(article.abstractCID)
-            const nameCID = await users.userName(userID)
-            const { firstName, lastName } = await readIPFS(nameCID)
+            const struct = await users.userInfo(userID)
+            const { firstName, lastName } = await readIPFS(struct.nameCID)
             return {
               ...article,
               authorID: userID.toNumber(),
@@ -38,6 +38,7 @@ const Home = () => {
         )
         setArticleListAuthor(asyncRes)
       })()
+      return () => setArticleListAuthor(undefined)
     }
   }, [users, articleList, readIPFS])
 

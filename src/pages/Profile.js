@@ -17,7 +17,7 @@ import { useIPFS } from "../hooks/useIPFS"
 import { useUsersContract } from "../hooks/useUsersContract"
 
 const Profile = () => {
-  const [users, , , getUserData] = useUsersContract()
+  const { users, getUserData } = useUsersContract()
   const [, readIPFS] = useIPFS()
   const [user, setUser] = useState()
 

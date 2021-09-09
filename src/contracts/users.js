@@ -1,4 +1,4 @@
-export const contractAddress = "0x2DBc0235e6565c70f81Aa7F06BE51a57dad086B4"
+export const contractAddress = "0x2c48E3F532786744b9cceB935c93e7859298adDe"
 
 export const contractABI = [
   {
@@ -48,7 +48,7 @@ export const contractABI = [
         type: "address",
       },
       {
-        indexed: false,
+        indexed: true,
         internalType: "uint256",
         name: "userID",
         type: "uint256",
@@ -92,7 +92,7 @@ export const contractABI = [
         type: "address",
       },
       {
-        indexed: false,
+        indexed: true,
         internalType: "uint256",
         name: "userID",
         type: "uint256",
@@ -180,55 +180,12 @@ export const contractABI = [
   {
     inputs: [
       {
-        internalType: "bytes32",
-        name: "newPassword",
-        type: "bytes32",
-      },
-    ],
-    name: "changePassword",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "string",
         name: "profileCID_",
         type: "string",
       },
     ],
     name: "editProfile",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "password",
-        type: "bytes32",
-      },
-      {
-        internalType: "uint256",
-        name: "userID",
-        type: "uint256",
-      },
-    ],
-    name: "forgotWallet",
     outputs: [
       {
         internalType: "bool",
@@ -253,6 +210,19 @@ export const contractABI = [
         internalType: "bool",
         name: "",
         type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "nbOfAcceptedUsers",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -306,10 +276,29 @@ export const contractABI = [
   {
     inputs: [
       {
-        internalType: "bytes32",
-        name: "hashedPassword_",
-        type: "bytes32",
+        internalType: "uint256",
+        name: "userID",
+        type: "uint256",
       },
+      {
+        internalType: "address",
+        name: "newAddress",
+        type: "address",
+      },
+    ],
+    name: "recoverAccount",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
       {
         internalType: "string",
         name: "profileCID_",
@@ -343,6 +332,25 @@ export const contractABI = [
     inputs: [
       {
         internalType: "address",
+        name: "governance_",
+        type: "address",
+      },
+    ],
+    name: "setContracts",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
         name: "newOwner",
         type: "address",
       },
@@ -360,50 +368,39 @@ export const contractABI = [
         type: "uint256",
       },
     ],
-    name: "userName",
+    name: "userInfo",
     outputs: [
       {
-        internalType: "string",
+        components: [
+          {
+            internalType: "uint256",
+            name: "id",
+            type: "uint256",
+          },
+          {
+            internalType: "enum IUsers.WhiteList",
+            name: "status",
+            type: "uint8",
+          },
+          {
+            internalType: "string",
+            name: "nameCID",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "profileCID",
+            type: "string",
+          },
+          {
+            internalType: "address[]",
+            name: "walletList",
+            type: "address[]",
+          },
+        ],
+        internalType: "struct Users.User",
         name: "",
-        type: "string",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "userID",
-        type: "uint256",
-      },
-    ],
-    name: "userNbOfWallet",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "userID",
-        type: "uint256",
-      },
-    ],
-    name: "userProfile",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
+        type: "tuple",
       },
     ],
     stateMutability: "view",
@@ -423,25 +420,6 @@ export const contractABI = [
         internalType: "enum IUsers.WhiteList",
         name: "",
         type: "uint8",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "userID",
-        type: "uint256",
-      },
-    ],
-    name: "userWalletList",
-    outputs: [
-      {
-        internalType: "address[]",
-        name: "",
-        type: "address[]",
       },
     ],
     stateMutability: "view",

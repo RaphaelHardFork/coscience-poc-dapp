@@ -1,15 +1,16 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext } from "react"
 import { ArticlesContext } from "../contexts/ArticlesContext"
-import { useWeb3 } from "../web3hook/useWeb3"
 
 // Pure function
-const getArticleData = async (articles, id) => {
+export const getArticleData = async (articles, id) => {
   const a = await articles.articleInfo(id)
 
   const articleObj = {
     id: a.id.toNumber(),
     author: a.author,
     coAuthor: a.coAuthor,
+    validity: a.validity.toNumber(),
+    importance: a.importance.toNumber(),
     contentBanned: a.contentBanned,
     abstractCID: a.abstractCID,
     contentCID: a.contentCID,
@@ -20,7 +21,7 @@ const getArticleData = async (articles, id) => {
 }
 
 // return articleList of user
-const userArticleList = async (articles, listOfId) => {
+const createArticleList = async (articles, listOfId) => {
   const articleList = []
 
   for (const id of listOfId) {
@@ -33,61 +34,23 @@ const userArticleList = async (articles, listOfId) => {
 
 // -----------------------------------------------------HOOK
 export const useArticlesContract = () => {
-  // call the context
-  const [articles, mode] = useContext(ArticlesContext)
-  const { state } = useWeb3()
-  const { networkName } = state
+  // call the context with global state
+  const [articles, mode, articleList, articleEvents] =
+    useContext(ArticlesContext)
 
-  // utils
-  const [articleList, setArticleList] = useState([])
-  const [articleEvents, setArticleEvents] = useState()
-
-  // create list of article
-  useEffect(() => {
-    if (articles && networkName === "rinkeby") {
-      const createArticleList = async () => {
-        const nb = await articles.nbOfArticles()
-        const articlesList = []
-
-        // in waiting for the articleID indexed
-        const eventList = [
-          { articleID: 0, txHash: null, timestamp: 0, blockNumber: 0 },
-        ]
-        const eventArray = await articles.queryFilter("Published") // EthersJS / Contract
-        for (const event of eventArray) {
-          const block = await event.getBlock()
-          const date = new Date(block.timestamp * 1000)
-          const obj = {
-            articleID: event.args.articleID.toNumber(),
-            txHash: event.transactionHash,
-            timestamp: block.timestamp,
-            blockNumber: event.blockNumber,
-            date: date.toLocaleString(),
-          }
-          eventList.push(obj)
-          // [{null},{event1 = articleID: 1}]
-        }
-        setArticleEvents(eventList)
-
-        for (let i = 1; i <= nb; i++) {
-          const obj = await getArticleData(articles, i) // i = id
-          const { txHash, timestamp, blockNumber, date } = eventList[i]
-
-          articlesList.push({
-            ...obj,
-            txHash,
-            timestamp,
-            blockNumber,
-            date,
-          })
-        }
-        setArticleList(articlesList)
-      }
-      createArticleList()
-    }
-
-    return () => setArticleList(undefined)
-  }, [articles, networkName])
+  // filter events
+  /*
+              // filter all farahtoken transfers FROM the account
+          let txOut = await farahtoken.filters.Transfer(web3State.account, null)
+          // filter all farahtoken transfers TO the account
+          let txIn = await farahtoken.filters.Transfer(null, web3State.account)
+          // list all Transfer event from me
+          txOut = await farahtoken.queryFilter(
+            txOut , {block range or last number }
+            )
+            // list all Transfer event to me
+            txIn = await farahtoken.queryFilter(txIn)
+            */
 
   // control call of the hook
   if (articles === undefined) {
@@ -97,5 +60,11 @@ export const useArticlesContract = () => {
   }
 
   // first: return contract for utilisation
-  return [articles, articleList, getArticleData, userArticleList, articleEvents]
+  return {
+    articles,
+    articleList,
+    getArticleData,
+    createArticleList,
+    articleEvents,
+  }
 }

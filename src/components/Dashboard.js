@@ -29,7 +29,7 @@ const userContractIds = async (contract, user) => {
 }
 
 const Dashboard = ({ user }) => {
-  const [articles, , , createArticleList] = useArticlesContract()
+  const { articles, createArticleList } = useArticlesContract()
   const [reviews, , createReviewList] = useReviewsContract()
   const [comments, , createCommentList] = useCommentsContract()
   const [, readIFPS] = useIPFS()
@@ -38,6 +38,7 @@ const Dashboard = ({ user }) => {
   const [reviewList, setReviewList] = useState()
   const [commentList, setCommentList] = useState()
 
+  // try to export that in a hook
   useEffect(() => {
     // anonymous function
     ;(async () => {

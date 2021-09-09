@@ -9,6 +9,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 
+import ArticleValidity from "./ArticleValidity"
+
 const ArticleHeader = ({ id, article, eventList }) => {
   const bg = useColorModeValue("grayOrange.100", "grayBlue.700")
   const link = useColorModeValue("main", "second")
@@ -56,6 +58,8 @@ const ArticleHeader = ({ id, article, eventList }) => {
                   {article.comments.length}
                 </Text>
               </Text>
+
+              <ArticleValidity id={id} article={article} />
             </Box>
             <Box mt="4" fontSize="lg" textAlign={{ base: "start", lg: "end" }}>
               <Heading fontSize="xl">Blockchain informations</Heading>

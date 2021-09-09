@@ -46,6 +46,8 @@ const About = () => {
       console.log(e.code)
       if (e.code === "INSUFFICIENT_FUNDS") {
         setStatus("INSUFFICIENT_FUNDS")
+      } else {
+        setStatus("Failed")
       }
     }
   }
@@ -80,7 +82,7 @@ const About = () => {
             value={amount}
             onChange={handleChange}
             step={0.001}
-            max={state.balance}
+            max={Number(ethers.utils.formatEther(state.balance))}
             min={0}
             mb="2"
           >
@@ -96,7 +98,7 @@ const About = () => {
             value={amount}
             onChange={handleChange}
             step={0.001}
-            max={state.balance}
+            max={Number(ethers.utils.formatEther(state.balance))}
             min={0}
           >
             <SliderTrack>

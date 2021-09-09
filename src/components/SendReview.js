@@ -12,12 +12,13 @@ import {
 } from "@chakra-ui/react"
 import { useState } from "react"
 import { useIPFS } from "../hooks/useIPFS"
-import { useMetamask } from "../hooks/useMetamask"
+
 import { useReviewsContract } from "../hooks/useReviewsContract"
+import { useCall } from "../web3hook/useCall"
 
 const SendReview = ({ id }) => {
   const [reviews] = useReviewsContract()
-  const [status, contractCall] = useMetamask()
+  const [status, contractCall] = useCall()
   const [content, setContent] = useState("")
   const [title, setTitle] = useState("")
   const [pinJsObject, , ipfsStatus, , unPin] = useIPFS()

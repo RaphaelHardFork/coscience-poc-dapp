@@ -10,13 +10,13 @@ import {
 import { ethers } from "ethers"
 import { useState } from "react"
 import { useIPFS } from "../hooks/useIPFS"
-import { useMetamask } from "../hooks/useMetamask"
 import { useUsersContract } from "../hooks/useUsersContract"
+import { useCall } from "../web3hook/useCall"
 
 const UserSetting = ({ user }) => {
-  const [users] = useUsersContract()
-  const [status, contractCall] = useMetamask()
-  const [pinJsObject, , ipfsStatus] = useIPFS()
+  const { users } = useUsersContract()
+  const [status, contractCall] = useCall()
+  const [pinJsObject, , ipfsStatus, , unPin] = useIPFS()
 
   const [addInput, setAddInput] = useState({
     address: false,
@@ -81,13 +81,18 @@ const UserSetting = ({ user }) => {
           email,
           userInfo: user.nameCID,
         }
-        console.log(profileObj)
 
         const profileCID = await pinJsObject(profileObj)
 
-        await contractCall(users, "editProfile", [profileCID])
+        const tx = await contractCall(users, "editProfile", [profileCID])
 
-        console.log(profileObj)
+        // unpin
+        if (tx === "Error") {
+          await unPin(profileCID)
+        } else {
+          // unpin old content
+          await unPin(user.profileCID)
+        }
 
         setAddInput({ ...addInput, edit: false })
 

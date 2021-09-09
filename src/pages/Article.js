@@ -37,8 +37,8 @@ import SendComment from "../components/SendComment"
 
 const Article = () => {
   const { id } = useParams()
-  const [articles, , getArticleData, , eventList] = useArticlesContract()
-  const [users] = useUsersContract()
+  const { articles, getArticleData, articleEvents } = useArticlesContract()
+  const { users } = useUsersContract()
 
   const [, readIPFS] = useIPFS()
 
@@ -53,27 +53,46 @@ const Article = () => {
       const articleData = async () => {
         const articleObj = await getArticleData(articles, id)
 
-        // get content
+        //get validity and Importance
+        const validity = articleObj.validity
+        const importance = articleObj.importance
 
+        // get number of voter
+        //event ValidityVoted(Vote indexed choice, uint256 indexed articleID, uint256 indexed userID);
+        // Contract
+        let nbOfImportanceVote = await articles.filters.ImportanceVoted(
+          null,
+          Number(id.toString(16)), // need to hexify the number 1 = 0x01
+          null
+        )
+        let eventArray = await articles.queryFilter(nbOfImportanceVote)
+        const importanceVotes = eventArray.length
+
+        let nbOfValidityVote = await articles.filters.ValidityVoted(
+          null,
+          Number(id.toString(16)), // need to hexify the number
+          null
+        )
+        eventArray = await articles.queryFilter(nbOfValidityVote)
+        const validityVotes = eventArray.length
+
+        // get content
         const { title, abstract } = await readIPFS(articleObj.abstractCID)
         const { content, pdfFile } = await readIPFS(articleObj.contentCID)
-
         // get user info
-        const idAuthor = await users.profileID(articleObj.author)
-        const nameCID = await users.userName(idAuthor)
-        const { firstName, lastName } = await readIPFS(nameCID)
-        const profileCID = await users.userProfile(idAuthor)
-        const { laboratory } = await readIPFS(profileCID)
+        const userID = await users.profileID(articleObj.author)
+        const struct = await users.userInfo(userID)
+        const { firstName, lastName } = await readIPFS(struct.nameCID)
+        const { laboratory } = await readIPFS(struct.profileCID)
 
         // get co author info
         let coAuthors = []
         for (const coAuthor of articleObj.coAuthor) {
           const coAuthorId = await users.profileID(coAuthor)
           if (coAuthorId !== 0) {
-            const nameCID = await users.userName(coAuthorId)
-            const { firstName, lastName } = await readIPFS(nameCID)
-            const profileCID = await users.userProfile(coAuthorId)
-            const { laboratory } = await readIPFS(profileCID)
+            const struct = await users.userInfo(coAuthorId)
+            const { firstName, lastName } = await readIPFS(struct.nameCID)
+            const { laboratory } = await readIPFS(struct.profileCID)
             coAuthors.push({ id: coAuthorId, firstName, lastName, laboratory })
           } // else return that author is not registred ?
         }
@@ -87,11 +106,15 @@ const Article = () => {
           abstract,
           content,
           pdfFile,
-          authorID: idAuthor,
+          authorID: userID,
           firstName,
           lastName,
           laboratory,
           coAuthors, // coAuthor: [{coAuthorId, firstName, lastName, laboratory},{}]
+          validity,
+          importance,
+          validityVotes,
+          importanceVotes,
         })
       }
       articleData()
@@ -108,7 +131,7 @@ const Article = () => {
     <>
       <Box shadow="lg" bg={bg}>
         {article?.id !== 0 ? (
-          <ArticleHeader id={id} article={article} eventList={eventList} />
+          <ArticleHeader id={id} article={article} eventList={articleEvents} />
         ) : (
           ""
         )}
@@ -259,7 +282,7 @@ const Article = () => {
         <DrawerOverlay />
         <DrawerContent maxH="60vh">
           <DrawerCloseButton />
-          <DrawerHeader>Reviews & Comments</DrawerHeader>
+          <DrawerHeader shadow="sm">Reviews & Comments</DrawerHeader>
 
           <DrawerBody>
             {/* TABS */}

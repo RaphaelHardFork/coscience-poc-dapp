@@ -31,7 +31,7 @@ export const useProviders = () => {
     networkName: undefined,
     chainId: 0,
     signer: null,
-    isLogged:false,
+    isLogged: false,
     account: ethers.constants.AddressZero,
     balance: 0,
   })
@@ -96,7 +96,10 @@ export const useProviders = () => {
 
         // Try to wrap the providers into a Web3Provider (Metamask & Wallet Connect)
         try {
-          const web3Provider = new ethers.providers.Web3Provider(provider)
+          const web3Provider = new ethers.providers.Web3Provider(
+            provider,
+            "any"
+          )
           const src = web3Provider.connection.url
           dispatch({
             type: "SET_ETHERS_PROVIDER",
@@ -225,7 +228,11 @@ export const useProviders = () => {
         console.log(`Chain changed to ${chainId}`)
         if (providerSrc === "metamask") {
           const newProvider = await detectEthereumProvider()
-          const web3Provider = new ethers.providers.Web3Provider(newProvider)
+          const web3Provider = new ethers.providers.Web3Provider(
+            newProvider,
+            "any"
+          )
+          ethersProvider.off("block")
           const src = web3Provider.connection.url
           dispatch({
             type: "SET_ETHERS_PROVIDER",

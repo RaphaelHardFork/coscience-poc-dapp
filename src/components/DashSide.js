@@ -47,7 +47,7 @@ import mailgo from "mailgo"
 import React, { useEffect } from "react"
 
 const DashSide = ({ user }) => {
-  const [, connectedUser] = useUsersContract()
+  const { userData } = useUsersContract()
   const [isOpenSetting, setIsOpenSetting] = useState()
 
   const [value, setValue] = useState()
@@ -143,7 +143,7 @@ const DashSide = ({ user }) => {
               </PopoverContent>
             </Popover>
             <Spacer />
-            {Number(user.id) === connectedUser.id ? (
+            {Number(user.id) === userData.id ? (
               <IconButton
                 colorScheme={button}
                 aria-label="Call Segun"

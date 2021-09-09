@@ -173,10 +173,17 @@ export const useIPFS = () => {
 
     let response
     try {
-      response = await axios(`https://ipfs.io/ipfs/${cid}`) // cid : part of the function that change in each call
+      response = await axios({
+        method: "get",
+        url: `https://ipfs.io/ipfs/${cid}`, // cid : part of the function that change in each call
+        timeout: 5000,
+      })
     } catch (e) {
       // manage IPFS error
-
+      response = {
+        data: "IPFS: too much time to get a response",
+      }
+      // add all keys??
       console.error(e)
     }
     return response.data

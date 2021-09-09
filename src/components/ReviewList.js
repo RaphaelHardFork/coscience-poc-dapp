@@ -22,7 +22,7 @@ const articleReviewIds = async (reviews, article) => {
 
 const ReviewList = ({ article }) => {
   const [reviews, , createReviewsList, eventList] = useReviewsContract()
-  const [users] = useUsersContract()
+  const {users} = useUsersContract()
   const [, readIPFS] = useIPFS()
 
   const [reviewList, setReviewList] = useState()
@@ -41,8 +41,8 @@ const ReviewList = ({ article }) => {
 
             // get user info
             const authorID = await users.profileID(review.author)
-            const nameCID = await users.userName(authorID)
-            const { firstName, lastName } = await readIPFS(nameCID)
+            const struct = await users.userInfo(authorID)
+            const { firstName, lastName } = await readIPFS(struct.nameCID)
 
             // get event info
             const { txHash, timestamp, blockNumber, date } =

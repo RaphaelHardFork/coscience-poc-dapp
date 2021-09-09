@@ -1,11 +1,11 @@
-export const contractAddress = "0x77943c71CF2d1da0E1678ac09581A5B149eA9454"
+export const contractAddress = "0x5DF53542eC8701f8cd6e23159305952ce394BDAE"
 
 export const contractABI = [
   {
     inputs: [
       {
         internalType: "address",
-        name: "owner_",
+        name: "usersContract",
         type: "address",
       },
       {
@@ -16,11 +16,6 @@ export const contractABI = [
       {
         internalType: "address",
         name: "reviewsContract",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "usersContract",
         type: "address",
       },
     ],
@@ -96,30 +91,11 @@ export const contractABI = [
       {
         indexed: true,
         internalType: "address",
-        name: "previousOwner",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
-      },
-    ],
-    name: "OwnershipTransferred",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
         name: "poster",
         type: "address",
       },
       {
-        indexed: false,
+        indexed: true,
         internalType: "uint256",
         name: "commentID",
         type: "uint256",
@@ -163,6 +139,25 @@ export const contractABI = [
       },
     ],
     name: "Transfer",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "commentID",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "userID",
+        type: "uint256",
+      },
+    ],
+    name: "Voted",
     type: "event",
   },
   {
@@ -241,6 +236,11 @@ export const contractABI = [
           {
             internalType: "uint256",
             name: "id",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "vote",
             type: "uint256",
           },
           {
@@ -334,32 +334,6 @@ export const contractABI = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "nbOfComment",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "owner",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "uint256",
@@ -404,13 +378,6 @@ export const contractABI = [
         type: "uint256",
       },
     ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "renounceOwnership",
-    outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
@@ -616,13 +583,19 @@ export const contractABI = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
+        internalType: "uint256",
+        name: "commentID",
+        type: "uint256",
       },
     ],
-    name: "transferOwnership",
-    outputs: [],
+    name: "vote",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
     stateMutability: "nonpayable",
     type: "function",
   },

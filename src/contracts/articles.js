@@ -1,13 +1,8 @@
-export const contractAddress = "0xFA726c39CeB254F762C6b52CB9921f72aB0a20Dd"
+export const contractAddress = "0x20B05d0Dfc12A4C71b55AfC14eCC5C452172c25b"
 
 export const contractABI = [
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "owner_",
-        type: "address",
-      },
       {
         internalType: "address",
         name: "usersContract",
@@ -85,18 +80,24 @@ export const contractABI = [
     inputs: [
       {
         indexed: true,
-        internalType: "address",
-        name: "previousOwner",
-        type: "address",
+        internalType: "enum IUsers.Vote",
+        name: "choice",
+        type: "uint8",
       },
       {
         indexed: true,
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
+        internalType: "uint256",
+        name: "articleID",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "userID",
+        type: "uint256",
       },
     ],
-    name: "OwnershipTransferred",
+    name: "ImportanceVoted",
     type: "event",
   },
   {
@@ -109,7 +110,7 @@ export const contractABI = [
         type: "address",
       },
       {
-        indexed: false,
+        indexed: true,
         internalType: "uint256",
         name: "articleID",
         type: "uint256",
@@ -147,6 +148,31 @@ export const contractABI = [
       },
     ],
     name: "Transfer",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "enum IUsers.Vote",
+        name: "choice",
+        type: "uint8",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "articleID",
+        type: "uint256",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "userID",
+        type: "uint256",
+      },
+    ],
+    name: "ValidityVoted",
     type: "event",
   },
   {
@@ -188,6 +214,16 @@ export const contractABI = [
             internalType: "uint256",
             name: "id",
             type: "uint256",
+          },
+          {
+            internalType: "int256",
+            name: "validity",
+            type: "int256",
+          },
+          {
+            internalType: "int256",
+            name: "importance",
+            type: "int256",
           },
           {
             internalType: "address",
@@ -264,6 +300,19 @@ export const contractABI = [
       },
     ],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "commentsAddress",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -358,6 +407,25 @@ export const contractABI = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "articleID",
+        type: "uint256",
+      },
+    ],
+    name: "isArticle",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "name",
     outputs: [
@@ -365,32 +433,6 @@ export const contractABI = [
         internalType: "string",
         name: "",
         type: "string",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "nbOfArticles",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "owner",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
       },
     ],
     stateMutability: "view",
@@ -441,13 +483,6 @@ export const contractABI = [
         type: "uint256",
       },
     ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "renounceOwnership",
-    outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
@@ -517,6 +552,30 @@ export const contractABI = [
     ],
     name: "setApprovalForAll",
     outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "reviews_",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "comments_",
+        type: "address",
+      },
+    ],
+    name: "setContracts",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
     stateMutability: "nonpayable",
     type: "function",
   },
@@ -653,13 +712,48 @@ export const contractABI = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
+        internalType: "enum IUsers.Vote",
+        name: "choice",
+        type: "uint8",
+      },
+      {
+        internalType: "uint256",
+        name: "articleID",
+        type: "uint256",
       },
     ],
-    name: "transferOwnership",
-    outputs: [],
+    name: "voteImportance",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "enum IUsers.Vote",
+        name: "choice",
+        type: "uint8",
+      },
+      {
+        internalType: "uint256",
+        name: "articleID",
+        type: "uint256",
+      },
+    ],
+    name: "voteValidity",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
     stateMutability: "nonpayable",
     type: "function",
   },

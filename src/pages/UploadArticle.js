@@ -15,14 +15,14 @@ import { AddIcon, MinusIcon } from "@chakra-ui/icons"
 import { useState } from "react"
 import UploadFile from "../components/UploadFile"
 import { useArticlesContract } from "../hooks/useArticlesContract"
-import { useMetamask } from "../hooks/useMetamask"
 import { useIPFS } from "../hooks/useIPFS"
 import { useUsersContract } from "../hooks/useUsersContract"
+import { useCall } from "../web3hook/useCall"
 
 const UploadArticle = () => {
-  const [articles] = useArticlesContract()
-  const [, user] = useUsersContract()
-  const [status, contractCall] = useMetamask()
+  const { articles } = useArticlesContract()
+  const { userData } = useUsersContract()
+  const [status, contractCall] = useCall()
   const [pinJsObject, , ipfsStatus, pinFile, unPin] = useIPFS()
 
   const [abstract, setAbstract] = useState("")
@@ -71,8 +71,8 @@ const UploadArticle = () => {
     // transform into CID
     let abstractCID = ""
     let contentCID = ""
-    if (user.status === "Approved") {
-      let hash = "No pdf joined"
+    if (userData.status === "Approved") {
+      let hash = "No PDF joined"
       if (file !== undefined) {
         hash = await pinFile(file)
       }
@@ -90,7 +90,7 @@ const UploadArticle = () => {
     ])
 
     // unpin content if revert
-    if (user.status === "Approved") {
+    if (userData.status === "Approved") {
       if (tx === "Error") {
         await unPin(abstractCID)
         await unPin(contentCID)

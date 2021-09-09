@@ -16,15 +16,15 @@ import { useEffect } from "react"
 import { useUsersContract } from "../hooks/useUsersContract"
 import { useColorModeValue } from "@chakra-ui/react"
 import { Link } from "react-router-dom"
-import { useMetamask } from "../hooks/useMetamask"
 import Loading from "../components/Loading"
 import { useWeb3 } from "../web3hook/useWeb3"
+import { useCall } from "../web3hook/useCall"
 
 const ListOfUsers = () => {
   const { state } = useWeb3()
   const { account } = state
-  const [users, , userList] = useUsersContract()
-  const [status, contractCall] = useMetamask()
+  const { users, userList } = useUsersContract()
+  const [status, contractCall] = useCall()
 
   const [owner, setOwner] = useState("")
   const [isOwner, setIsOwner] = useState(false)

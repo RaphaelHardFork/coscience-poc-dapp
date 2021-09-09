@@ -21,7 +21,7 @@ const onCommentIds = async (comments, on) => {
 
 const CommentList = ({ on }) => {
   const [comments, , createCommentList, eventList] = useCommentsContract()
-  const [users] = useUsersContract()
+  const {users} = useUsersContract()
   const [, readIPFS] = useIPFS()
 
   const [commentList, setCommentList] = useState()
@@ -39,8 +39,8 @@ const CommentList = ({ on }) => {
 
             // user info
             const authorID = await users.profileID(comment.author)
-            const nameCID = await users.userName(authorID)
-            const { firstName, lastName } = await readIPFS(nameCID)
+            const struct = await users.userInfo(authorID)
+            const { firstName, lastName } = await readIPFS(struct.nameCID)
 
             // event info
             const { txHash, timestamp, blockNumber, date } =

@@ -19,7 +19,7 @@ import { useCommentsContract } from "../hooks/useCommentsContract"
 
 const Accordion = ({ object, type }) => {
   const [reviews] = useReviewsContract()
-  const [articles] = useArticlesContract()
+  const { articles } = useArticlesContract()
   const [comments] = useCommentsContract()
 
   const [articleID, setArticleID] = useState()

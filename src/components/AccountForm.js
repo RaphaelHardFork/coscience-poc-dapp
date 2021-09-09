@@ -8,37 +8,38 @@ import {
   useColorModeValue,
   Textarea,
   SlideFade,
+  Text,
 } from "@chakra-ui/react"
 import { ethers } from "ethers"
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { useUsersContract } from "../hooks/useUsersContract"
-import { useMetamask } from "../hooks/useMetamask"
 import { useIPFS } from "../hooks/useIPFS"
+import { useCall } from "../web3hook/useCall"
 
 const AccountForm = () => {
   const [users] = useUsersContract() // [contract]
-  const [status, contractCall] = useMetamask()
+  const [status, contractCall] = useCall()
   const [pinJsObject, , ipfsStatus] = useIPFS()
 
+  // factorize in a reducer? with initial state
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [laboratory, setLaboratory] = useState("")
   const [email, setEmail] = useState("")
+  const [registerMail, setRegisterMail] = useState("")
   const [bio, setBio] = useState("")
-
-  const [password, setPassword] = useState("")
 
   //color Mode
   const bg = useColorModeValue("white", "gray.800")
   const scheme = useColorModeValue("colorMain", "colorSecond")
 
   async function register() {
-    const hashedPassword = await ethers.utils.id(password)
     const nameObj = {
       version: 0.1,
       firstName,
       lastName,
+      registerMail,
     }
     const nameHash = await pinJsObject(nameObj)
     const userObj = {
@@ -49,13 +50,13 @@ const AccountForm = () => {
       bio,
     }
     const userHash = await pinJsObject(userObj)
-    await contractCall(users, "register", [hashedPassword, userHash, nameHash])
+    await contractCall(users, "register", [userHash, nameHash])
     setBio("")
     setLaboratory("")
     setLastName("")
     setFirstName("")
-    setPassword("")
     setEmail("")
+    setRegisterMail("")
   }
 
   return (
@@ -75,6 +76,13 @@ const AccountForm = () => {
             Create an account to publish an article
           </Heading>
           <Box mx="auto" maxW="50%" display="flex" flexDirection="column">
+            <Heading mt="4" fontSize="xl" as="h3">
+              Essential informations
+            </Heading>
+            <Text mb="4" color="gray">
+              These informations will be stored permanently and can't be
+              editable.
+            </Text>
             <FormControl mb="4">
               <FormLabel>First name</FormLabel>
               <Input
@@ -92,14 +100,21 @@ const AccountForm = () => {
               />
             </FormControl>
             <FormControl mb="4">
-              <FormLabel>E-mail</FormLabel>
+              <FormLabel>Institutional e-mail for registration</FormLabel>
               <Input
                 type="email"
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => setRegisterMail(e.target.value)}
                 placeholder="Bob@alice.com"
-                value={email}
+                value={registerMail}
               />
             </FormControl>
+            <Heading mt="4" fontSize="xl" as="h3">
+              About you
+            </Heading>
+            <Text mb="4" color="gray">
+              Except the laboratory, these informations are not essential to
+              register and can be editable in your profile.
+            </Text>
             <FormControl mb="4">
               <FormLabel>Laboratory</FormLabel>
               <Input
@@ -109,29 +124,21 @@ const AccountForm = () => {
               />
             </FormControl>
             <FormControl mb="4">
+              <FormLabel>Your contact e-mail</FormLabel>
+              <Input
+                type="email"
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Bob@alice.com"
+                value={email}
+              />
+            </FormControl>
+            <FormControl mb="4">
               <FormLabel>Bio</FormLabel>
               <Textarea
                 minH="40"
                 onChange={(e) => setBio(e.target.value)}
                 placeholder="Your experience, ..."
                 value={bio}
-              />
-            </FormControl>
-            <FormControl mb="4">
-              <FormLabel>Password</FormLabel>
-              <Input
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="**********"
-              />
-            </FormControl>
-            <FormControl mb="4">
-              <FormLabel>Confirm password</FormLabel>
-
-              <Input
-                onChange={(e) => setPassword(e.target.value)}
-                value={password}
-                placeholder="**********"
               />
             </FormControl>
             <Button
@@ -145,11 +152,9 @@ const AccountForm = () => {
               }
               disabled={
                 !firstName.length ||
-                !password.length ||
                 !lastName.length ||
                 !laboratory.length ||
-                !bio.length ||
-                !email.length ||
+                !registerMail.length ||
                 status.startsWith("Waiting") ||
                 status.startsWith("Pending") ||
                 ipfsStatus.startsWith("Pinning")

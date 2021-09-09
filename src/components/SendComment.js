@@ -10,13 +10,13 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { useState } from "react"
-import { useMetamask } from "../hooks/useMetamask"
 import { useCommentsContract } from "../hooks/useCommentsContract"
 import { useIPFS } from "../hooks/useIPFS"
+import { useCall } from "../web3hook/useCall"
 
 const SendComment = ({ targetAddress, id }) => {
   const [comments] = useCommentsContract()
-  const [status, contractCall] = useMetamask()
+  const [status, contractCall] = useCall()
   const [pinJsObject, , ipfsStatus, , unPin] = useIPFS()
   const { isOpen, onToggle } = useDisclosure()
 

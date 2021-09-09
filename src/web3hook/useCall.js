@@ -8,6 +8,58 @@ export const useCall = () => {
   const [status, setStatus] = useState("")
   const toast = useToast()
 
+  // read function to avoid network change problems
+  const readContract = async (contract, functionName, params) => {
+    let nbOfParam
+    if (params === undefined) {
+      nbOfParam = 0
+    } else {
+      nbOfParam = params.length
+    }
+
+    let result
+    try {
+      switch (nbOfParam) {
+        case 0:
+          result = await contract[functionName]()
+          break
+        case 1:
+          result = await contract[functionName](params[0]) // .functionName
+          break
+        case 2:
+          result = await contract[functionName](params[0], params[1])
+          break
+        case 3:
+          result = await contract[functionName](params[0], params[1], params[2])
+          break
+        case 4:
+          result = await contract[functionName](
+            params[0],
+            params[1],
+            params[2],
+            params[3]
+          )
+          break
+        default:
+          console.log("Wrong number of params")
+      }
+      return result
+    } catch (e) {
+      let errorMessage
+      switch (e.code) {
+        case "NETWORK_ERROR":
+          errorMessage = "Wrong network: " + e.message
+          break
+        case "CALL_EXCEPTION":
+          errorMessage = "Wrong network (certainly): " + e.message
+          break
+        default:
+          errorMessage = "unknown error"
+          break
+      }
+    }
+  }
+
   // Ex: await contractCall(token, "transfer", ["0x....", 105000])
   const contractCall = async (contract, functionName, params) => {
     let nbOfParam

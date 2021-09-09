@@ -1,6 +1,7 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import {
   Box,
+  Badge,
   Flex,
   useColorModeValue,
   HStack,
@@ -8,14 +9,11 @@ import {
   useDisclosure,
   VStack,
   CloseButton,
-  InputGroup,
-  InputLeftElement,
-  Input,
   Heading,
   Text,
   Link,
 } from "@chakra-ui/react"
-import { HamburgerIcon, MoonIcon, SunIcon, Search2Icon } from "@chakra-ui/icons"
+import { HamburgerIcon, MoonIcon, SunIcon, BellIcon } from "@chakra-ui/icons"
 
 import { useColorMode } from "@chakra-ui/react"
 import { Link as RouterLink } from "react-router-dom"
@@ -24,14 +22,26 @@ import HeaderLinks from "./HeaderLinks"
 
 //in small sizeburgerMenu, close not only with cross but add a component for clicking outside menu too.
 const Header = () => {
-  //login for the sign up to add.
-  const [, user] = useUsersContract()
+  //login for the sign up to add.<Badge colorScheme="purple">New</Badge>
+  const { userData, userList } = useUsersContract()
   const bg = useColorModeValue("white", "grayBlue.900")
   const co = useColorModeValue("main", "second")
   const mobileNav = useDisclosure()
 
+  // useState
+  const [count, setCount] = useState(0)
+
   //Color mode
   const { colorMode, toggleColorMode } = useColorMode()
+
+  useEffect(() => {
+    setCount(0)
+    userList.forEach((el) => {
+      if (el.status === "Pending") {
+        setCount((c) => c + 1) // update count
+      }
+    })
+  }, [userList])
 
   return (
     <>
@@ -62,7 +72,7 @@ const Header = () => {
               color="brand.500"
               display={{ base: "none", lg: "inline-flex" }}
             >
-              <HeaderLinks user={user} />
+              <HeaderLinks user={userData} />
             </HStack>
 
             <Box display={{ base: "inline-flex", lg: "none" }} zIndex="sticky">
@@ -96,7 +106,7 @@ const Header = () => {
                 />
 
                 <HeaderLinks
-                  user={user}
+                  user={userData}
                   isOpen={mobileNav.isOpen}
                   onClose={mobileNav.onClose}
                 />
@@ -116,13 +126,40 @@ const Header = () => {
                 {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
               </IconButton>
 
-              <InputGroup>
-                <InputLeftElement
-                  pointerEvents="none"
-                  children={<Search2Icon />}
+              <Box position="relative" display="inline-block">
+                <IconButton
+                  boxSize={6}
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  variant="outline"
+                  colorScheme="teal"
+                  aria-label="Bell notification"
+                  icon={<BellIcon />}
+                  as={RouterLink}
+                  to="/list-of-users"
                 />
-                <Input type="tel" placeholder="Search..." />
-              </InputGroup>
+                <Badge
+                  position="absolute"
+                  top="-1px"
+                  right="-1px"
+                  px={2}
+                  py={1}
+                  fontSize="xs"
+                  fontWeight="bold"
+                  lineHeight="none"
+                  color="red.100"
+                  transform="translate(50%,-50%)"
+                  bg="red.600"
+                  rounded="full"
+                  colorScheme="purple"
+                >
+                  {count}
+                </Badge>
+              </Box>
             </HStack>
           </HStack>
         </Flex>
