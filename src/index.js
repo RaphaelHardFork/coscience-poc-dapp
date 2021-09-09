@@ -3,7 +3,7 @@ import ReactDOM from "react-dom"
 import "./index.css"
 import App from "./App"
 import reportWebVitals from "./reportWebVitals"
-import { Web3Provider } from "web3-hooks"
+import Web3ContextProvider from "./web3hook/Web3ContextProvider"
 import { ChakraProvider, extendTheme } from "@chakra-ui/react"
 import { BrowserRouter as Router } from "react-router-dom"
 import { styles } from "./theme/index"
@@ -12,9 +12,9 @@ ReactDOM.render(
   <React.StrictMode>
     <Router>
       <ChakraProvider theme={extendTheme(styles)}>
-        <Web3Provider>
+        <Web3ContextProvider>
           <App />
-        </Web3Provider>
+        </Web3ContextProvider>
       </ChakraProvider>
     </Router>
   </React.StrictMode>,

@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import { ArticlesContext } from "../contexts/ArticlesContext"
+import { useWeb3 } from "../web3hook/useWeb3"
 
 // Pure function
 const getArticleData = async (articles, id) => {
@@ -33,7 +34,9 @@ const userArticleList = async (articles, listOfId) => {
 // -----------------------------------------------------HOOK
 export const useArticlesContract = () => {
   // call the context
-  const [articles] = useContext(ArticlesContext)
+  const [articles, mode] = useContext(ArticlesContext)
+  const { state } = useWeb3()
+  const { networkName } = state
 
   // utils
   const [articleList, setArticleList] = useState([])
@@ -41,7 +44,7 @@ export const useArticlesContract = () => {
 
   // create list of article
   useEffect(() => {
-    if (articles) {
+    if (articles && networkName === "rinkeby") {
       const createArticleList = async () => {
         const nb = await articles.nbOfArticles()
         const articlesList = []
@@ -84,7 +87,7 @@ export const useArticlesContract = () => {
     }
 
     return () => setArticleList(undefined)
-  }, [articles])
+  }, [articles, networkName])
 
   // control call of the hook
   if (articles === undefined) {

@@ -6,15 +6,14 @@ import {
   useColorModeValue,
   Heading,
 } from "@chakra-ui/react"
-import { useContext } from "react"
 import { Link } from "react-router-dom"
-import { Web3Context } from "web3-hooks"
 import { useUsersContract } from "../hooks/useUsersContract"
 import AccountForm from "../components/AccountForm"
 import Loading from "../components/Loading"
+import { useWeb3 } from "../web3hook/useWeb3"
 
 const SignUp = () => {
-  const [web3State, login] = useContext(Web3Context)
+  const { state, connectToMetamask } = useWeb3()
   const [, user] = useUsersContract()
 
   //color Mode
@@ -26,7 +25,7 @@ const SignUp = () => {
       <Box p="10">
         <Container maxW="container.lg">
           <Box shadow="lg" borderRadius="50" py="10" bg={bg}>
-            {web3State.isLogged ? (
+            {state.isLogged ? (
               user ? (
                 user.id !== 0 ? (
                   <Box>
@@ -62,7 +61,7 @@ const SignUp = () => {
                   colorScheme={scheme}
                   display="flex"
                   mx="auto"
-                  onClick={login}
+                  onClick={connectToMetamask}
                 >
                   Connect your metamask
                 </Button>

@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import { ReviewsContext } from "../contexts/ReviewsContext"
+import { useWeb3 } from "../web3hook/useWeb3"
 
 const getReviewData = async (reviews, id) => {
   const r = await reviews.reviewInfo(id)
@@ -27,11 +28,14 @@ const createReviewList = async (reviews, listOfId) => {
 }
 
 export const useReviewsContract = () => {
-  const [reviews] = useContext(ReviewsContext)
+  const [reviews, mode] = useContext(ReviewsContext)
   const [eventList, setEventList] = useState()
 
+  const { state } = useWeb3()
+  const { networkName } = state
+
   useEffect(() => {
-    if (reviews) {
+    if (reviews && networkName === "rinkeby") {
       ;(async () => {
         const eventArray = await reviews.queryFilter("Posted")
         const eventListArray = [
@@ -59,7 +63,7 @@ export const useReviewsContract = () => {
         // [{null},{event1 = reviewID n°1}]
       })()
     }
-  }, [reviews])
+  }, [reviews, networkName])
 
   /*
   useEffect(() => {

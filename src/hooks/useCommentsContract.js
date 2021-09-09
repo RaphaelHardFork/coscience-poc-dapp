@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import { CommentsContext } from "../contexts/CommentsContext"
+import { useWeb3 } from "../web3hook/useWeb3"
 
 //pure function
 
@@ -30,12 +31,14 @@ const createCommentList = async (comments, listOfId) => {
 
 // HOOKS
 export const useCommentsContract = () => {
-  const [comments] = useContext(CommentsContext)
+  const [comments, mode] = useContext(CommentsContext)
+  const { state } = useWeb3()
+  const { networkName } = state
 
   const [eventList, setEventList] = useState()
 
   useEffect(() => {
-    if (comments) {
+    if (comments && networkName === "rinkeby") {
       ;(async () => {
         const eventArray = await comments.queryFilter("Posted")
         const eventListArray = [
@@ -62,7 +65,7 @@ export const useCommentsContract = () => {
         // [{null},{event1 = reviewID n°1}]
       })()
     }
-  }, [comments])
+  }, [comments, networkName])
 
   if (comments === undefined) {
     throw new Error(

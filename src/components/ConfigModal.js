@@ -6,18 +6,19 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { useContext } from "react"
-import { Web3Context } from "web3-hooks"
+import { useWeb3 } from "../web3hook/useWeb3"
 
 const ConfigModal = () => {
-  const [web3State, login] = useContext(Web3Context)
+  const { state, connectToMetamask, switchNetwork } = useWeb3()
+  const { isLogged, networkName } = state
 
   const back = useColorModeValue("white", "black")
 
   // switch network: will goes soon in a hook
+  /*
   const switchNetwork = async () => {
     try {
-      await web3State.provider.provider.request({
+      await state.ethersProvider.provider.request({
         method: "wallet_switchEthereumChain",
         params: [{ chainId: "0x4" }],
       })
@@ -25,9 +26,11 @@ const ConfigModal = () => {
       console.log(e)
     }
   }
+  */
+
   return (
     <>
-      {web3State.isLogged && web3State.networkName === "Rinkeby" ? (
+      {networkName === "rinkeby" ? (
         ""
       ) : (
         <>
@@ -67,49 +70,27 @@ const ConfigModal = () => {
                   You are connected to the blockchain through the Metamask
                   provider
                 </Text>
-                {!web3State.isLogged ? (
-                  <>
-                    <Text
-                      textAlign="center"
-                      fontWeight="bold"
-                      opacity="1"
-                      fontSize="4xl"
-                      my="4"
-                    >
-                      Please connect your Metamask
-                    </Text>
-                    <Button
-                      onClick={login}
-                      colorScheme="orange"
-                      display="flex"
-                      mx="auto"
-                      my="4"
-                    >
-                      Connect
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Text
-                      textAlign="center"
-                      fontWeight="bold"
-                      opacity="1"
-                      fontSize="4xl"
-                      my="4"
-                    >
-                      Please switch to Rinkeby network
-                    </Text>
-                    <Button
-                      onClick={switchNetwork}
-                      colorScheme="yellow"
-                      display="flex"
-                      mx="auto"
-                      my="4"
-                    >
-                      Switch to Rinkeby
-                    </Button>
-                  </>
-                )}
+
+                <>
+                  <Text
+                    textAlign="center"
+                    fontWeight="bold"
+                    opacity="1"
+                    fontSize="4xl"
+                    my="4"
+                  >
+                    Please switch to Rinkeby network
+                  </Text>
+                  <Button
+                    onClick={() => switchNetwork("0x4", "rinkeby")}
+                    colorScheme="yellow"
+                    display="flex"
+                    mx="auto"
+                    my="4"
+                  >
+                    Switch to Rinkeby
+                  </Button>
+                </>
               </Flex>
             </Box>
           </Flex>

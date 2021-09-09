@@ -4,15 +4,17 @@ import UsersContextProvider from "./contexts/UsersContext.js"
 import ArticlesContextProvider from "./contexts/ArticlesContext"
 import ReviewsContextProvider from "./contexts/ReviewsContext"
 import CommentsContextProvider from "./contexts/CommentsContext"
+import { useWeb3 } from "./web3hook/useWeb3"
 
 const App = () => {
+  const { state } = useWeb3()
   return (
     <>
       <UsersContextProvider>
         <ArticlesContextProvider>
           <ReviewsContextProvider>
             <CommentsContextProvider>
-              <Dapp />
+              {state.ethersProvider !== null ? <Dapp /> : "No provider"}
             </CommentsContextProvider>
           </ReviewsContextProvider>
         </ArticlesContextProvider>

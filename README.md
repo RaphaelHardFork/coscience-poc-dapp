@@ -6,9 +6,31 @@
 
 ## TODO in this repo
 
+- add contracts
+
+- add IPFS info(+registrationEmail in nameCID and persona email in profileCID)
+- notifs (go to users in pending or article in banning) ONLY for owner (while no governance)
+- votes on article / review / comment
+- display votes on Home
+- recoverAccount (off chain => Bob send mail to approved member + add a newWallet)
+
+  - BACKEND => call need recoverAccount
+
+- Unpin content when EditProfile
+- General modal (before provider is found) (wrap Dapp) (before load website)
+
+Providers
+
+- change network
+- function to read contract?
+
+Data
+
+- hook / context
+- fetch everything in hooks (as we can)
+- listen event => instant refresh
+
 - Crawler with `react-router-dom`❌ (Not in this version)
-- REVIEW DAPP (architecture schema) !!
-- MERGE with main
 
 ## TODO in the backend (Not in this version)
 

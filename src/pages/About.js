@@ -17,11 +17,11 @@ import {
   SliderThumb,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Web3Context } from "web3-hooks"
 import { ethers } from "ethers"
+import { useWeb3 } from "../web3hook/useWeb3"
 
 const About = () => {
-  const [web3State] = useContext(Web3Context)
+  const { state } = useWeb3()
   const scheme = useColorModeValue("colorMain", "colorSecond")
   const bg = useColorModeValue("white", "grayBlue.900")
 
@@ -35,8 +35,8 @@ const About = () => {
   async function donate() {
     try {
       setStatus("Pending")
-      const response = await web3State.signer.sendTransaction({
-        from: web3State.account,
+      const response = await state.signer.sendTransaction({
+        from: state.account,
         to: "0x5F6922217C1CFCC7ebC457585c76841b73b179A3",
         value: ethers.utils.parseEther(amount.toString()), // 2441406250
       })
@@ -80,7 +80,7 @@ const About = () => {
             value={amount}
             onChange={handleChange}
             step={0.001}
-            max={web3State.balance}
+            max={state.balance}
             min={0}
             mb="2"
           >
@@ -96,7 +96,7 @@ const About = () => {
             value={amount}
             onChange={handleChange}
             step={0.001}
-            max={web3State.balance}
+            max={state.balance}
             min={0}
           >
             <SliderTrack>

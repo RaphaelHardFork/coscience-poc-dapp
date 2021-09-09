@@ -12,17 +12,17 @@ import {
   Tag,
 } from "@chakra-ui/react"
 import { useState } from "react"
-import { useContext } from "react"
 import { useEffect } from "react"
-import { Web3Context } from "web3-hooks"
 import { useUsersContract } from "../hooks/useUsersContract"
 import { useColorModeValue } from "@chakra-ui/react"
 import { Link } from "react-router-dom"
 import { useMetamask } from "../hooks/useMetamask"
 import Loading from "../components/Loading"
+import { useWeb3 } from "../web3hook/useWeb3"
 
 const ListOfUsers = () => {
-  const [web3State] = useContext(Web3Context)
+  const { state } = useWeb3()
+  const { account } = state
   const [users, , userList] = useUsersContract()
   const [status, contractCall] = useMetamask()
 
@@ -38,7 +38,7 @@ const ListOfUsers = () => {
     const getOwner = async () => {
       try {
         const owner = await users.owner()
-        if (owner.toLowerCase() === web3State.account.toLowerCase()) {
+        if (owner.toLowerCase() === account.toLowerCase()) {
           setIsOwner(true)
         }
         setOwner(owner)
@@ -47,7 +47,7 @@ const ListOfUsers = () => {
       }
     }
     getOwner()
-  }, [users, web3State.account])
+  }, [users, account])
 
   async function acceptUser(id) {
     await contractCall(users, "acceptUser", [id])

@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react"
-import { Web3Context } from "web3-hooks"
 import { UsersContext } from "../contexts/UsersContext"
+import { useCall } from "../web3hook/useCall"
+import { useWeb3 } from "../web3hook/useWeb3"
 import { useIPFS } from "./useIPFS"
 
 // Pure function
@@ -38,10 +39,10 @@ const getUserData = async (users, id) => {
 // hooks
 export const useUsersContract = () => {
   // call the context
-  const [users] = useContext(UsersContext)
-
+  const [users, mode] = useContext(UsersContext)
   // utils
-  const [web3State] = useContext(Web3Context)
+  const [status, contractCall] = useCall()
+  const { state } = useWeb3()
   const [, readIPFS] = useIPFS()
   const [userData, setUserData] = useState({})
   const [userList, setUserList] = useState([])
@@ -49,8 +50,10 @@ export const useUsersContract = () => {
   // get user data
   useEffect(() => {
     const connectedUser = async () => {
-      if (users) {
-        const id = await users.profileID(web3State.account)
+      if (users && state.networkName === "rinkeby") {
+        console.log("Render the hook useUsersContract")
+        // const id = await contractCall(users, "profileID", [state.account])
+        const id = await users.profileID(state.account)
         const userObj = await getUserData(users, id.toNumber())
         const { firstName, lastName } = await readIPFS(userObj.nameCID)
         setUserData({ ...userObj, firstName, lastName })
@@ -61,12 +64,12 @@ export const useUsersContract = () => {
     return () => {
       setUserData({})
     }
-  }, [web3State.account, users, readIPFS])
+  }, [state.account, users, readIPFS, state.networkName])
 
   // get list of user
   useEffect(() => {
     const createList = async () => {
-      if (users) {
+      if (users && state.networkName === "rinkeby") {
         const listOfUser = []
         const nb = await users.nbOfUsers()
         for (let i = 1; i <= nb; i++) {
@@ -84,7 +87,7 @@ export const useUsersContract = () => {
     return () => {
       setUserList([])
     }
-  }, [users, readIPFS])
+  }, [users, readIPFS, state.networkName])
 
   // control call of the hook
   if (users === undefined) {
