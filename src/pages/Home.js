@@ -1,4 +1,4 @@
-import { Box, Heading, useColorModeValue, Container } from "@chakra-ui/react"
+import { Box, useColorModeValue, Container } from "@chakra-ui/react"
 import { useState } from "react"
 import { useEffect } from "react"
 import ArticleList from "../components/ArticleList"
@@ -15,7 +15,7 @@ const Home = () => {
 
   const [articleListAuthor, setArticleListAuthor] = useState()
 
-  const bg = useColorModeValue("white", "gray.800")
+  const bg = useColorModeValue("grayOrange.100", "grayBlue.800")
 
   useEffect(() => {
     if (users && articleList !== undefined) {
@@ -23,13 +23,17 @@ const Home = () => {
         const asyncRes = await Promise.all(
           articleList.map(async (article) => {
             const userID = await users.profileID(article.author)
-            let header
-            try {
-              header = await readIPFS(article.abstractCID)
-            } catch (cid) {
-              header = cid
+            const { title, abstract } = await readIPFS(article.abstractCID)
+            const nameCID = await users.userName(userID)
+            const { firstName, lastName } = await readIPFS(nameCID)
+            return {
+              ...article,
+              authorID: userID.toNumber(),
+              title,
+              abstract,
+              firstName,
+              lastName,
             }
-            return { ...article, authorID: userID.toNumber(), header }
           })
         )
         setArticleListAuthor(asyncRes)
@@ -39,12 +43,10 @@ const Home = () => {
 
   return (
     <>
-      <Heading>
-        <CallToAction />
-      </Heading>
+      <CallToAction />
 
       <Box py="10" bg={bg}>
-        <Container maxW="container.xl">
+        <Container maxW={{ base: "container.sm", lg: "container.xl" }}>
           {articleListAuthor === undefined ? (
             <Loading />
           ) : articleListAuthor.length === 0 ? (

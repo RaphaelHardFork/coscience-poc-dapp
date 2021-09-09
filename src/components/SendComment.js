@@ -1,4 +1,14 @@
-import { Box, FormControl, FormLabel, Textarea, Button } from "@chakra-ui/react"
+import {
+  Box,
+  FormControl,
+  FormLabel,
+  Textarea,
+  Button,
+  useDisclosure,
+  Collapse,
+  Heading,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import { useState } from "react"
 import { useMetamask } from "../hooks/useMetamask"
 import { useCommentsContract } from "../hooks/useCommentsContract"
@@ -7,46 +17,76 @@ import { useIPFS } from "../hooks/useIPFS"
 const SendComment = ({ targetAddress, id }) => {
   const [comments] = useCommentsContract()
   const [status, contractCall] = useMetamask()
-  const [pinJsObject, , ipfsStatus] = useIPFS()
+  const [pinJsObject, , ipfsStatus, , unPin] = useIPFS()
+  const { isOpen, onToggle } = useDisclosure()
 
-  const [comment, setComment] = useState("")
+  const [content, setContent] = useState("")
 
   async function post() {
-    const body = await pinJsObject({ comment })
+    const contentHash = await pinJsObject({ version: 0.1, content })
     // post(comment,articleAddress, articleID)
-    await contractCall(comments, "post", [body, targetAddress, id])
-    setComment("")
+    const tx = await contractCall(comments, "post", [
+      contentHash,
+      targetAddress,
+      id,
+    ])
+
+    // unpin
+    if (tx === "Error") {
+      await unPin(contentHash)
+    }
+    setContent("")
   }
+  const scheme = useColorModeValue("colorMain", "colorSecond")
 
   return (
     <>
-      <Box mx="auto" maxW="50%" display="flex" flexDirection="column">
-        <FormControl mb="4">
-          <FormLabel>Write a comment</FormLabel>
-          <Textarea
-            value={comment}
-            placeholder="Your comment..."
-            onChange={(e) => setComment(e.target.value)}
-          />
-        </FormControl>
+      <Box minW="49%">
         <Button
-          colorScheme="orange"
-          onClick={post}
-          isLoading={
-            status.startsWith("Waiting") ||
-            status.startsWith("Pending") ||
-            ipfsStatus.startsWith("Pinning")
-          }
-          loadingText={ipfsStatus.startsWith("Pinning") ? ipfsStatus : status}
-          disabled={
-            !comment.length ||
-            status.startsWith("Waiting") ||
-            status.startsWith("Pending") ||
-            ipfsStatus.startsWith("Pinning")
-          }
+          display="flex"
+          ms={{ base: "", lg: "auto" }}
+          onClick={onToggle}
+          colorScheme={scheme}
         >
-          Submit
+          {isOpen ? "X" : "Add comment"}
         </Button>
+
+        <Box mx="auto" display="flex" flexDirection="column">
+          <Collapse in={isOpen} animateOpacity>
+            <Box p="40px" mt="4" rounded="md" shadow="md">
+              <FormControl mb="4">
+                <FormLabel>
+                  <Heading>Write a comment</Heading>
+                </FormLabel>
+                <Textarea
+                  value={content}
+                  placeholder="Your comment..."
+                  onChange={(e) => setContent(e.target.value)}
+                />
+              </FormControl>
+              <Button
+                colorScheme={scheme}
+                onClick={post}
+                isLoading={
+                  status.startsWith("Waiting") ||
+                  status.startsWith("Pending") ||
+                  ipfsStatus.startsWith("Pinning")
+                }
+                loadingText={
+                  ipfsStatus.startsWith("Pinning") ? ipfsStatus : status
+                }
+                disabled={
+                  !content.length ||
+                  status.startsWith("Waiting") ||
+                  status.startsWith("Pending") ||
+                  ipfsStatus.startsWith("Pinning")
+                }
+              >
+                Submit
+              </Button>
+            </Box>
+          </Collapse>
+        </Box>
       </Box>
     </>
   )

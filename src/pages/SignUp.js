@@ -19,6 +19,7 @@ const SignUp = () => {
 
   //color Mode
   const bg = useColorModeValue("white", "gray.800")
+  const scheme = useColorModeValue("colorMain", "colorSecond")
 
   return (
     <>
@@ -36,7 +37,7 @@ const SignUp = () => {
                       maxW="30ch"
                       display="flex"
                       mx="auto"
-                      colorScheme="telegram"
+                      colorScheme={scheme}
                       as={Link}
                       to={`/profile/${user.id}`}
                       disabled={user.id === undefined}
@@ -58,7 +59,7 @@ const SignUp = () => {
                   You must connect your Metamask to sign up
                 </Heading>
                 <Button
-                  colorScheme="orange"
+                  colorScheme={scheme}
                   display="flex"
                   mx="auto"
                   onClick={login}
