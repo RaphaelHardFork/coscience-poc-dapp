@@ -83,7 +83,7 @@ const AccountForm = () => {
               These informations will be stored permanently and can't be
               editable.
             </Text>
-            <FormControl mb='4'>
+            <FormControl mb='4' isRequired>
               <FormLabel>First name</FormLabel>
               <Input
                 onChange={(e) => setFirstName(e.target.value)}
@@ -91,7 +91,7 @@ const AccountForm = () => {
                 value={firstName}
               />
             </FormControl>
-            <FormControl mb='4'>
+            <FormControl mb='4' isRequired>
               <FormLabel>Last name</FormLabel>
               <Input
                 onChange={(e) => setLastName(e.target.value)}
@@ -99,7 +99,7 @@ const AccountForm = () => {
                 value={lastName}
               />
             </FormControl>
-            <FormControl mb='4'>
+            <FormControl mb='4' isRequired>
               <FormLabel>Institutional e-mail for registration</FormLabel>
               <Input
                 type='email'
@@ -115,7 +115,7 @@ const AccountForm = () => {
               Except the laboratory, these informations are not essential to
               register and can be editable in your profile.
             </Text>
-            <FormControl mb='4'>
+            <FormControl mb='4' isRequired>
               <FormLabel>Laboratory</FormLabel>
               <Input
                 onChange={(e) => setLaboratory(e.target.value)}
