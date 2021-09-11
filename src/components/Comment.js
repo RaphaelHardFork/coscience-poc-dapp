@@ -121,7 +121,9 @@ const Comment = ({ comment }) => {
           </Flex>
 
           <Text mt='10'>{comment.content}</Text>
+
           <VoteOnComment id={comment.id} comment={comment} />
+
           <Button colorScheme={scheme} variant='link' onClick={onToggle} mt='4'>
             {comment.comments.length === 0
               ? ''

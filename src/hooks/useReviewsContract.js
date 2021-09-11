@@ -1,6 +1,5 @@
 import { useContext } from 'react'
 import { ReviewsContext } from '../contexts/ReviewsContext'
-import { useWeb3 } from '../web3hook/useWeb3'
 
 const getReviewData = async (reviews, id) => {
   const r = await reviews.reviewInfo(id)

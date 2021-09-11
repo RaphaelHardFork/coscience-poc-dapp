@@ -10,7 +10,7 @@ import {
   SlideFade,
   Text
 } from '@chakra-ui/react'
-import { ethers } from 'ethers'
+
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useUsersContract } from '../hooks/useUsersContract'

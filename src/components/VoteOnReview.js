@@ -12,6 +12,8 @@ const VoteOnReview = ({ id, review }) => {
   async function VoteOn(choice) {
     await contractCall(reviews, 'vote', [choice, id])
   }
+
+  console.log('review', review)
   return (
     <Flex my='5' alignItems='center'>
       {/* <Text>Review </Text> */}

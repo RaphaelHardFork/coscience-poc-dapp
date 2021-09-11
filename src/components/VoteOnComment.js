@@ -5,7 +5,7 @@ import { FaHeart } from 'react-icons/fa'
 import { useCommentsContract } from '../hooks/useCommentsContract'
 import { useCall } from '../web3hook/useCall'
 
-const VoteOnReview = ({ id, comment }) => {
+const VoteOnComment = ({ id, comment }) => {
   const { comments } = useCommentsContract()
   const [status, contractCall] = useCall()
 
@@ -31,4 +31,4 @@ const VoteOnReview = ({ id, comment }) => {
   )
 }
 
-export default VoteOnReview
+export default VoteOnComment

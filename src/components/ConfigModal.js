@@ -9,8 +9,8 @@ import {
 import { useWeb3 } from '../web3hook/useWeb3'
 
 const ConfigModal = () => {
-  const { state, connectToMetamask, switchNetwork } = useWeb3()
-  const { isLogged, networkName } = state
+  const { state, switchNetwork } = useWeb3()
+  const { networkName } = state
 
   const back = useColorModeValue('white', 'black')
 

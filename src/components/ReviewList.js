@@ -33,8 +33,7 @@ const ReviewList = ({ article }) => {
       const reviewData = async () => {
         const listOfId = await articleReviewIds(reviews, article)
         const reviewList = await createReviewList(reviews, listOfId)
-        let nbReviewVote
-        let nbReview
+
         const asyncRes = await Promise.all(
           reviewList.map(async (review) => {
             // get the content from IFPS
@@ -45,7 +44,7 @@ const ReviewList = ({ article }) => {
             const { vote } = structReview
 
             // event listener nb of vote
-            nbReviewVote = await reviews.filters.Voted(
+            let nbReviewVote = await reviews.filters.Voted(
               null,
               Number(review.id.toString(16)),
               null
@@ -54,18 +53,6 @@ const ReviewList = ({ article }) => {
 
             const eventArray = await reviews.queryFilter(nbReviewVote)
             const nbVotes = eventArray.length
-
-            // event listener nb of review for an article
-            nbReview = await reviews.filters.Posted(
-              null,
-              Number(review.id.toString(16)),
-              null
-            )
-
-            reviews.on(nbReview, reviewData)
-
-            const ArticleReviewsArray = await reviews.queryFilter(nbReview)
-            const nbReviews = ArticleReviewsArray.length
 
             // get user info
             const authorID = await users.profileID(review.author)
@@ -88,18 +75,16 @@ const ReviewList = ({ article }) => {
               blockNumber,
               date,
               vote,
-              nbVotes,
-              nbReviews
+              nbVotes
             }
           })
         )
 
         setReviewList(asyncRes)
 
-        return () => {
-          reviews.off(nbReviewVote, reviewData)
-          reviews.off(nbReview, reviewData)
-        }
+        // return () => {
+        //   reviews.off(nbReviewVote, reviewData)
+        // }
       }
       reviewData()
     }

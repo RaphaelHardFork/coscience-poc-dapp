@@ -8,9 +8,6 @@ const ArticleValidity = ({ id, article }) => {
   const { articles } = useArticlesContract()
   const [status, contractCall] = useCall()
 
-  console.log(article.validityVotes)
-  console.log(article.importanceVotes)
-
   async function VoteValidity(validity) {
     await contractCall(articles, 'voteValidity', [validity, id])
   }
