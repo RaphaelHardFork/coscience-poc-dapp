@@ -9,16 +9,16 @@ import {
   UnorderedList,
   Button,
   SlideFade,
-  Tag,
-} from "@chakra-ui/react"
-import { useState } from "react"
-import { useEffect } from "react"
-import { useUsersContract } from "../hooks/useUsersContract"
-import { useColorModeValue } from "@chakra-ui/react"
-import { Link } from "react-router-dom"
-import Loading from "../components/Loading"
-import { useWeb3 } from "../web3hook/useWeb3"
-import { useCall } from "../web3hook/useCall"
+  Tag
+} from '@chakra-ui/react'
+import { useState } from 'react'
+import { useEffect } from 'react'
+import { useUsersContract } from '../hooks/useUsersContract'
+import { useColorModeValue } from '@chakra-ui/react'
+import { Link } from 'react-router-dom'
+import Loading from '../components/Loading'
+import { useWeb3 } from '../web3hook/useWeb3'
+import { useCall } from '../web3hook/useCall'
 
 const ListOfUsers = () => {
   const { state } = useWeb3()
@@ -26,13 +26,13 @@ const ListOfUsers = () => {
   const { users, userList } = useUsersContract()
   const [status, contractCall] = useCall()
 
-  const [owner, setOwner] = useState("")
+  const [owner, setOwner] = useState('')
   const [isOwner, setIsOwner] = useState(false)
 
   //                  Color Value
-  const bg = useColorModeValue("white", "grayBlue.900")
-  const bgUser = useColorModeValue("grayOrange.100", "grayBlue.800")
-  const txt = useColorModeValue("mainLight", "second")
+  const bg = useColorModeValue('white', 'grayBlue.900')
+  const bgUser = useColorModeValue('grayOrange.100', 'grayBlue.800')
+  const txt = useColorModeValue('mainLight', 'second')
 
   useEffect(() => {
     const getOwner = async () => {
@@ -50,69 +50,69 @@ const ListOfUsers = () => {
   }, [users, account])
 
   async function acceptUser(id) {
-    await contractCall(users, "acceptUser", [id])
+    await contractCall(users, 'acceptUser', [id])
   }
 
   async function banUser(id) {
-    await contractCall(users, "banUser", [id])
+    await contractCall(users, 'banUser', [id])
   }
 
   return (
     <>
-      <Box p="10">
-        <Container maxW="container.lg">
-          <Box shadow="lg" borderRadius="50" py="10" bg={bg}>
+      <Box p='10'>
+        <Container maxW='container.lg'>
+          <Box shadow='lg' borderRadius='50' py='10' bg={bg}>
             <SlideFade
-              threshold="0.1"
+              threshold='0.1'
               delay={{ enter: 0.1 }}
               transition={{
-                enter: { duration: 0.7 },
+                enter: { duration: 0.7 }
               }}
-              offsetY="-100px"
-              offsetX="0px"
+              offsetY='-100px'
+              offsetX='0px'
               in
             >
-              <Heading textAlign="center" mb="5">
+              <Heading textAlign='center' mb='5'>
                 List of users
               </Heading>
             </SlideFade>
-            <Box mx="auto" maxW="75%" display="flex" flexDirection="column">
-              <UnorderedList listStyleType="none">
+            <Box mx='auto' maxW='75%' display='flex' flexDirection='column'>
+              <UnorderedList listStyleType='none'>
                 {userList.length === 0 ? (
                   <Loading />
                 ) : (
                   userList.map((user) => {
                     return (
                       <SlideFade
-                        threshold="0.1"
+                        threshold='0.1'
                         delay={{ enter: 0.1 }}
                         transition={{
-                          enter: { duration: 0.7 },
+                          enter: { duration: 0.7 }
                         }}
-                        offsetY="0px"
-                        offsetX="100px"
+                        offsetY='0px'
+                        offsetX='100px'
                         in
                         key={user.id}
                       >
                         <Flex
-                          borderRadius="10"
-                          shadow="lg"
-                          p="4"
-                          mb="5"
+                          borderRadius='10'
+                          shadow='lg'
+                          p='4'
+                          mb='5'
                           as={LinkBox}
-                          alignItems={{ base: "space-around", lg: "center" }}
-                          justifyContent={"space-around"}
+                          alignItems={{ base: 'space-around', lg: 'center' }}
+                          justifyContent={'space-around'}
                           _hover={{ backgroundColor: txt }}
-                          transition="0.3s"
+                          transition='0.3s'
                           bg={bgUser}
-                          direction={{ base: "column", lg: "row" }}
+                          direction={{ base: 'column', lg: 'row' }}
                         >
-                          <Text fontSize="3xl">#{user.id}</Text>
-                          <Flex flexDirection="column">
-                            <Text fontWeight="bold">
+                          <Text fontSize='3xl'>#{user.id}</Text>
+                          <Flex flexDirection='column'>
+                            <Text fontWeight='bold'>
                               {user.firstName} {user.lastName}
                             </Text>
-                            <Text wrap="wrap"> {user.walletList[0]} </Text>
+                            <Text wrap='wrap'> {user.walletList[0]} </Text>
                           </Flex>
                           <Text> {user.nbOfWallet} Wallet(s) </Text>
                           <LinkOverlay
@@ -121,42 +121,42 @@ const ListOfUsers = () => {
                           ></LinkOverlay>
 
                           <Flex
-                            alignItems="center"
-                            direction="column"
-                            width="75px"
+                            alignItems='center'
+                            direction='column'
+                            width='75px'
                           >
-                            {user.status === "Pending"
-                              ? "Pending"
-                              : user.status === "Approved"
-                              ? "Approved"
-                              : "Banned"}
+                            {user.status === 'Pending'
+                              ? 'Pending'
+                              : user.status === 'Approved'
+                              ? 'Approved'
+                              : 'Banned'}
                             <Tag
-                              borderRadius="full"
-                              variant="solid"
+                              borderRadius='full'
+                              variant='solid'
                               bg={
-                                user.status === "Pending"
-                                  ? "orange.500"
-                                  : user.status === "Approved"
-                                  ? "green.400"
-                                  : "red.400"
+                                user.status === 'Pending'
+                                  ? 'orange.500'
+                                  : user.status === 'Approved'
+                                  ? 'green.400'
+                                  : 'red.400'
                               }
                             ></Tag>
                           </Flex>
 
                           {/* OWNER OPTIONS */}
                           {isOwner ? (
-                            user.status === "Approved" ? (
+                            user.status === 'Approved' ? (
                               <Button
                                 onClick={() => banUser(user.id)}
                                 isLoading={
-                                  status.startsWith("Waiting") ||
-                                  status.startsWith("Pending")
+                                  status.startsWith('Waiting') ||
+                                  status.startsWith('Pending')
                                 }
                                 loadingText={status}
                                 disabled={
-                                  user.status === "Not approved" ||
-                                  status.startsWith("Waiting") ||
-                                  status.startsWith("Pending")
+                                  user.status === 'Not approved' ||
+                                  status.startsWith('Waiting') ||
+                                  status.startsWith('Pending')
                                 }
                               >
                                 Ban
@@ -165,21 +165,21 @@ const ListOfUsers = () => {
                               <Button
                                 onClick={() => acceptUser(user.id)}
                                 isLoading={
-                                  status.startsWith("Waiting") ||
-                                  status.startsWith("Pending")
+                                  status.startsWith('Waiting') ||
+                                  status.startsWith('Pending')
                                 }
                                 loadingText={status}
                                 disabled={
-                                  user.status === "Not approved" ||
-                                  status.startsWith("Waiting") ||
-                                  status.startsWith("Pending")
+                                  user.status === 'Not approved' ||
+                                  status.startsWith('Waiting') ||
+                                  status.startsWith('Pending')
                                 }
                               >
                                 Accept
                               </Button>
                             )
                           ) : (
-                            ""
+                            ''
                           )}
                         </Flex>
                       </SlideFade>
@@ -189,17 +189,17 @@ const ListOfUsers = () => {
               </UnorderedList>
             </Box>
             <SlideFade
-              threshold="0.1"
+              threshold='0.1'
               delay={{ enter: 0.1 }}
               transition={{
-                enter: { duration: 0.7 },
+                enter: { duration: 0.7 }
               }}
-              offsetY="100px"
-              offsetX="0px"
+              offsetY='100px'
+              offsetX='0px'
               in
             >
-              <Heading textAlign="center">Owner of the contract</Heading>
-              <Text textAlign="center">Address: {owner} </Text>
+              <Heading textAlign='center'>Owner of the contract</Heading>
+              <Text textAlign='center'>Address: {owner} </Text>
             </SlideFade>
           </Box>
         </Container>

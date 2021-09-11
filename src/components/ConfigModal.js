@@ -5,14 +5,14 @@ import {
   Heading,
   Text,
   useColorModeValue
-} from '@chakra-ui/react';
-import { useWeb3 } from '../web3hook/useWeb3';
+} from '@chakra-ui/react'
+import { useWeb3 } from '../web3hook/useWeb3'
 
 const ConfigModal = () => {
-  const { state, connectToMetamask, switchNetwork } = useWeb3();
-  const { isLogged, networkName } = state;
+  const { state, connectToMetamask, switchNetwork } = useWeb3()
+  const { isLogged, networkName } = state
 
-  const back = useColorModeValue('white', 'black');
+  const back = useColorModeValue('white', 'black')
 
   // switch network: will goes soon in a hook
   /*
@@ -97,7 +97,7 @@ const ConfigModal = () => {
         </>
       )}
     </>
-  );
-};
+  )
+}
 
-export default ConfigModal;
+export default ConfigModal

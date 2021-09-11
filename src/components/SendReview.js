@@ -9,36 +9,36 @@ import {
   useDisclosure,
   Collapse,
   useColorModeValue
-} from '@chakra-ui/react';
-import { useState } from 'react';
-import { useIPFS } from '../hooks/useIPFS';
+} from '@chakra-ui/react'
+import { useState } from 'react'
+import { useIPFS } from '../hooks/useIPFS'
 
-import { useReviewsContract } from '../hooks/useReviewsContract';
-import { useCall } from '../web3hook/useCall';
+import { useReviewsContract } from '../hooks/useReviewsContract'
+import { useCall } from '../web3hook/useCall'
 
 const SendReview = ({ id }) => {
-  const { reviews } = useReviewsContract();
-  const [status, contractCall] = useCall();
-  const [content, setContent] = useState('');
-  const [title, setTitle] = useState('');
-  const [pinJsObject, , ipfsStatus, , unPin] = useIPFS();
-  const { isOpen, onToggle } = useDisclosure();
+  const { reviews } = useReviewsContract()
+  const [status, contractCall] = useCall()
+  const [content, setContent] = useState('')
+  const [title, setTitle] = useState('')
+  const [pinJsObject, , ipfsStatus, , unPin] = useIPFS()
+  const { isOpen, onToggle } = useDisclosure()
 
   async function post() {
-    const reviewObj = { version: 0.1, title, content };
-    const reviewHash = await pinJsObject(reviewObj);
+    const reviewObj = { version: 0.1, title, content }
+    const reviewHash = await pinJsObject(reviewObj)
     // post(review, articleID)
-    const tx = await contractCall(reviews, 'post', [reviewHash, id]);
+    const tx = await contractCall(reviews, 'post', [reviewHash, id])
 
     // unpin
     if (tx === 'Error') {
-      await unPin(reviewHash);
+      await unPin(reviewHash)
     }
-    setTitle('');
-    setContent('');
+    setTitle('')
+    setContent('')
   }
 
-  const scheme = useColorModeValue('colorMain', 'colorSecond');
+  const scheme = useColorModeValue('colorMain', 'colorSecond')
 
   return (
     <>
@@ -93,7 +93,7 @@ const SendReview = ({ id }) => {
         </Box>
       </Box>
     </>
-  );
-};
+  )
+}
 
-export default SendReview;
+export default SendReview

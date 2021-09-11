@@ -8,36 +8,36 @@ import {
   Collapse,
   Heading,
   useColorModeValue
-} from '@chakra-ui/react';
-import { useState } from 'react';
-import { useCommentsContract } from '../hooks/useCommentsContract';
-import { useIPFS } from '../hooks/useIPFS';
-import { useCall } from '../web3hook/useCall';
+} from '@chakra-ui/react'
+import { useState } from 'react'
+import { useCommentsContract } from '../hooks/useCommentsContract'
+import { useIPFS } from '../hooks/useIPFS'
+import { useCall } from '../web3hook/useCall'
 
 const SendComment = ({ targetAddress, id }) => {
-  const { comments } = useCommentsContract();
-  const [status, contractCall] = useCall();
-  const [pinJsObject, , ipfsStatus, , unPin] = useIPFS();
-  const { isOpen, onToggle } = useDisclosure();
+  const { comments } = useCommentsContract()
+  const [status, contractCall] = useCall()
+  const [pinJsObject, , ipfsStatus, , unPin] = useIPFS()
+  const { isOpen, onToggle } = useDisclosure()
 
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState('')
 
   async function post() {
-    const contentHash = await pinJsObject({ version: 0.1, content });
+    const contentHash = await pinJsObject({ version: 0.1, content })
     // post(comment,articleAddress, articleID)
     const tx = await contractCall(comments, 'post', [
       contentHash,
       targetAddress,
       id
-    ]);
+    ])
 
     // unpin
     if (tx === 'Error') {
-      await unPin(contentHash);
+      await unPin(contentHash)
     }
-    setContent('');
+    setContent('')
   }
-  const scheme = useColorModeValue('colorMain', 'colorSecond');
+  const scheme = useColorModeValue('colorMain', 'colorSecond')
 
   return (
     <>
@@ -89,7 +89,7 @@ const SendComment = ({ targetAddress, id }) => {
         </Box>
       </Box>
     </>
-  );
-};
+  )
+}
 
-export default SendComment;
+export default SendComment

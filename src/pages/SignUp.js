@@ -5,20 +5,20 @@ import {
   Text,
   useColorModeValue,
   Heading
-} from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
-import { useUsersContract } from '../hooks/useUsersContract';
-import AccountForm from '../components/AccountForm';
-import Loading from '../components/Loading';
-import { useWeb3 } from '../web3hook/useWeb3';
+} from '@chakra-ui/react'
+import { Link } from 'react-router-dom'
+import { useUsersContract } from '../hooks/useUsersContract'
+import AccountForm from '../components/AccountForm'
+import Loading from '../components/Loading'
+import { useWeb3 } from '../web3hook/useWeb3'
 
 const SignUp = () => {
-  const { state, connectToMetamask } = useWeb3();
-  const { userData } = useUsersContract();
+  const { state, connectToMetamask } = useWeb3()
+  const { userData } = useUsersContract()
 
   //color Mode
-  const bg = useColorModeValue('white', 'gray.800');
-  const scheme = useColorModeValue('colorMain', 'colorSecond');
+  const bg = useColorModeValue('white', 'gray.800')
+  const scheme = useColorModeValue('colorMain', 'colorSecond')
 
   return (
     <>
@@ -71,7 +71,7 @@ const SignUp = () => {
         </Container>
       </Box>
     </>
-  );
-};
+  )
+}
 
-export default SignUp;
+export default SignUp

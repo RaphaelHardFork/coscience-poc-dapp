@@ -9,30 +9,30 @@ import {
   Textarea,
   SlideFade,
   Text
-} from '@chakra-ui/react';
-import { ethers } from 'ethers';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useUsersContract } from '../hooks/useUsersContract';
-import { useIPFS } from '../hooks/useIPFS';
-import { useCall } from '../web3hook/useCall';
+} from '@chakra-ui/react'
+import { ethers } from 'ethers'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { useUsersContract } from '../hooks/useUsersContract'
+import { useIPFS } from '../hooks/useIPFS'
+import { useCall } from '../web3hook/useCall'
 
 const AccountForm = () => {
-  const { users } = useUsersContract(); // [contract]
-  const [status, contractCall] = useCall();
-  const [pinJsObject, , ipfsStatus] = useIPFS();
+  const { users } = useUsersContract() // [contract]
+  const [status, contractCall] = useCall()
+  const [pinJsObject, , ipfsStatus] = useIPFS()
 
   // factorize in a reducer? with initial state
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [laboratory, setLaboratory] = useState('');
-  const [email, setEmail] = useState('');
-  const [registerMail, setRegisterMail] = useState('');
-  const [bio, setBio] = useState('');
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [laboratory, setLaboratory] = useState('')
+  const [email, setEmail] = useState('')
+  const [registerMail, setRegisterMail] = useState('')
+  const [bio, setBio] = useState('')
 
   //color Mode
-  const bg = useColorModeValue('white', 'gray.800');
-  const scheme = useColorModeValue('colorMain', 'colorSecond');
+  const bg = useColorModeValue('white', 'gray.800')
+  const scheme = useColorModeValue('colorMain', 'colorSecond')
 
   async function register() {
     const nameObj = {
@@ -40,23 +40,23 @@ const AccountForm = () => {
       firstName,
       lastName,
       registerMail
-    };
-    const nameHash = await pinJsObject(nameObj);
+    }
+    const nameHash = await pinJsObject(nameObj)
     const userObj = {
       version: 0.1,
       userInfo: nameHash,
       email,
       laboratory,
       bio
-    };
-    const userHash = await pinJsObject(userObj);
-    await contractCall(users, 'register', [userHash, nameHash]);
-    setBio('');
-    setLaboratory('');
-    setLastName('');
-    setFirstName('');
-    setEmail('');
-    setRegisterMail('');
+    }
+    const userHash = await pinJsObject(userObj)
+    await contractCall(users, 'register', [userHash, nameHash])
+    setBio('')
+    setLaboratory('')
+    setLastName('')
+    setFirstName('')
+    setEmail('')
+    setRegisterMail('')
   }
 
   return (
@@ -188,7 +188,7 @@ const AccountForm = () => {
         </SlideFade>
       </Box>
     </>
-  );
-};
+  )
+}
 
-export default AccountForm;
+export default AccountForm

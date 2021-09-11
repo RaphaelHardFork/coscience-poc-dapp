@@ -1,9 +1,9 @@
-import { useContext } from 'react';
-import { ReviewsContext } from '../contexts/ReviewsContext';
-import { useWeb3 } from '../web3hook/useWeb3';
+import { useContext } from 'react'
+import { ReviewsContext } from '../contexts/ReviewsContext'
+import { useWeb3 } from '../web3hook/useWeb3'
 
 const getReviewData = async (reviews, id) => {
-  const r = await reviews.reviewInfo(id);
+  const r = await reviews.reviewInfo(id)
 
   const reviewObj = {
     id: r.id.toNumber(),
@@ -11,24 +11,25 @@ const getReviewData = async (reviews, id) => {
     contentCID: r.contentCID,
     contentBanned: r.contentBanned,
     targetID: r.targetID.toNumber(),
-    comments: r.comments
-  };
-  return reviewObj;
-};
+    comments: r.comments,
+    vote: r.vote.toNumber()
+  }
+  return reviewObj
+}
 
 const createReviewList = async (reviews, listOfId) => {
-  const reviewList = [];
+  const reviewList = []
 
   for (const i of listOfId) {
-    const reviewObj = await getReviewData(reviews, i);
-    reviewList.push(reviewObj);
+    const reviewObj = await getReviewData(reviews, i)
+    reviewList.push(reviewObj)
   }
 
-  return reviewList;
-};
+  return reviewList
+}
 
 export const useReviewsContract = () => {
-  const [reviews, mode, reviewEvents] = useContext(ReviewsContext);
+  const [reviews, mode, reviewEvents] = useContext(ReviewsContext)
   /*
   useEffect(() => {
     if (reviews) {
@@ -50,7 +51,7 @@ export const useReviewsContract = () => {
   if (reviews === undefined) {
     throw new Error(
       `It seems that you are trying to use ReviewsContext outside of its provider`
-    );
+    )
   }
-  return { reviews, getReviewData, createReviewList, reviewEvents };
-};
+  return { reviews, getReviewData, createReviewList, reviewEvents }
+}

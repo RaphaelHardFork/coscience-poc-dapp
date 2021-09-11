@@ -1,4 +1,4 @@
-import { InfoIcon } from '@chakra-ui/icons';
+import { InfoIcon } from '@chakra-ui/icons'
 import {
   Box,
   Flex,
@@ -19,19 +19,20 @@ import {
   Skeleton,
   Text,
   useColorModeValue
-} from '@chakra-ui/react';
-import { Link as RouterLink } from 'react-router-dom';
-import { useCommentsContract } from '../hooks/useCommentsContract';
-import CommentList from './CommentList';
-import SendComment from './SendComment';
+} from '@chakra-ui/react'
+import { Link as RouterLink } from 'react-router-dom'
+import { useCommentsContract } from '../hooks/useCommentsContract'
+import CommentList from './CommentList'
+import SendComment from './SendComment'
+import VoteOnComment from './VoteOnComment'
 
 const Comment = ({ comment }) => {
-  const { comments } = useCommentsContract();
+  const { comments } = useCommentsContract()
 
-  const link = useColorModeValue('main', 'second');
+  const link = useColorModeValue('main', 'second')
 
-  const { isOpen, onToggle } = useDisclosure();
-  const scheme = useColorModeValue('colorMain', 'colorSecond');
+  const { isOpen, onToggle } = useDisclosure()
+  const scheme = useColorModeValue('colorMain', 'colorSecond')
 
   return (
     <Box mb='5' p='5' key={comment.id}>
@@ -120,7 +121,7 @@ const Comment = ({ comment }) => {
           </Flex>
 
           <Text mt='10'>{comment.content}</Text>
-
+          <VoteOnComment id={comment.id} comment={comment} />
           <Button colorScheme={scheme} variant='link' onClick={onToggle} mt='4'>
             {comment.comments.length === 0
               ? ''
@@ -145,6 +146,6 @@ const Comment = ({ comment }) => {
         <Skeleton height='200px' />
       )}
     </Box>
-  );
-};
-export default Comment;
+  )
+}
+export default Comment

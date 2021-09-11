@@ -1,4 +1,4 @@
-import { InfoIcon } from '@chakra-ui/icons';
+import { InfoIcon } from '@chakra-ui/icons'
 import {
   Box,
   Flex,
@@ -19,18 +19,19 @@ import {
   useColorModeValue,
   useDisclosure,
   Collapse
-} from '@chakra-ui/react';
-import { Link as RouterLink } from 'react-router-dom';
-import { useReviewsContract } from '../hooks/useReviewsContract';
-import CommentList from './CommentList';
-import SendComment from './SendComment';
+} from '@chakra-ui/react'
+import { Link as RouterLink } from 'react-router-dom'
+import { useReviewsContract } from '../hooks/useReviewsContract'
+import CommentList from './CommentList'
+import SendComment from './SendComment'
+import VoteOnReview from './VoteOnReview'
 
 const Review = ({ review }) => {
-  const link = useColorModeValue('main', 'second');
-  const { reviews } = useReviewsContract();
+  const link = useColorModeValue('main', 'second')
+  const { reviews } = useReviewsContract()
 
-  const { isOpen, onToggle } = useDisclosure();
-  const scheme = useColorModeValue('colorMain', 'colorSecond');
+  const { isOpen, onToggle } = useDisclosure()
+  const scheme = useColorModeValue('colorMain', 'colorSecond')
 
   return (
     <Box p='5' key={review.id}>
@@ -118,6 +119,7 @@ const Review = ({ review }) => {
           </Flex>
 
           <Text mt='10'>{review.content}</Text>
+          <VoteOnReview id={review.id} review={review} />
           <Button colorScheme={scheme} variant='link' onClick={onToggle} mt='4'>
             {review.comments.length === 0
               ? ''
@@ -142,6 +144,6 @@ const Review = ({ review }) => {
         <Skeleton height='200px' />
       )}
     </Box>
-  );
-};
-export default Review;
+  )
+}
+export default Review

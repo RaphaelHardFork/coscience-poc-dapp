@@ -1,47 +1,47 @@
-import { EditIcon, PlusSquareIcon } from '@chakra-ui/icons';
-import { Button, FormControl, FormLabel, Input } from '@chakra-ui/react';
-import { useState } from 'react';
-import { useIPFS } from '../hooks/useIPFS';
-import { useUsersContract } from '../hooks/useUsersContract';
-import { useCall } from '../web3hook/useCall';
+import { EditIcon, PlusSquareIcon } from '@chakra-ui/icons'
+import { Button, FormControl, FormLabel, Input } from '@chakra-ui/react'
+import { useState } from 'react'
+import { useIPFS } from '../hooks/useIPFS'
+import { useUsersContract } from '../hooks/useUsersContract'
+import { useCall } from '../web3hook/useCall'
 
 const UserSetting = ({ user }) => {
-  const { users } = useUsersContract();
-  const [status, contractCall] = useCall();
-  const [pinJsObject, , ipfsStatus, , unPin] = useIPFS();
+  const { users } = useUsersContract()
+  const [status, contractCall] = useCall()
+  const [pinJsObject, , ipfsStatus, , unPin] = useIPFS()
 
   const [addInput, setAddInput] = useState({
     address: false,
     edit: false
-  });
-  const [input, setInput] = useState('');
+  })
+  const [input, setInput] = useState('')
 
-  const [laboratory, setLaboratory] = useState(user.laboratory);
-  const [bio, setBio] = useState(user.bio);
-  const [email, setEmail] = useState('');
+  const [laboratory, setLaboratory] = useState(user.laboratory)
+  const [bio, setBio] = useState(user.bio)
+  const [email, setEmail] = useState('')
 
   async function addWallet(code) {
     switch (code) {
       case 0:
-        setAddInput({ address: true, edit: false });
-        break;
+        setAddInput({ address: true, edit: false })
+        break
       case 1:
-        await contractCall(users, 'addWallet', [input]);
-        setAddInput({ ...addInput, address: false });
-        break;
+        await contractCall(users, 'addWallet', [input])
+        setAddInput({ ...addInput, address: false })
+        break
       case 2:
-        setAddInput({ address: false, edit: false });
-        break;
+        setAddInput({ address: false, edit: false })
+        break
       default:
-        return false;
+        return false
     }
   }
 
   async function changeProfile(code) {
     switch (code) {
       case 0:
-        setAddInput({ address: false, edit: true });
-        break;
+        setAddInput({ address: false, edit: true })
+        break
       case 1:
         const profileObj = {
           version: 0.1,
@@ -49,28 +49,28 @@ const UserSetting = ({ user }) => {
           bio,
           email,
           userInfo: user.nameCID
-        };
+        }
 
-        const profileCID = await pinJsObject(profileObj);
+        const profileCID = await pinJsObject(profileObj)
 
-        const tx = await contractCall(users, 'editProfile', [profileCID]);
+        const tx = await contractCall(users, 'editProfile', [profileCID])
 
         // unpin
         if (tx === 'Error') {
-          await unPin(profileCID);
+          await unPin(profileCID)
         } else {
           // unpin old content
-          await unPin(user.profileCID);
+          await unPin(user.profileCID)
         }
 
-        setAddInput({ ...addInput, edit: false });
+        setAddInput({ ...addInput, edit: false })
 
-        break;
+        break
       case 2:
-        setAddInput({ address: false, edit: false });
-        break;
+        setAddInput({ address: false, edit: false })
+        break
       default:
-        return false;
+        return false
     }
   }
 
@@ -205,7 +205,7 @@ const UserSetting = ({ user }) => {
         ''
       )}
     </>
-  );
-};
+  )
+}
 
-export default UserSetting;
+export default UserSetting

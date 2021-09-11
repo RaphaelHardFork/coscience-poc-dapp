@@ -10,62 +10,62 @@ import {
   Button,
   Flex,
   useColorModeValue
-} from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
-import { useArticlesContract } from '../hooks/useArticlesContract';
-import { useReviewsContract } from '../hooks/useReviewsContract';
-import { useEffect, useState } from 'react';
-import { useCommentsContract } from '../hooks/useCommentsContract';
+} from '@chakra-ui/react'
+import { Link } from 'react-router-dom'
+import { useArticlesContract } from '../hooks/useArticlesContract'
+import { useReviewsContract } from '../hooks/useReviewsContract'
+import { useEffect, useState } from 'react'
+import { useCommentsContract } from '../hooks/useCommentsContract'
 
 const Accordion = ({ object, type }) => {
-  const { reviews } = useReviewsContract();
-  const { articles } = useArticlesContract();
-  const { comments } = useCommentsContract();
+  const { reviews } = useReviewsContract()
+  const { articles } = useArticlesContract()
+  const { comments } = useCommentsContract()
 
-  const [articleID, setArticleID] = useState();
+  const [articleID, setArticleID] = useState()
 
   //                  Color Value
-  const scheme = useColorModeValue('colorMain', 'colorSecond');
+  const scheme = useColorModeValue('colorMain', 'colorSecond')
 
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       switch (type) {
         case 'Article':
-          setArticleID(object.id);
-          break;
+          setArticleID(object.id)
+          break
         case 'Review':
-          setArticleID(object.targetID);
-          break;
+          setArticleID(object.targetID)
+          break
         case 'Comment':
           // comment
           // CRAWLER ------------------------------------
-          let on = object;
+          let on = object
           while (on.target === comments.address) {
-            const onComment = await comments.commentInfo(on.targetID);
-            on = onComment;
+            const onComment = await comments.commentInfo(on.targetID)
+            on = onComment
           }
           if (on.target === articles.address) {
-            let number;
+            let number
             if (typeof on.id !== 'number') {
-              number = on.id.toNumber();
+              number = on.id.toNumber()
             } else {
-              number = on.id;
+              number = on.id
             }
-            setArticleID(number);
+            setArticleID(number)
           } else if (on.target === reviews.address) {
-            let number;
+            let number
             if (typeof on.id !== 'number') {
-              number = on.id.toNumber();
+              number = on.id.toNumber()
             } else {
-              number = on.id;
+              number = on.id
             }
-            setArticleID(number);
+            setArticleID(number)
           }
-          break;
+          break
         default:
-          console.log(`Wrong type in Accordion ${type}`);
+          console.log(`Wrong type in Accordion ${type}`)
       }
-    })();
+    })()
   }, [
     object.id,
     object.targetID,
@@ -74,7 +74,7 @@ const Accordion = ({ object, type }) => {
     reviews.address,
     comments,
     object
-  ]);
+  ])
 
   return (
     <ChakraAccordion allowToggle>
@@ -99,7 +99,7 @@ const Accordion = ({ object, type }) => {
                     {object.coAuthor.map((author, index) => {
                       return (
                         <Text key={author}>{`${index + 1}: ${author}`}</Text>
-                      );
+                      )
                     })}
                   </>
                 ) : (
@@ -163,7 +163,7 @@ const Accordion = ({ object, type }) => {
         </AccordionPanel>
       </AccordionItem>
     </ChakraAccordion>
-  );
-};
+  )
+}
 
-export default Accordion;
+export default Accordion
