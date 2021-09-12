@@ -1,5 +1,5 @@
 import { IconButton } from '@chakra-ui/button'
-import { Flex, Text } from '@chakra-ui/layout'
+import { Flex, Text, Box } from '@chakra-ui/layout'
 import React from 'react'
 import { FaThumbsDown, FaThumbsUp } from 'react-icons/fa'
 import { useArticlesContract } from '../hooks/useArticlesContract'
@@ -13,23 +13,38 @@ const ArticleImportance = ({ id, article }) => {
     await contractCall(articles, 'voteImportance', [Importance, id])
   }
   return (
-    <Flex>
-      <Text>Vote Importance</Text>
-      <IconButton
-        aria-label='thumb ub'
-        icon={<FaThumbsUp />}
-        onClick={() => VoteImportance(1)}
-        isLoading={status.startsWith('Waiting') || status.startsWith('Pending')}
-        disabled={status.startsWith('Waiting') || status.startsWith('Pending')}
-      />
+    <Flex alignItems='center' my='2'>
+      <Text me='5'>Importance</Text>
+      <Box me='5'>
+        <IconButton
+          aria-label='thumb ub'
+          icon={<FaThumbsUp />}
+          onClick={() => VoteImportance(1)}
+          isLoading={
+            status.startsWith('Waiting') || status.startsWith('Pending')
+          }
+          disabled={
+            status.startsWith('Waiting') || status.startsWith('Pending')
+          }
+          me='1'
+          borderRadius='full'
+          colorScheme='green'
+        />
 
-      <IconButton
-        aria-label='thumb down'
-        icon={<FaThumbsDown />}
-        isLoading={status.startsWith('Waiting') || status.startsWith('Pending')}
-        disabled={status.startsWith('Waiting') || status.startsWith('Pending')}
-        onClick={() => VoteImportance(0)}
-      />
+        <IconButton
+          aria-label='thumb down'
+          icon={<FaThumbsDown />}
+          isLoading={
+            status.startsWith('Waiting') || status.startsWith('Pending')
+          }
+          disabled={
+            status.startsWith('Waiting') || status.startsWith('Pending')
+          }
+          onClick={() => VoteImportance(0)}
+          borderRadius='full'
+          colorScheme='red'
+        />
+      </Box>
       <Text>
         {article.importanceVotes - article.importance} /{' '}
         {article.importanceVotes}

@@ -29,7 +29,7 @@ const ReviewList = ({ article }) => {
 
   // get review data
   useEffect(() => {
-    if (reviews && article !== undefined && reviewEvents) {
+    if (reviews && article !== undefined && reviewEvents !== undefined) {
       const reviewData = async () => {
         const listOfId = await articleReviewIds(reviews, article)
         const reviewList = await createReviewList(reviews, listOfId)
@@ -41,12 +41,12 @@ const ReviewList = ({ article }) => {
 
             //get review vote
             const structReview = await reviews.reviewInfo(review.id)
-            const { vote } = structReview
+            const { vote, id } = structReview
 
             // event listener nb of vote
             let nbReviewVote = await reviews.filters.Voted(
               null,
-              Number(review.id.toString(16)),
+              Number(id),
               null
             )
             reviews.on(nbReviewVote, reviewData)

@@ -40,13 +40,10 @@ const CommentList = ({ on }) => {
 
             //get comment vote
             const structComment = await comments.commentInfo(comment.id)
-            const { vote } = structComment
+            const { vote, id } = structComment
 
             // nb of vote
-            nbCommentVote = await comments.filters.Voted(
-              Number(comment.id.toString(16)),
-              null
-            )
+            nbCommentVote = await comments.filters.Voted(Number(id), null)
 
             const eventArray = await comments.queryFilter(nbCommentVote)
             const nbVotes = eventArray.length

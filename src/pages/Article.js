@@ -149,7 +149,14 @@ const Article = () => {
             article.id !== 0 ? (
               <>
                 <Box key={article.id}>
-                  <Heading fontFamily='title' fontSize='8xl' textAlign='center'>
+                  <Heading
+                    fontFamily='title'
+                    fontSize='6xl'
+                    textAlign='center'
+                    p='5'
+                    border='4px'
+                    borderStyle='inset'
+                  >
                     {article.title}
                   </Heading>
 

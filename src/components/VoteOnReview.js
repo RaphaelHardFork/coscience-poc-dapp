@@ -19,6 +19,7 @@ const VoteOnReview = ({ id, review }) => {
       {/* <Text>Review </Text> */}
       <Box>
         <IconButton
+          colorScheme='green'
           aria-label='thumb ub'
           icon={<FaThumbsUp />}
           onClick={() => VoteOn(1)}
@@ -29,10 +30,11 @@ const VoteOnReview = ({ id, review }) => {
             status.startsWith('Waiting') || status.startsWith('Pending')
           }
           me='1'
-          borderRadius='5'
+          borderRadius='full'
         />
 
         <IconButton
+          colorScheme='red'
           aria-label='thumb down'
           icon={<FaThumbsDown />}
           isLoading={
@@ -42,7 +44,7 @@ const VoteOnReview = ({ id, review }) => {
             status.startsWith('Waiting') || status.startsWith('Pending')
           }
           onClick={() => VoteOn(0)}
-          borderRadius='5'
+          borderRadius='full'
           me='5'
         />
       </Box>

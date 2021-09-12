@@ -14,6 +14,7 @@ import {
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { useUsersContract } from '../hooks/useUsersContract'
+import { useGovernanceContract } from '../hooks/useGovernanceContract'
 import { useColorModeValue } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import Loading from '../components/Loading'
@@ -24,6 +25,7 @@ const ListOfUsers = () => {
   const { state } = useWeb3()
   const { account } = state
   const { users, userList } = useUsersContract()
+  const { governance } = useGovernanceContract()
   const [status, contractCall] = useCall()
 
   const [owner, setOwner] = useState('')
@@ -49,12 +51,23 @@ const ListOfUsers = () => {
     getOwner()
   }, [users, account])
 
+  // contract users
   async function acceptUser(id) {
     await contractCall(users, 'acceptUser', [id])
   }
 
   async function banUser(id) {
     await contractCall(users, 'banUser', [id])
+  }
+
+  // contract governance
+
+  async function voteToAcceptUser(id) {
+    await contractCall(governance, 'voteToAcceptUser', [id])
+  }
+
+  async function voteToBanUser(id) {
+    await contractCall(governance, 'voteToBanUser', [id])
   }
 
   return (
