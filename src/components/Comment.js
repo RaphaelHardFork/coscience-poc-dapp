@@ -22,17 +22,31 @@ import {
 } from '@chakra-ui/react'
 import { Link as RouterLink } from 'react-router-dom'
 import { useCommentsContract } from '../hooks/useCommentsContract'
+import { useGovernanceContract } from '../hooks/useGovernanceContract'
+import { useUsersContract } from '../hooks/useUsersContract'
+import { useCall } from '../web3hook/useCall'
 import CommentList from './CommentList'
 import SendComment from './SendComment'
 import VoteOnComment from './VoteOnComment'
 
 const Comment = ({ comment }) => {
   const { comments } = useCommentsContract()
+  const { governance } = useGovernanceContract()
+  const { owner, isOwner } = useUsersContract()
+  const [status, contractCall] = useCall()
 
   const link = useColorModeValue('main', 'second')
 
   const { isOpen, onToggle } = useDisclosure()
   const scheme = useColorModeValue('colorMain', 'colorSecond')
+
+  async function banPost(id) {
+    await contractCall(comment, 'banPost', [id])
+  }
+
+  async function voteToBanComment(id) {
+    await contractCall(governance, 'voteToBanComment', [id])
+  }
 
   return (
     <Box mb='5' p='5' key={comment.id}>
@@ -132,6 +146,39 @@ const Comment = ({ comment }) => {
           <Collapse in={isOpen} animateOpacity>
             <CommentList on={comment} />
           </Collapse>
+          <Box>
+            {isOwner ? (
+              owner !== governance.address ? (
+                <Button
+                  onClick={() => banPost(comment.id)}
+                  isLoading={
+                    status.startsWith('Waiting') || status.startsWith('Pending')
+                  }
+                  loadingText={status}
+                  disabled={
+                    status.startsWith('Waiting') || status.startsWith('Pending')
+                  }
+                >
+                  Ban
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => voteToBanComment(comment.id)}
+                  isLoading={
+                    status.startsWith('Waiting') || status.startsWith('Pending')
+                  }
+                  loadingText={status}
+                  disabled={
+                    status.startsWith('Waiting') || status.startsWith('Pending')
+                  }
+                >
+                  Ban Governance
+                </Button>
+              )
+            ) : (
+              'test'
+            )}
+          </Box>
           <SendComment targetAddress={comments.address} id={comment.id} />
           <Text
             mt='4'

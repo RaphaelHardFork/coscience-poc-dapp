@@ -25,6 +25,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useParams, Link as RouterLink } from 'react-router-dom'
 import { useArticlesContract } from '../hooks/useArticlesContract'
 import { useIPFS } from '../hooks/useIPFS'
+import { FaRadiationAlt } from 'react-icons/fa'
 
 import { useUsersContract } from '../hooks/useUsersContract'
 import Loading from '../components/Loading'
@@ -34,11 +35,15 @@ import ReviewList from '../components/ReviewList'
 import CommentList from '../components/CommentList'
 import SendReview from '../components/SendReview'
 import SendComment from '../components/SendComment'
+import { useCall } from '../web3hook/useCall'
+import { useGovernanceContract } from '../hooks/useGovernanceContract'
 
 const Article = () => {
   const { id } = useParams()
   const { articles, getArticleData, articleEvents } = useArticlesContract()
-  const { users } = useUsersContract()
+  const { governance } = useGovernanceContract()
+  const { users, owner, isOwner } = useUsersContract()
+  const [status, contractCall] = useCall()
 
   const [, readIPFS] = useIPFS()
 
@@ -128,6 +133,15 @@ const Article = () => {
       articleData()
     }
   }, [articles, getArticleData, id, readIPFS, users])
+
+  // ban
+  async function banArticle(id) {
+    await contractCall(articles, 'banArticle', [id])
+  }
+
+  async function voteToBanArticle(id) {
+    await contractCall(governance, 'voteToBanArticle', [id])
+  }
 
   //                  Color Value
   const bg = useColorModeValue('white', 'grayOrange.900')
@@ -284,6 +298,74 @@ const Article = () => {
           ) : (
             <Loading />
           )}
+          <Box>
+            {/*Owner Options */}
+            {isOwner ? (
+              owner !== governance.address ? (
+                <Button
+                  onClick={() => banArticle(id)}
+                  isLoading={
+                    status.startsWith('Waiting') || status.startsWith('Pending')
+                  }
+                  loadingText={status}
+                  disabled={
+                    status.startsWith('Waiting') || status.startsWith('Pending')
+                  }
+                >
+                  Ban
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => voteToBanArticle(id)}
+                  isLoading={
+                    status.startsWith('Waiting') || status.startsWith('Pending')
+                  }
+                  loadingText={status}
+                  disabled={
+                    status.startsWith('Waiting') || status.startsWith('Pending')
+                  }
+                >
+                  Ban Governance
+                </Button>
+              )
+            ) : (
+              'test'
+            )}
+
+            <Button
+              onClick={() => banArticle(id)}
+              colorScheme='red'
+              isLoading={
+                status.startsWith('Waiting') || status.startsWith('Pending')
+              }
+              loadingText={status}
+              disabled={
+                status.startsWith('Waiting') || status.startsWith('Pending')
+              }
+              leftIcon={<FaRadiationAlt />}
+              variant='outline'
+            >
+              {' '}
+              Ban
+            </Button>
+
+            <Button
+              onClick={() => voteToBanArticle(id)}
+              colorScheme='red'
+              isLoading={
+                status.startsWith('Waiting') || status.startsWith('Pending')
+              }
+              loadingText={status}
+              disabled={
+                status.startsWith('Waiting') || status.startsWith('Pending')
+              }
+              leftIcon={<FaRadiationAlt />}
+              variant='outline'
+            >
+              {' '}
+              Ban Article
+            </Button>
+          </Box>
         </Container>
       </Box>
 

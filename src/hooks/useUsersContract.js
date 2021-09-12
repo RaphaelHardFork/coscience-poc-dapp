@@ -39,7 +39,8 @@ export const getUserData = async (users, id) => {
 // hooks
 export const useUsersContract = () => {
   // call the context
-  const [users, mode, userData, userList] = useContext(UsersContext)
+  const [users, mode, userData, userList, owner, isOwner] =
+    useContext(UsersContext)
 
   // control call of the hook
   if (users === undefined) {
@@ -49,5 +50,5 @@ export const useUsersContract = () => {
   }
 
   // first: return contract for utilisation
-  return { users, userData, userList, getUserData }
+  return { users, userData, userList, getUserData, owner, isOwner }
 }

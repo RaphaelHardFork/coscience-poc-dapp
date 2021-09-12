@@ -11,45 +11,23 @@ import {
   SlideFade,
   Tag
 } from '@chakra-ui/react'
-import { useState } from 'react'
-import { useEffect } from 'react'
+
 import { useUsersContract } from '../hooks/useUsersContract'
 import { useGovernanceContract } from '../hooks/useGovernanceContract'
 import { useColorModeValue } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import Loading from '../components/Loading'
-import { useWeb3 } from '../web3hook/useWeb3'
 import { useCall } from '../web3hook/useCall'
 
 const ListOfUsers = () => {
-  const { state } = useWeb3()
-  const { account } = state
-  const { users, userList } = useUsersContract()
+  const { users, userList, owner, isOwner } = useUsersContract()
   const { governance } = useGovernanceContract()
   const [status, contractCall] = useCall()
-
-  const [owner, setOwner] = useState('')
-  const [isOwner, setIsOwner] = useState(false)
 
   //                  Color Value
   const bg = useColorModeValue('white', 'grayBlue.900')
   const bgUser = useColorModeValue('grayOrange.100', 'grayBlue.800')
   const txt = useColorModeValue('mainLight', 'second')
-
-  useEffect(() => {
-    const getOwner = async () => {
-      try {
-        const owner = await users.owner()
-        if (owner.toLowerCase() === account.toLowerCase()) {
-          setIsOwner(true)
-        }
-        setOwner(owner)
-      } catch (e) {
-        console.log(e)
-      }
-    }
-    getOwner()
-  }, [users, account])
 
   // contract users
   async function acceptUser(id) {
@@ -69,9 +47,6 @@ const ListOfUsers = () => {
   async function voteToBanUser(id) {
     await contractCall(governance, 'voteToBanUser', [id])
   }
-
-  console.log(isOwner)
-  console.log(owner)
 
   return (
     <>
