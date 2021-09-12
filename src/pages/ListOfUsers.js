@@ -70,6 +70,9 @@ const ListOfUsers = () => {
     await contractCall(governance, 'voteToBanUser', [id])
   }
 
+  console.log(isOwner)
+  console.log(owner)
+
   return (
     <>
       <Box p='10'>
@@ -158,9 +161,43 @@ const ListOfUsers = () => {
 
                           {/* OWNER OPTIONS */}
                           {isOwner ? (
-                            user.status === 'Approved' ? (
+                            owner !== governance.address ? (
+                              user.status === 'Approved' ? (
+                                <Button
+                                  onClick={() => banUser(user.id)}
+                                  isLoading={
+                                    status.startsWith('Waiting') ||
+                                    status.startsWith('Pending')
+                                  }
+                                  loadingText={status}
+                                  disabled={
+                                    user.status === 'Not approved' ||
+                                    status.startsWith('Waiting') ||
+                                    status.startsWith('Pending')
+                                  }
+                                >
+                                  Ban
+                                </Button>
+                              ) : (
+                                <Button
+                                  onClick={() => acceptUser(user.id)}
+                                  isLoading={
+                                    status.startsWith('Waiting') ||
+                                    status.startsWith('Pending')
+                                  }
+                                  loadingText={status}
+                                  disabled={
+                                    user.status === 'Not approved' ||
+                                    status.startsWith('Waiting') ||
+                                    status.startsWith('Pending')
+                                  }
+                                >
+                                  Accept
+                                </Button>
+                              )
+                            ) : user.status === 'Approved' ? (
                               <Button
-                                onClick={() => banUser(user.id)}
+                                onClick={() => voteToBanUser(user.id)}
                                 isLoading={
                                   status.startsWith('Waiting') ||
                                   status.startsWith('Pending')
@@ -172,11 +209,11 @@ const ListOfUsers = () => {
                                   status.startsWith('Pending')
                                 }
                               >
-                                Ban
+                                Ban Governance
                               </Button>
                             ) : (
                               <Button
-                                onClick={() => acceptUser(user.id)}
+                                onClick={() => voteToAcceptUser(user.id)}
                                 isLoading={
                                   status.startsWith('Waiting') ||
                                   status.startsWith('Pending')
@@ -188,7 +225,7 @@ const ListOfUsers = () => {
                                   status.startsWith('Pending')
                                 }
                               >
-                                Accept
+                                Accept governance
                               </Button>
                             )
                           ) : (
