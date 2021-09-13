@@ -12,6 +12,7 @@ const ArticleImportance = ({ id, article }) => {
   async function VoteImportance(Importance) {
     await contractCall(articles, 'voteImportance', [Importance, id])
   }
+  
   return (
     <Flex alignItems='center' my='2'>
       <Text me='5'>Importance</Text>

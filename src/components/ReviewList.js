@@ -1,11 +1,11 @@
-import { useState } from 'react'
-import { useEffect } from 'react'
-import { useIPFS } from '../hooks/useIPFS'
-import { useReviewsContract } from '../hooks/useReviewsContract'
-import { useUsersContract } from '../hooks/useUsersContract'
-import { Box } from '@chakra-ui/react'
-import Review from './Review'
-import Loading from './Loading'
+import { useState } from "react"
+import { useEffect } from "react"
+import { useIPFS } from "../hooks/useIPFS"
+import { useReviewsContract } from "../hooks/useReviewsContract"
+import { useUsersContract } from "../hooks/useUsersContract"
+import { Box } from "@chakra-ui/react"
+import Review from "./Review"
+import Loading from "./Loading"
 
 const articleReviewIds = async (reviews, article) => {
   if (reviews) {
@@ -33,7 +33,7 @@ const ReviewList = ({ article }) => {
       const reviewData = async () => {
         const listOfId = await articleReviewIds(reviews, article)
         const reviewList = await createReviewList(reviews, listOfId)
-
+        let nbReviewVote
         const asyncRes = await Promise.all(
           reviewList.map(async (review) => {
             // get the content from IFPS
@@ -44,11 +44,7 @@ const ReviewList = ({ article }) => {
             const { vote, id } = structReview
 
             // event listener nb of vote
-            let nbReviewVote = await reviews.filters.Voted(
-              null,
-              Number(id),
-              null
-            )
+            nbReviewVote = await reviews.filters.Voted(null, Number(id), null)
             reviews.on(nbReviewVote, reviewData)
 
             const eventArray = await reviews.queryFilter(nbReviewVote)
@@ -82,9 +78,9 @@ const ReviewList = ({ article }) => {
 
         setReviewList(asyncRes)
 
-        // return () => {
-        //   reviews.off(nbReviewVote, reviewData)
-        // }
+        return () => {
+          reviews.off(nbReviewVote, reviewData)
+        }
       }
       reviewData()
     }
