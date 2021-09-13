@@ -1,5 +1,5 @@
-import { useContext } from 'react'
-import { ReviewsContext } from '../contexts/ReviewsContext'
+import { useContext } from "react"
+import { ReviewsContext } from "../contexts/ReviewsContext"
 
 const getReviewData = async (reviews, id) => {
   const r = await reviews.reviewInfo(id)
@@ -28,7 +28,7 @@ const createReviewList = async (reviews, listOfId) => {
 }
 
 export const useReviewsContract = () => {
-  const [reviews, mode, reviewEvents] = useContext(ReviewsContext)
+  const [reviews, , reviewEvents] = useContext(ReviewsContext)
   /*
   useEffect(() => {
     if (reviews) {

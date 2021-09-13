@@ -1,4 +1,4 @@
-import { InfoIcon } from '@chakra-ui/icons'
+import { InfoIcon } from "@chakra-ui/icons"
 import {
   Box,
   Flex,
@@ -12,6 +12,8 @@ import {
   PopoverBody,
   PopoverCloseButton,
   PopoverContent,
+  CircularProgressLabel,
+  CircularProgress,
   PopoverHeader,
   PopoverTrigger,
   Skeleton,
@@ -19,103 +21,127 @@ import {
   useColorModeValue,
   useDisclosure,
   Collapse
-} from '@chakra-ui/react'
-import { Link as RouterLink } from 'react-router-dom'
-import { useGovernanceContract } from '../hooks/useGovernanceContract'
-import { useReviewsContract } from '../hooks/useReviewsContract'
-import { useUsersContract } from '../hooks/useUsersContract'
-import { useCall } from '../web3hook/useCall'
-import CommentList from './CommentList'
-import SendComment from './SendComment'
-import VoteOnReview from './VoteOnReview'
+} from "@chakra-ui/react"
+import { useEffect, useState } from "react"
+import { Link as RouterLink } from "react-router-dom"
+import { useGovernanceContract } from "../hooks/useGovernanceContract"
+import { useReviewsContract } from "../hooks/useReviewsContract"
+import { useUsersContract } from "../hooks/useUsersContract"
+import { useCall } from "../web3hook/useCall"
+import CommentList from "./CommentList"
+import SendComment from "./SendComment"
+import VoteOnReview from "./VoteOnReview"
 
 const Review = ({ review }) => {
-  const link = useColorModeValue('main', 'second')
+  const link = useColorModeValue("main", "second")
   const { reviews } = useReviewsContract()
   const { governance } = useGovernanceContract()
   const { owner, isOwner } = useUsersContract()
   const [status, contractCall] = useCall()
 
+  const [banVote, setBanVote] = useState(0)
+
   const { isOpen, onToggle } = useDisclosure()
-  const scheme = useColorModeValue('colorMain', 'colorSecond')
+  const scheme = useColorModeValue("colorMain", "colorSecond")
+
+  // get governance informations (ban)
+  useEffect(() => {
+    const getBanVotes = async () => {
+      let nbOfBanVote = await governance.filters.Voted(
+        reviews.address,
+        Number(review.id),
+        null
+      )
+      nbOfBanVote = await governance.queryFilter(nbOfBanVote)
+      setBanVote(nbOfBanVote.length)
+    }
+    if (governance) {
+      getBanVotes()
+      governance.on("Voted", getBanVotes)
+    }
+    return () => {
+      setBanVote(0)
+      governance?.off("Voted", getBanVotes)
+    }
+  }, [governance, reviews, review.id])
 
   async function banPost(id) {
-    await contractCall(reviews, 'banPost', [id])
+    await contractCall(reviews, "banPost", [id])
   }
 
   async function voteToBanReview(id) {
-    await contractCall(governance, 'voteToBanReview', [id])
+    await contractCall(governance, "voteToBanReview", [id])
   }
 
   return (
-    <Box p='5' key={review.id}>
+    <Box p="5" key={review.id}>
       {review !== undefined ? (
         <>
           <Flex
-            flexDirection={{ base: 'column', lg: 'row' }}
-            justifyContent={{ base: 'start', lg: 'space-between' }}
+            flexDirection={{ base: "column", lg: "row" }}
+            justifyContent={{ base: "start", lg: "space-between" }}
           >
             <Box>
-              <Heading as='h2'>{review.title}</Heading>
+              <Heading as="h2">{review.title}</Heading>
 
               <Text>
-                by{' '}
+                by{" "}
                 <Link
                   as={RouterLink}
                   color={link}
                   to={`/profile/${review.authorID}`}
                 >
                   {review.firstName} {review.lastName}
-                </Link>{' '}
+                </Link>{" "}
                 | {review.date} | {review.comments.length} comments
               </Text>
             </Box>
 
-            <Box textAlign={{ base: 'start', lg: 'end' }}>
-              <Heading as='h2' fontSize='xl'>
+            <Box textAlign={{ base: "start", lg: "end" }}>
+              <Heading as="h2" fontSize="xl">
                 Review #{review.id}
               </Heading>
-              <Flex alignItems='center'>
+              <Flex alignItems="center">
                 <Text>Blockchain Informations</Text>
                 <Box>
-                  <Popover placement='top-start'>
+                  <Popover placement="top-start">
                     <PopoverTrigger>
                       <IconButton
-                        variant='Link'
+                        variant="Link"
                         color={link}
                         icon={<InfoIcon />}
                       />
                     </PopoverTrigger>
-                    <PopoverContent w='100%' textAlign='start' p='2'>
-                      <PopoverHeader fontWeight='semibold'>
+                    <PopoverContent w="100%" textAlign="start" p="2">
+                      <PopoverHeader fontWeight="semibold">
                         Blockchain Informations
                       </PopoverHeader>
                       <PopoverArrow />
                       <PopoverCloseButton />
                       <PopoverBody>
                         <Text>
-                          Address of author: {review.author}{' '}
+                          Address of author: {review.author}{" "}
                           <Link
                             color={link}
                             isExternal
                             href={`https://rinkeby.etherscan.io/address/${review.author}`}
                           >
                             (Etherscan)
-                          </Link>{' '}
+                          </Link>{" "}
                         </Text>
                         <Text>
-                          Mined in block n° {review.blockNumber}{' '}
+                          Mined in block n° {review.blockNumber}{" "}
                           <Link
                             color={link}
                             isExternal
                             href={`https://rinkeby.etherscan.io/txs?block=${review.blockNumber}`}
                           >
                             (Etherscan)
-                          </Link>{' '}
+                          </Link>{" "}
                         </Text>
 
                         <Text>
-                          Transaction hash: {review.txHash}{' '}
+                          Transaction hash: {review.txHash}{" "}
                           <Link
                             color={link}
                             isExternal
@@ -132,64 +158,75 @@ const Review = ({ review }) => {
             </Box>
           </Flex>
 
-          <Text mt='10'>{review.content}</Text>
+          <Text mt="10">{review.content}</Text>
           <VoteOnReview id={review.id} review={review} />
-          <Button colorScheme={scheme} variant='link' onClick={onToggle} mt='4'>
+          <Button colorScheme={scheme} variant="link" onClick={onToggle} my="4">
             {review.comments.length === 0
-              ? ''
+              ? ""
               : `${review.comments.length} comments`}
           </Button>
           <Collapse in={isOpen} animateOpacity>
             <CommentList on={review} />
           </Collapse>
           <Box>
-            {isOwner ? (
-              owner !== governance.address ? (
+            {owner !== governance.address ? (
+              isOwner ? (
                 <Button
                   onClick={() => banPost(review.id)}
                   isLoading={
-                    status.startsWith('Waiting') || status.startsWith('Pending')
+                    status.startsWith("Waiting") || status.startsWith("Pending")
                   }
                   loadingText={status}
                   disabled={
-                    status.startsWith('Waiting') || status.startsWith('Pending')
+                    status.startsWith("Waiting") || status.startsWith("Pending")
                   }
                 >
                   Ban
                 </Button>
               ) : (
+                ""
+              )
+            ) : (
+              <>
                 <Button
+                  colorScheme="red"
+                  variant="outline"
                   onClick={() => voteToBanReview(review.id)}
                   isLoading={
-                    status.startsWith('Waiting') || status.startsWith('Pending')
+                    status.startsWith("Waiting") || status.startsWith("Pending")
                   }
                   loadingText={status}
                   disabled={
-                    status.startsWith('Waiting') || status.startsWith('Pending')
+                    status.startsWith("Waiting") || status.startsWith("Pending")
                   }
                 >
-                  Ban Governance
+                  Vote to ban this review
                 </Button>
-              )
-            ) : (
-              'test'
+                {banVote ? (
+                  <CircularProgress ms="4" value={banVote} max="5" color="red">
+                    <CircularProgressLabel>{banVote}/5</CircularProgressLabel>
+                  </CircularProgress>
+                ) : (
+                  ""
+                )}
+              </>
             )}
 
             <Text
-              mt='4'
-              fontSize='sm'
-              color='gray.500'
-              textAlign='end'
-              fontStyle='uppercase'
+              mt="4"
+              fontSize="sm"
+              color="gray.500"
+              textAlign="end"
+              fontStyle="uppercase"
             >
-              Review n°{review.id}{' '}
+              Review n°{review.id}{" "}
             </Text>
             <SendComment targetAddress={reviews.address} id={review.id} />
           </Box>
-          <Divider my='2' borderColor='gray.500' border='3px' mt='2' />
+          <Divider my="2" borderColor="gray.500" border="3px" mt="2" />
         </>
       ) : (
-        <Skeleton height='200px' />
+        <Skeleton height="200px" />
       )}
     </Box>
   )
