@@ -19,26 +19,31 @@ import {
   TabList,
   Tab,
   TabPanels,
-  TabPanel,
-} from "@chakra-ui/react"
-import { useState, useEffect, useRef } from "react"
-import { useParams, Link as RouterLink } from "react-router-dom"
-import { useArticlesContract } from "../hooks/useArticlesContract"
-import { useIPFS } from "../hooks/useIPFS"
+  TabPanel
+} from '@chakra-ui/react'
+import { useState, useEffect, useRef } from 'react'
+import { useParams, Link as RouterLink } from 'react-router-dom'
+import { useArticlesContract } from '../hooks/useArticlesContract'
+import { useIPFS } from '../hooks/useIPFS'
+import { FaRadiationAlt } from 'react-icons/fa'
 
-import { useUsersContract } from "../hooks/useUsersContract"
-import Loading from "../components/Loading"
+import { useUsersContract } from '../hooks/useUsersContract'
+import Loading from '../components/Loading'
 
-import ArticleHeader from "../components/ArticleHeader"
-import ReviewList from "../components/ReviewList"
-import CommentList from "../components/CommentList"
-import SendReview from "../components/SendReview"
-import SendComment from "../components/SendComment"
+import ArticleHeader from '../components/ArticleHeader'
+import ReviewList from '../components/ReviewList'
+import CommentList from '../components/CommentList'
+import SendReview from '../components/SendReview'
+import SendComment from '../components/SendComment'
+import { useCall } from '../web3hook/useCall'
+import { useGovernanceContract } from '../hooks/useGovernanceContract'
 
 const Article = () => {
   const { id } = useParams()
   const { articles, getArticleData, articleEvents } = useArticlesContract()
-  const { users } = useUsersContract()
+  const { governance } = useGovernanceContract()
+  const { users, owner, isOwner } = useUsersContract()
+  const [status, contractCall] = useCall()
 
   const [, readIPFS] = useIPFS()
 
@@ -114,60 +119,84 @@ const Article = () => {
           validity,
           importance,
           validityVotes,
-          importanceVotes,
+          importanceVotes
         })
+
+        // listen the event with the filter
+        articles.on(nbOfValidityVote, articleData)
+        articles.on(nbOfImportanceVote, articleData)
+        return () => {
+          articles.off(nbOfValidityVote, articleData)
+          articles.off(nbOfImportanceVote, articleData)
+        }
       }
       articleData()
     }
   }, [articles, getArticleData, id, readIPFS, users])
 
+  // ban
+  async function banArticle(id) {
+    await contractCall(articles, 'banArticle', [id])
+  }
+
+  async function voteToBanArticle(id) {
+    await contractCall(governance, 'voteToBanArticle', [id])
+  }
+
   //                  Color Value
-  const bg = useColorModeValue("white", "grayOrange.900")
-  const txt = useColorModeValue("main", "second")
-  const scheme = useColorModeValue("colorMain", "colorSecond")
+  const bg = useColorModeValue('white', 'grayOrange.900')
+  const txt = useColorModeValue('main', 'second')
+  const scheme = useColorModeValue('colorMain', 'colorSecond')
 
   // --------------------------------------------------------------RETURN
   return (
     <>
-      <Box shadow="lg" bg={bg}>
+      <Box shadow='lg' bg={bg}>
         {article?.id !== 0 ? (
           <ArticleHeader id={id} article={article} eventList={articleEvents} />
         ) : (
-          ""
+          ''
         )}
 
-        <Container py="10" maxW="container.xl">
+        <Container py='10' maxW='container.xl'>
           {article ? (
             article.id !== 0 ? (
               <>
                 <Box key={article.id}>
-                  <Heading fontFamily="title" fontSize="8xl" textAlign="center">
+                  <Heading
+                    fontFamily='title'
+                    fontSize='6xl'
+                    textAlign='center'
+                    p='5'
+                    border='4px'
+                    borderStyle='inset'
+                  >
                     {article.title}
                   </Heading>
 
                   {/* Authors of the articles */}
-                  <Text my="4" fontSize="lg">
+                  <Text my='4' fontSize='lg'>
                     <Link
-                      fontWeight="bold"
+                      fontWeight='bold'
                       as={RouterLink}
                       to={`/profile/${article.authorID}`}
                     >
                       {article.firstName} {article.lastName}
                     </Link>
-                    <Text as="sup"> 1 </Text>,{" "}
+                    <Text as='sup'> 1 </Text>,{' '}
                     {article.coAuthors.map((coAuthor, index) => {
                       return (
-                        <Box as="span" key={coAuthor.id}>
+                        <Box as='span' key={coAuthor.id}>
                           <Link as={RouterLink} to={`/profile/${coAuthor.id}`}>
                             {coAuthor.firstName} {coAuthor.lastName}
                           </Link>
-                          <Text as="sup"> {index + 2} </Text>,{" "}
+                          <Text as='sup'> {index + 2} </Text>,{' '}
                         </Box>
                       )
                     })}
                   </Text>
 
-                  <Heading fontSize="lg" as="h3">
+                  <Heading fontSize='lg' as='h3'>
                     Authors' affiliations
                   </Heading>
                   <Text>1. {article.laboratory}</Text>
@@ -183,78 +212,78 @@ const Article = () => {
                       as={Link}
                       isExternal
                       href={`https://ipfs.io/ipfs/${article.pdfFile}`}
-                      mt="4"
-                      variant="link"
+                      mt='4'
+                      variant='link'
                       color={txt}
                     >
                       PDF Link
                     </Button>
                   ) : (
-                    <Text color="gray" mt="4">
+                    <Text color='gray' mt='4'>
                       No PDF File
                     </Text>
                   )}
 
                   <Heading
-                    fontSize="lg"
-                    as="h3"
-                    textTransform="uppercase"
-                    textAlign="center"
+                    fontSize='lg'
+                    as='h3'
+                    textTransform='uppercase'
+                    textAlign='center'
                   >
                     Abstract
                   </Heading>
-                  <Text textAlign="center" my="4">
+                  <Text textAlign='center' my='4'>
                     {article.abstract}
                   </Text>
 
                   <Heading
-                    fontSize="lg"
-                    as="h3"
-                    textTransform="uppercase"
-                    textAlign="center"
-                    mt="20"
+                    fontSize='lg'
+                    as='h3'
+                    textTransform='uppercase'
+                    textAlign='center'
+                    mt='20'
                   >
                     Content
                   </Heading>
-                  <Text my="4">{article.content}</Text>
+                  <Text my='4'>{article.content}</Text>
                   <Heading
-                    fontSize="lg"
-                    as="h3"
-                    textTransform="uppercase"
-                    textAlign="center"
-                    mt="20"
-                    color="gray.300"
+                    fontSize='lg'
+                    as='h3'
+                    textTransform='uppercase'
+                    textAlign='center'
+                    mt='20'
+                    color='gray.300'
                   >
                     Bibliographie
                   </Heading>
-                  <Text mb="10" textAlign="center">
+                  <Text mb='10' textAlign='center'>
                     Not implemented yet...
                   </Text>
 
-                  <Flex mb="10">
+                  <Flex mb='10'>
                     <Button
                       onClick={onOpen}
                       colorScheme={scheme}
-                      me="4"
-                      variant="link"
+                      me='4'
+                      variant='link'
                     >
                       Reviews (
-                      {article !== undefined ? article.reviews.length : "..."})
+                      {article !== undefined ? article.reviews.length : '...'})
                     </Button>
                     <Button
                       onClick={onOpen}
                       colorScheme={scheme}
-                      variant="link"
+                      variant='link'
                     >
                       Comments (
-                      {article !== undefined ? article.comments.length : "..."})
+                      {article !== undefined ? article.comments.length : '...'})
                     </Button>
                   </Flex>
 
                   <Flex
-                    flexDirection={{ base: "column", lg: "row" }}
-                    justifyContent="space-between"
-                    mb="10"
+                    flexDirection={{ base: 'column', lg: 'row' }}
+                    justifyContent='space-between'
+                    mb='10'
                   >
                     <SendReview id={id} />
                     <SendComment id={id} targetAddress={articles.address} />
@@ -262,13 +291,81 @@ const Article = () => {
                 </Box>
               </>
             ) : (
-              <Heading textAlign="center">
+              <Heading textAlign='center'>
                 Oups this article doesn't exist
               </Heading>
             )
           ) : (
             <Loading />
           )}
+          <Box>
+            {/*Owner Options */}
+            {isOwner ? (
+              owner !== governance.address ? (
+                <Button
+                  onClick={() => banArticle(id)}
+                  isLoading={
+                    status.startsWith('Waiting') || status.startsWith('Pending')
+                  }
+                  loadingText={status}
+                  disabled={
+                    status.startsWith('Waiting') || status.startsWith('Pending')
+                  }
+                >
+                  Ban
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => voteToBanArticle(id)}
+                  isLoading={
+                    status.startsWith('Waiting') || status.startsWith('Pending')
+                  }
+                  loadingText={status}
+                  disabled={
+                    status.startsWith('Waiting') || status.startsWith('Pending')
+                  }
+                >
+                  Ban Governance
+                </Button>
+              )
+            ) : (
+              'test'
+            )}
+
+            <Button
+              onClick={() => banArticle(id)}
+              colorScheme='red'
+              isLoading={
+                status.startsWith('Waiting') || status.startsWith('Pending')
+              }
+              loadingText={status}
+              disabled={
+                status.startsWith('Waiting') || status.startsWith('Pending')
+              }
+              leftIcon={<FaRadiationAlt />}
+              variant='outline'
+            >
+              {' '}
+              Ban
+            </Button>
+
+            <Button
+              onClick={() => voteToBanArticle(id)}
+              colorScheme='red'
+              isLoading={
+                status.startsWith('Waiting') || status.startsWith('Pending')
+              }
+              loadingText={status}
+              disabled={
+                status.startsWith('Waiting') || status.startsWith('Pending')
+              }
+              leftIcon={<FaRadiationAlt />}
+              variant='outline'
+            >
+              {' '}
+              Ban Article
+            </Button>
+          </Box>
         </Container>
       </Box>
 
@@ -277,24 +374,24 @@ const Article = () => {
         isOpen={isOpen}
         onClose={onClose}
         finalFocusRef={btnRef}
-        placement="bottom"
+        placement='bottom'
       >
         <DrawerOverlay />
-        <DrawerContent maxH="60vh">
+        <DrawerContent maxH='60vh'>
           <DrawerCloseButton />
-          <DrawerHeader shadow="sm">Reviews & Comments</DrawerHeader>
+          <DrawerHeader shadow='sm'>Reviews & Comments</DrawerHeader>
 
           <DrawerBody>
             {/* TABS */}
-            <Tabs size="md" variant="enclosed">
+            <Tabs size='md' variant='enclosed'>
               <TabList>
                 <Tab>
                   Reviews (
-                  {article !== undefined ? article.reviews.length : "..."})
+                  {article !== undefined ? article.reviews.length : '...'})
                 </Tab>
                 <Tab>
                   Comments (
-                  {article !== undefined ? article.comments.length : "..."})
+                  {article !== undefined ? article.comments.length : '...'})
                 </Tab>
               </TabList>
               <TabPanels>

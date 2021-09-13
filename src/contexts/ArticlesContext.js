@@ -1,8 +1,8 @@
-import { createContext, useEffect, useState } from "react"
-import { useContract } from "../web3hook/useContract"
-import { contractAddress, contractABI } from "../contracts/articles"
-import { useWeb3 } from "../web3hook/useWeb3"
-import { getArticleData } from "../hooks/useArticlesContract"
+import { createContext, useEffect, useState } from 'react'
+import { useContract } from '../web3hook/useContract'
+import { contractAddress, contractABI } from '../contracts/articles'
+import { useWeb3 } from '../web3hook/useWeb3'
+import { getArticleData } from '../hooks/useArticlesContract'
 
 export const ArticlesContext = createContext(null)
 
@@ -18,16 +18,16 @@ const ArticlesContextProvider = ({ children }) => {
   // create list of article
   // has been deplaced here to create only one list of article for the entire App
   useEffect(() => {
-    if (contract && networkName === "rinkeby") {
+    if (contract && networkName === 'rinkeby') {
       const createArticleList = async () => {
         const nb = await contract.totalSupply()
         const articlesList = []
 
         // in waiting for the articleID indexed
         const eventList = [
-          { articleID: 0, txHash: null, timestamp: 0, blockNumber: 0 },
+          { articleID: 0, txHash: null, timestamp: 0, blockNumber: 0 }
         ]
-        const eventArray = await contract.queryFilter("Published") // EthersJS / Contract
+        const eventArray = await contract.queryFilter('Published') // EthersJS / Contract
         for (const event of eventArray) {
           const block = await event.getBlock()
           const date = new Date(block.timestamp * 1000)
@@ -36,7 +36,7 @@ const ArticlesContextProvider = ({ children }) => {
             txHash: event.transactionHash,
             timestamp: block.timestamp,
             blockNumber: event.blockNumber,
-            date: date.toLocaleString(),
+            date: date.toLocaleString()
           }
           eventList.push(obj)
           // [{null},{event1 = articleID: 1}]
@@ -45,7 +45,29 @@ const ArticlesContextProvider = ({ children }) => {
 
         for (let i = 1; i <= nb; i++) {
           const obj = await getArticleData(contract, i) // i = id
+
+          const validity = obj.validity
+          const importance = obj.importance
           const { txHash, timestamp, blockNumber, date } = eventList[i]
+
+          // Importance
+          let nbOfImportanceVote = await contract.filters.ImportanceVoted(
+            null,
+            Number(i.toString(16)), // need to hexify the number 1 = 0x01
+            null
+          )
+
+          let eventArray = await contract.queryFilter(nbOfImportanceVote)
+          const importanceVotes = eventArray.length
+
+          // Validity
+          let nbOfValidityVote = await contract.filters.ValidityVoted(
+            null,
+            Number(i.toString(16)), // need to hexify the number
+            null
+          )
+          eventArray = await contract.queryFilter(nbOfValidityVote)
+          const validityVotes = eventArray.length
 
           articlesList.push({
             ...obj,
@@ -53,9 +75,13 @@ const ArticlesContextProvider = ({ children }) => {
             timestamp,
             blockNumber,
             date,
+            validity,
+            importance,
+            importanceVotes,
+            validityVotes
           })
         }
-        console.log("List of articles created")
+        console.log('List of articles created')
         setArticleList(articlesList)
       }
       createArticleList()

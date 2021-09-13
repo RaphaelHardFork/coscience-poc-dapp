@@ -1,25 +1,28 @@
 import { Flex, Text, IconButton, Box } from '@chakra-ui/react'
 import React from 'react'
 import { FaThumbsUp, FaThumbsDown } from 'react-icons/fa'
-import { useArticlesContract } from '../hooks/useArticlesContract'
+
+import { useReviewsContract } from '../hooks/useReviewsContract'
 import { useCall } from '../web3hook/useCall'
 
-const ArticleValidity = ({ id, article }) => {
-  const { articles } = useArticlesContract()
+const VoteOnReview = ({ id, review }) => {
+  const { reviews } = useReviewsContract()
   const [status, contractCall] = useCall()
 
-  async function VoteValidity(validity) {
-    await contractCall(articles, 'voteValidity', [validity, id])
+  async function VoteOn(choice) {
+    await contractCall(reviews, 'vote', [choice, id])
   }
 
+  console.log('review', review)
   return (
-    <Flex alignItems='center' my='2'>
-      <Text me='5'>Validity</Text>
-      <Box me='5'>
+    <Flex my='5' alignItems='center'>
+      {/* <Text>Review </Text> */}
+      <Box>
         <IconButton
+          colorScheme='green'
           aria-label='thumb ub'
           icon={<FaThumbsUp />}
-          onClick={() => VoteValidity(1)}
+          onClick={() => VoteOn(1)}
           isLoading={
             status.startsWith('Waiting') || status.startsWith('Pending')
           }
@@ -28,10 +31,10 @@ const ArticleValidity = ({ id, article }) => {
           }
           me='1'
           borderRadius='full'
-          colorScheme='green'
         />
 
         <IconButton
+          colorScheme='red'
           aria-label='thumb down'
           icon={<FaThumbsDown />}
           isLoading={
@@ -40,21 +43,16 @@ const ArticleValidity = ({ id, article }) => {
           disabled={
             status.startsWith('Waiting') || status.startsWith('Pending')
           }
-          onClick={() => VoteValidity(0)}
+          onClick={() => VoteOn(0)}
           borderRadius='full'
-          colorScheme='red'
+          me='5'
         />
       </Box>
       <Text>
-        {article.validityVotes - article.validity} / {article.validityVotes}
+        {review.vote - review.vote} / {review.nbVotes}
       </Text>
     </Flex>
   )
 }
 
-export default ArticleValidity
-
-// Voter 1 = +1
-// voter2 = -1
-// total = 0
-// score = 1/2
+export default VoteOnReview
