@@ -26,10 +26,35 @@ import { useColorMode } from "@chakra-ui/react"
 import { Link as RouterLink } from "react-router-dom"
 import { useUsersContract } from "../hooks/useUsersContract"
 import HeaderLinks from "./HeaderLinks"
+import Notifs from "./Notifs"
 import { useGovernanceContract } from "../hooks/useGovernanceContract"
 import { useArticlesContract } from "../hooks/useArticlesContract"
 import { useReviewsContract } from "../hooks/useReviewsContract"
 
+// Pure functions
+const itemType = (address, articles, reviews) => {
+  if (address === articles.address) {
+    return "Ban an article"
+  } else if (address === reviews.address) {
+    return "Ban a review"
+  } else {
+    return "Ban a comment"
+  }
+}
+
+const voteProgression = async (
+  contract,
+  eventName,
+  indexed1,
+  indexed2,
+  indexed3
+) => {
+  let nbOfVote = await contract.filters[eventName](indexed1, indexed2, indexed3)
+  nbOfVote = await contract.queryFilter(nbOfVote)
+  return nbOfVote
+}
+
+// Component
 const Header = () => {
   const { userData, userList } = useUsersContract()
   const { governance } = useGovernanceContract()
@@ -42,6 +67,7 @@ const Header = () => {
 
   // useState
   const [count, setCount] = useState(0)
+  const [notifs, setNotifs] = useState([])
 
   //Color mode
   const { colorMode, toggleColorMode } = useColorMode()
@@ -49,30 +75,23 @@ const Header = () => {
   // get notifications
   useEffect(() => {
     const getNotifs = async () => {
-      // need to listen events: Voted, not UserVoted, RecoverVoted
-
       const eventTab = []
 
+      // Item events
       const banItemEvents = await governance.queryFilter("Voted")
       for (const event of banItemEvents) {
-        // notif type (pure)
-        let notifType
-        if (event.args.contractAddress === articles.address) {
-          notifType = "Ban an article"
-        } else if (event.args.contractAddress === reviews.address) {
-          notifType = "Ban a review"
-        } else {
-          notifType = "Ban a comment"
-        }
-
-        // listen progression (pure)
-        let nbOfVote = await governance.filters.Voted(
+        const notifType = itemType(
+          event.args.contractAddress,
+          articles,
+          reviews
+        )
+        const nbOfVote = await voteProgression(
+          governance,
+          "Voted",
           event.args.contractAddress,
           event.args.itemID.toNumber(),
           null
         )
-        nbOfVote = await governance.queryFilter(nbOfVote)
-
         const obj = {
           notifType,
           who: event.args.userID.toNumber(),
@@ -81,21 +100,21 @@ const Header = () => {
           blockNumber: event.blockNumber,
           date: 0
         }
-
         eventTab.push(obj)
       }
 
+      // user events
       const userEvents = await governance.queryFilter("UserVoted")
       for (const event of userEvents) {
         const notifType =
           event.args.voteType === 0 ? "Accept an user" : "Ban an user"
-        let nbOfVote = await governance.filters.UserVoted(
+        const nbOfVote = await voteProgression(
+          governance,
+          "UserVoted",
           null,
           event.args.subjectUserID.toNumber(),
           null
         )
-        nbOfVote = await governance.queryFilter(nbOfVote)
-
         const obj = {
           notifType,
           who: event.args.userID.toNumber(),
@@ -107,19 +126,35 @@ const Header = () => {
         eventTab.push(obj)
       }
 
-      // sort by blockNumber
-      const sortedTab = eventTab.sort((a, b) => a.blockNumber - b.blockNumber)
-
+      // register event
       const registerEvents = await users.queryFilter("Registered")
+      for (const event of registerEvents) {
+        // check if id is approved
+        const { status } = await users.userInfo(event.args.userID.toNumber())
+        if (status === 2) {
+          continue
+        }
+        const obj = {
+          notifType: "User registration pending",
+          who: event.args.userID.toNumber(),
+          itemID: event.args.userID.toNumber(),
+          progression: 0,
+          blockNumber: event.blockNumber,
+          date: 0
+        }
+        eventTab.push(obj)
+      }
 
-      const recoverEvents = await governance.queryFilter("RecoverVoted")
-      console.log(recoverEvents)
-      console.log(registerEvents)
-      console.log(eventTab)
-      console.log(sortedTab)
+      // sort by blockNumber
+      const sortedTab = eventTab.sort((a, b) => b.blockNumber - a.blockNumber)
+      setNotifs(sortedTab)
     }
-    if (governance && articles) {
+    if (governance && articles && reviews) {
       getNotifs()
+      // listen event
+    }
+    return () => {
+      setNotifs([])
     }
   }, [governance, articles, users, reviews])
 
@@ -262,7 +297,21 @@ const Header = () => {
                     <DrawerCloseButton />
                     <DrawerHeader>Governance notifications</DrawerHeader>
 
-                    <DrawerBody></DrawerBody>
+                    <DrawerBody>
+                      {notifs.map((notif) => {
+                        return (
+                          <Box
+                            mb="4"
+                            borderRadius="5"
+                            p="2"
+                            bg="green.100"
+                            key={notif.blockNumber}
+                          >
+                            <Notifs notif={notif} />
+                          </Box>
+                        )
+                      })}
+                    </DrawerBody>
 
                     <DrawerFooter>
                       <Text>FOOTER</Text>

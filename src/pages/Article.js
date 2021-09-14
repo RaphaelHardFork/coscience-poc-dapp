@@ -64,6 +64,8 @@ const Article = () => {
     const articleData = async () => {
       const articleObj = await getArticleData(articles, id)
 
+      const isBanned = articleObj.contentBanned
+
       // get number of voters
       let nbOfImportanceVote = await articles.filters.ImportanceVoted(
         null,
@@ -117,7 +119,8 @@ const Article = () => {
         laboratory,
         coAuthors, // coAuthor: [{coAuthorId, firstName, lastName, laboratory},{}]
         validityVotes,
-        importanceVotes
+        importanceVotes,
+        isBanned
       })
     }
     if (articles) {
@@ -190,6 +193,7 @@ const Article = () => {
         <Container py="10" maxW="container.xl">
           {article ? (
             article.id !== 0 ? (
+              // article?.isBanned ? (<Text>Article n°{article.id} has been Banned</Text>) : ()) : ()) : (<Loading />) }
               <>
                 <Box>
                   <Heading
@@ -272,7 +276,14 @@ const Article = () => {
                   >
                     Content
                   </Heading>
-                  <Text my="4">{article.content}</Text>
+                  {article.content ? (
+                    <Text my="4">{article.content}</Text>
+                  ) : (
+                    <Text color="gray">
+                      IPFS cannot be read at this time, try later
+                    </Text>
+                  )}
+
                   <Heading
                     fontSize="lg"
                     as="h3"
