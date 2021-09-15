@@ -17,7 +17,6 @@ import {
   SliderFilledTrack,
   SliderThumb,
   useColorModeValue,
-  HStack,
   SlideFade
 } from '@chakra-ui/react'
 import { ethers } from 'ethers'
@@ -27,8 +26,6 @@ import { useWeb3 } from '../web3hook/useWeb3'
 const About = () => {
   const { state } = useWeb3()
   const { providerType, providerSrc, account, networkName } = state
-  const scheme = useColorModeValue('colorMain', 'colorSecond')
-  const bg = useColorModeValue('white', 'grayBlue.900')
 
   const [amount, setAmount] = useState(0)
   const handleChange = (value) => setAmount(value)
@@ -36,6 +33,14 @@ const About = () => {
 
   // function sign() {}
   // try to sign a message
+
+  // color mode value
+  const scheme = useColorModeValue('colorMain', 'colorSecond')
+  const bg = useColorModeValue('white', 'grayBlue.900')
+  const bgProvider = useColorModeValue('green.200', 'green.600')
+  const bgNetwork = useColorModeValue('orange.200', 'orange.400')
+  const bgWallet = useColorModeValue('orange.400', 'orange.600')
+  const bgAddress = useColorModeValue('blue.200', 'blue.600')
 
   async function donate() {
     try {
@@ -98,7 +103,7 @@ const About = () => {
                 <NumberDecrementStepper />
               </NumberInputStepper>
             </NumberInput>
-            <Icon h='2rem' w='2rem' as={FaEthereum} />
+            <Icon h='2rem' w='2rem' as={FaEthereum} alt='ethereum icon' />
             <Text me='4' fontSize='xl'>
               ETH
             </Text>
@@ -123,6 +128,7 @@ const About = () => {
             mx='auto'
             size='lg'
             colorScheme={scheme}
+            aria-label='donate button'
           >
             Donate
           </Button>
@@ -153,7 +159,13 @@ const About = () => {
             <Text me='4' fontSize='lg'>
               Provider:
             </Text>
-            <Box p='2' borderRadius='5' bg='green.200' shadow='md'>
+            <Box
+              p='2'
+              borderRadius='5'
+              bg={bgProvider}
+              shadow='md'
+              fontWeight='bold'
+            >
               {providerType}
             </Box>
           </Flex>
@@ -161,7 +173,13 @@ const About = () => {
             <Text fontSize='lg' me='4'>
               Network:
             </Text>
-            <Box p='2' borderRadius='5' bg='orange.200' shadow='md'>
+            <Box
+              p='2'
+              borderRadius='5'
+              bg={bgNetwork}
+              shadow='md'
+              fontWeight='bold'
+            >
               {networkName}
             </Box>
           </Flex>
@@ -169,7 +187,13 @@ const About = () => {
             <Text fontSize='lg' me='4'>
               Wallet:
             </Text>
-            <Box p='2' borderRadius='5' bg='orange.400' shadow='md'>
+            <Box
+              p='2'
+              borderRadius='5'
+              bg={bgWallet}
+              shadow='md'
+              fontWeight='bold'
+            >
               {providerSrc}
             </Box>
           </Flex>
@@ -178,7 +202,13 @@ const About = () => {
             <Text fontSize='lg' me='4'>
               Your address:
             </Text>
-            <Box p='2' borderRadius='5' bg='blue.200' shadow='md'>
+            <Box
+              p='2'
+              borderRadius='5'
+              bg={bgAddress}
+              shadow='md'
+              fontWeight='bold'
+            >
               {account}
             </Box>
           </Flex>

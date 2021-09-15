@@ -51,6 +51,9 @@ const ConfigModal = () => {
               bgGradient={`linear(to-br,${back},main)`}
               shadow='dark-lg'
               display='flex'
+              flexDirection='column'
+              justifyContent='center'
+              alignItems='center'
             >
               <Flex m='auto' flexDirection='column'>
                 <Heading my='4' textAlign='center'>
@@ -72,13 +75,14 @@ const ConfigModal = () => {
                     Please switch to one of these network
                   </Text>
 
-                  <Flex>
+                  <Flex wrap='wrap'>
                     <Button
                       onClick={() => switchNetwork('0x4', 'rinkeby')}
                       colorScheme='yellow'
                       display='flex'
                       mx='1'
                       my='4'
+                      aria-label='switch network to rinkeby'
                     >
                       Switch to Rinkeby
                     </Button>
@@ -88,6 +92,7 @@ const ConfigModal = () => {
                       display='flex'
                       mx='1'
                       my='4'
+                      aria-label='switch network to kovan'
                     >
                       Switch to Kovan
                     </Button>
@@ -97,6 +102,7 @@ const ConfigModal = () => {
                       display='flex'
                       mx='1'
                       my='4'
+                      aria-label='switch network to goerli'
                     >
                       Switch to Goerli
                     </Button>
@@ -106,6 +112,7 @@ const ConfigModal = () => {
                       display='flex'
                       mx='1'
                       my='4'
+                      aria-label='switch network to BSC testnet'
                     >
                       Switch to BSC Testnet
                     </Button>
@@ -115,6 +122,7 @@ const ConfigModal = () => {
                       display='flex'
                       mx='1'
                       my='4'
+                      aria-label='switch network to Polygon mumbai'
                     >
                       Switch to Polygon Mumbai
                     </Button>

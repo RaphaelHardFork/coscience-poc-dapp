@@ -329,7 +329,7 @@ const Header = () => {
                   onClose={onClose}
                 >
                   <DrawerOverlay />
-                  <DrawerContent bg={bg}>
+                  <DrawerContent bg={bg} p='1'>
                     <DrawerCloseButton />
                     <DrawerHeader>Governance notifications</DrawerHeader>
 

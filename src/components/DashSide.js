@@ -102,6 +102,7 @@ const DashSide = ({ user }) => {
                       ? 'green.400'
                       : 'red.400'
                   }
+                  alt='status of user'
                 >
                   {user.status}
                 </Badge>
@@ -112,6 +113,7 @@ const DashSide = ({ user }) => {
                   colorScheme={button}
                   p='3'
                   fontWeight='bold'
+                  alt='ID of user'
                 >
                   ID #{user.id}
                 </Tag>
@@ -124,7 +126,12 @@ const DashSide = ({ user }) => {
 
               <Popover placement='top-start'>
                 <PopoverTrigger>
-                  <IconButton variant='Link' color={link} icon={<InfoIcon />} />
+                  <IconButton
+                    variant='Link'
+                    color={link}
+                    icon={<InfoIcon />}
+                    aria-label='info ipfs icon button'
+                  />
                 </PopoverTrigger>
                 <PopoverContent w='100%' textAlign='start' p='2'>
                   <PopoverHeader fontWeight='semibold'>
@@ -139,6 +146,7 @@ const DashSide = ({ user }) => {
                         color={link}
                         isExternal
                         href={`https://ipfs.io/ipfs/${user.profileCID}`}
+                        aria-label='ipfs redirection link'
                       >
                         ipfs.io
                       </Link>{' '}
@@ -150,6 +158,7 @@ const DashSide = ({ user }) => {
                         color={link}
                         isExternal
                         href={`https://ipfs.io/ipfs/${user.nameCID}`}
+                        aria-label='ipfs redirection link'
                       >
                         ipfs.io
                       </Link>{' '}
@@ -162,7 +171,7 @@ const DashSide = ({ user }) => {
               {Number(user.id) === userData.id ? (
                 <IconButton
                   colorScheme={button}
-                  aria-label='Call Segun'
+                  aria-label='setting button'
                   size='lg'
                   icon={<SettingsIcon />}
                   onClick={setIsOpenSetting}
@@ -177,7 +186,7 @@ const DashSide = ({ user }) => {
               <ModalOverlay />
               <ModalContent>
                 <ModalHeader>Settings</ModalHeader>
-                <ModalCloseButton />
+                <ModalCloseButton aria-label='modal close button' />
                 <ModalBody pb={6}>
                   <UserSetting user={user} />
                 </ModalBody>
@@ -187,16 +196,19 @@ const DashSide = ({ user }) => {
             {/* USER PROFILE */}
 
             <Flex my='4' alignItems='center'>
-              <EmailIcon me='4' />
-              <Link href={`mailto:${user.email}`}>
+              <EmailIcon me='4' alt='email icon' />
+              <Link
+                href={`mailto:${user.email}`}
+                aria-label='email redirection'
+              >
                 {user.email}
-                <LinkIcon mx='2px' />
+                <LinkIcon mx='2px' alt='link icon' />
               </Link>
             </Flex>
             <Text my='2'>Laboratory: {user.laboratory}</Text>
 
             <Text my='4' fontWeight='bold'>
-              <ChatIcon /> Bio:
+              <ChatIcon alt='biography icon' /> Bio:
             </Text>
 
             <Box borderRadius='5' bg={bg} w='100%' p={4}>
@@ -209,6 +221,7 @@ const DashSide = ({ user }) => {
               px={6}
               colorScheme={button}
               onClick={setIsOpen}
+              aria-label='wallet list button'
             >
               Wallet List
             </Button>
@@ -234,6 +247,7 @@ const DashSide = ({ user }) => {
                                 disabled={value !== wallet}
                                 onClick={onCopy}
                                 ml={2}
+                                aria-label='copy button'
                               >
                                 {hasCopied ? 'Copied' : 'Copy'}
                               </Button>

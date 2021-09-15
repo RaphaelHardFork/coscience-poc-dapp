@@ -15,8 +15,7 @@ const Notifs = ({ notif, onClose }) => {
     voterName: 'IPFS problem',
     userName: '',
     itemDescription: '',
-    date: 0,
-    color: ''
+    date: 0
   })
 
   // get IPFS information
@@ -51,7 +50,7 @@ const Notifs = ({ notif, onClose }) => {
           setNotifInfo({ userName, bg, link, voterName, date })
           break
         case 'Vote for ban an user':
-          bg = 'orange.100'
+          bg = 'red.300'
           link = `/profile/${notif.who}`
           setNotifInfo({ userName, bg, link, voterName, date })
           break
@@ -108,7 +107,7 @@ const Notifs = ({ notif, onClose }) => {
   // const bgTitle = useColorModeValue('grayOrange.800', 'grayBlue.800')
 
   return (
-    <Box mb='4' borderRadius='5' p='2' bg={notifInfo.bg} color='grayBlue.800'>
+    <Box mb='4' borderRadius='5' p='4' bg={notifInfo.bg} color='grayBlue.800'>
       <Flex justifyContent='space-between'>
         <Flex flexDirection='column'>
           <Text fontWeight='bold' fontSize='lg'>
@@ -122,7 +121,12 @@ const Notifs = ({ notif, onClose }) => {
               ? `Vote emitted by ${notifInfo.voterName}`
               : ''}
           </Text>
-          <Link onClick={onClose} as={RouterLink} to={notifInfo.link}>
+          <Link
+            onClick={onClose}
+            as={RouterLink}
+            to={notifInfo.link}
+            aria-label='notification subject redirection'
+          >
             {notifInfo.userName
               ? notifInfo.userName
               : notifInfo.itemDescription}

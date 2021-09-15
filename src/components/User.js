@@ -83,7 +83,11 @@ const User = ({ user }) => {
         <Text wrap='wrap'> {user.walletList[0].slice(0, 10)}... </Text>
       </Flex>
       <Text w={{ lg: '15%' }}> {user.nbOfWallet} Wallet(s) </Text>
-      <LinkOverlay as={Link} to={`/profile/${user.id}`}></LinkOverlay>
+      <LinkOverlay
+        as={Link}
+        to={`/profile/${user.id}`}
+        aria-label='profile redirection button'
+      ></LinkOverlay>
 
       <Flex alignItems='center' direction='column' width='75px'>
         {user.status === 'Pending'
@@ -123,6 +127,7 @@ const User = ({ user }) => {
                 status.startsWith('Pending')
               }
               colorScheme={txt}
+              aria-label='ban button'
             >
               Ban
             </Button>
@@ -139,6 +144,7 @@ const User = ({ user }) => {
                 status.startsWith('Pending')
               }
               colorScheme={txt}
+              aria-label='accept button'
             >
               Accept
             </Button>
@@ -167,6 +173,7 @@ const User = ({ user }) => {
               status.startsWith('Waiting') ||
               status.startsWith('Pending')
             }
+            aria-label='vote for ban button'
           >
             Vote for ban
           </Button>
@@ -198,6 +205,7 @@ const User = ({ user }) => {
                 status.startsWith('Waiting') ||
                 status.startsWith('Pending')
               }
+              aria-label='vote for accept button'
             >
               Vote for accept
             </Button>

@@ -13,6 +13,8 @@ import { FaGithub } from 'react-icons/fa'
 const Footer = () => {
   //color Mode
   const bg = useColorModeValue('white', 'grayBlue.900')
+  const button = useColorModeValue('main', 'second')
+
   return (
     <>
       <Box
@@ -33,13 +35,25 @@ const Footer = () => {
           align={{ base: 'center', md: 'center' }}
         >
           <Stack direction='row' spacing={6}>
-            <Link as={RouterLink} to='/about'>
+            <Link
+              as={RouterLink}
+              to='/about'
+              aria-label='About page redirection'
+            >
               What is Coscience?
             </Link>
-            <Link as={RouterLink} to='/about'>
+            <Link
+              as={RouterLink}
+              to='/about'
+              aria-label='About page redirection'
+            >
               Terms of use
             </Link>
-            <Link as={RouterLink} to='/about'>
+            <Link
+              as={RouterLink}
+              to='/about'
+              aria-label='About page redirection'
+            >
               Privacy
             </Link>
             <HStack>
@@ -48,9 +62,10 @@ const Footer = () => {
                 isExternal
                 href='https://github.com/RaphaelHardFork/coscience-poc-dapp/tree/version-0.1'
                 variant='link'
-                color='main'
+                color={button}
                 fontWeight='bold'
                 my='4'
+                aria-label='Github website redirection'
               >
                 Github
               </Link>

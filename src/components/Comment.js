@@ -176,6 +176,7 @@ const Comment = ({ comment }) => {
               variant='link'
               onClick={onToggle}
               my='4'
+              aria-label='toggle comment button'
             >
               {comment.comments.length === 0
                 ? ''
@@ -198,6 +199,7 @@ const Comment = ({ comment }) => {
                       status.startsWith('Waiting') ||
                       status.startsWith('Pending')
                     }
+                    aria-label='ban button'
                   >
                     Ban
                   </Button>
@@ -219,6 +221,7 @@ const Comment = ({ comment }) => {
                       status.startsWith('Waiting') ||
                       status.startsWith('Pending')
                     }
+                    aria-label='ban button'
                   >
                     Vote to ban this comment
                   </Button>
