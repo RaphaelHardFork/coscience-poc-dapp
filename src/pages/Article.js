@@ -213,6 +213,7 @@ const Article = () => {
                         fontWeight='bold'
                         as={RouterLink}
                         to={`/profile/${article.authorID}`}
+                        aria-label='author profile redirection button'
                       >
                         {article.firstName} {article.lastName}
                       </Link>
@@ -223,6 +224,7 @@ const Article = () => {
                             <Link
                               as={RouterLink}
                               to={`/profile/${coAuthor.id}`}
+                              aria-label='coAuthor profile redirection button'
                             >
                               {coAuthor.firstName} {coAuthor.lastName}
                             </Link>
@@ -252,6 +254,7 @@ const Article = () => {
                         mt='4'
                         variant='link'
                         color={txt}
+                        aria-label='pdf article content link'
                       >
                         PDF Link
                       </Button>
@@ -310,6 +313,7 @@ const Article = () => {
                         colorScheme={scheme}
                         me='4'
                         variant='link'
+                        aria-label='reviews drawer button'
                       >
                         Reviews (
                         {article !== undefined ? article.reviews.length : '...'}
@@ -319,6 +323,7 @@ const Article = () => {
                         onClick={() => openDrawer(1)}
                         colorScheme={scheme}
                         variant='link'
+                        aria-label='comments drawer button'
                       >
                         Comments (
                         {article !== undefined
@@ -351,6 +356,7 @@ const Article = () => {
                               status.startsWith('Waiting') ||
                               status.startsWith('Pending')
                             }
+                            aria-label='ban button'
                           >
                             Ban
                           </Button>
@@ -372,6 +378,7 @@ const Article = () => {
                               status.startsWith('Waiting') ||
                               status.startsWith('Pending')
                             }
+                            aria-label='ban vote article button'
                           >
                             Vote to ban this article
                           </Button>
@@ -422,11 +429,11 @@ const Article = () => {
             {/* TABS */}
             <Tabs defaultIndex={index} size='md' variant='enclosed'>
               <TabList>
-                <Tab>
+                <Tab aria-label='tab reviews'>
                   Reviews (
                   {article !== undefined ? article.reviews.length : '...'})
                 </Tab>
-                <Tab>
+                <Tab aria-label='tab comments'>
                   Comments (
                   {article !== undefined ? article.comments.length : '...'})
                 </Tab>

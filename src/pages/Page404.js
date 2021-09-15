@@ -39,7 +39,12 @@ const Page404 = () => {
             src='https://ipfs.io/ipfs/QmXRXx7tgHgFoaceDZZfpcoKMMkwWcsmLr5MSveGgiFEZx'
           />
 
-          <Button as={Link} to='/' colorScheme={scheme}>
+          <Button
+            as={Link}
+            to='/'
+            colorScheme={scheme}
+            aria-label='Home page redirection button'
+          >
             GO TO HOME PAGE
           </Button>
         </Container>

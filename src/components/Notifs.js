@@ -1,9 +1,11 @@
-import { Box, Flex, Link, Text, useColorModeValue } from '@chakra-ui/react'
+import { Box, Flex, Link, Text, Icon } from '@chakra-ui/react'
 import { Link as RouterLink } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { useIPFS } from '../hooks/useIPFS'
 import { useUsersContract } from '../hooks/useUsersContract'
 import { CircularProgress, CircularProgressLabel } from '@chakra-ui/progress'
+import { FaUserSlash, FaUserCheck, FaUserClock, FaBan } from 'react-icons/fa'
+import Loading from '../components/Loading'
 
 const Notifs = ({ notif, onClose }) => {
   const { users } = useUsersContract()
@@ -107,14 +109,18 @@ const Notifs = ({ notif, onClose }) => {
   // const bgTitle = useColorModeValue('grayOrange.800', 'grayBlue.800')
 
   return (
-    <Box mb='4' borderRadius='5' p='4' bg={notifInfo.bg} color='grayBlue.800'>
+    <Box
+      mb='4'
+      borderRadius='5'
+      p='5'
+      bg={notifInfo.bg}
+      color='grayBlue.800'
+      boxShadow='lg'
+    >
       <Flex justifyContent='space-between'>
-        <Flex flexDirection='column'>
+        <Flex flexDirection='column' flex='1'>
           <Text fontWeight='bold' fontSize='lg'>
             {notif.notifType}
-          </Text>
-          <Text as='span' fontSize='xs' textTransform='uppercase' color='gray'>
-            {notifInfo.date}
           </Text>
           <Text>
             {notifInfo.voterName
@@ -131,16 +137,46 @@ const Notifs = ({ notif, onClose }) => {
               ? notifInfo.userName
               : notifInfo.itemDescription}
           </Link>
+          <Text as='span' fontSize='xs' textTransform='uppercase' color='gray'>
+            {notifInfo.date}
+          </Text>
         </Flex>
-        <CircularProgress
-          me='4'
-          value={notif.progression}
-          max='5'
-          color='black'
-          my='auto'
-        >
-          <CircularProgressLabel>{notif.progression}/5</CircularProgressLabel>
-        </CircularProgress>
+        <Flex flexDirection='row' alignItems='center'>
+          <Box>
+            {notif.notifType === 'User registration pending' ? (
+              <Icon as={FaUserClock} w='8' h='8' />
+            ) : (
+              ''
+            )}
+            {notif.notifType === 'Vote for ban an user' ? (
+              <Icon as={FaUserSlash} w='8' h='8' />
+            ) : (
+              ''
+            )}
+            {notif.notifType === 'Ban an article' ||
+            notif.notifType === 'Ban a review' ||
+            notif.notifType === 'Ban a comment' ? (
+              <Icon as={FaBan} w='8' h='8' />
+            ) : (
+              ''
+            )}
+            {notif.notifType === 'Vote for accept an user' ? (
+              <Icon as={FaUserCheck} w='8' h='8' />
+            ) : (
+              ''
+            )}
+          </Box>
+          <CircularProgress
+            me='4'
+            value={notif.progression}
+            max='5'
+            color='black'
+            my='auto'
+            ms='5'
+          >
+            <CircularProgressLabel>{notif.progression}/5</CircularProgressLabel>
+          </CircularProgress>
+        </Flex>
       </Flex>
     </Box>
   )

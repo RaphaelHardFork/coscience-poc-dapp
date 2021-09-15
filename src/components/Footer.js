@@ -62,7 +62,6 @@ const Footer = () => {
                 isExternal
                 href='https://github.com/RaphaelHardFork/coscience-poc-dapp/tree/version-0.1'
                 variant='link'
-                color={button}
                 fontWeight='bold'
                 my='4'
                 aria-label='Github website redirection'

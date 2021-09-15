@@ -92,16 +92,18 @@ const ArticleList = ({ articleList }) => {
                 <Text
                   as='span'
                   fontSize='xs'
+                  fontWeight='bold'
                   textTransform='uppercase'
-                  color='gray'
+                  color='gray.600'
                 >
                   Article n°{article.id}
                 </Text>
                 <Text
                   as='span'
                   fontSize='xs'
+                  fontWeight='bold'
                   textTransform='uppercase'
-                  color='gray'
+                  color='gray.600'
                 >
                   {article.date}
                 </Text>

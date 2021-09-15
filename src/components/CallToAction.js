@@ -56,6 +56,7 @@ const CallToAction = () => {
               px={6}
               colorScheme={scheme}
               aria-label='About page redirection'
+              fontSize='lg'
             >
               Get started
             </Button>
