@@ -9,7 +9,7 @@ import {
   Container,
   useColorModeValue,
   Textarea,
-  SlideFade,
+  SlideFade
 } from "@chakra-ui/react"
 import { AddIcon, MinusIcon } from "@chakra-ui/icons"
 import { useState } from "react"
@@ -86,7 +86,7 @@ const UploadArticle = () => {
     const tx = await contractCall(articles, "publish", [
       coAuthorArray,
       abstractCID,
-      contentCID,
+      contentCID
     ])
 
     // unpin content if revert
@@ -120,7 +120,7 @@ const UploadArticle = () => {
             threshold="0.1"
             delay={{ enter: 0.1 }}
             transition={{
-              enter: { duration: 0.7 },
+              enter: { duration: 0.7 }
             }}
             offsetY="0px"
             offsetX="100px"
@@ -136,7 +136,7 @@ const UploadArticle = () => {
               threshold="0.1"
               delay={{ enter: 0.1 }}
               transition={{
-                enter: { duration: 0.7 },
+                enter: { duration: 0.7 }
               }}
               offsetY="-100px"
               offsetX="0px"
@@ -203,7 +203,7 @@ const UploadArticle = () => {
               threshold="0.1"
               delay={{ enter: 0.1 }}
               transition={{
-                enter: { duration: 0.7 },
+                enter: { duration: 0.7 }
               }}
               offsetY="100px"
               offsetX="0px"
@@ -228,7 +228,7 @@ const UploadArticle = () => {
               threshold="0.1"
               delay={{ enter: 0.25 }}
               transition={{
-                enter: { duration: 0.8 },
+                enter: { duration: 0.8 }
               }}
               offsetY="0px"
               offsetX="-200px"

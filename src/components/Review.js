@@ -35,6 +35,7 @@ import VoteOnReview from "./VoteOnReview"
 const Review = ({ review }) => {
   const link = useColorModeValue("main", "second")
   const { reviews } = useReviewsContract()
+
   const { governance } = useGovernanceContract()
   const { owner, isOwner } = useUsersContract()
   const [status, contractCall] = useCall()
@@ -76,155 +77,173 @@ const Review = ({ review }) => {
   return (
     <Box p="5" key={review.id}>
       {review !== undefined ? (
-        <>
-          <Flex
-            flexDirection={{ base: "column", lg: "row" }}
-            justifyContent={{ base: "start", lg: "space-between" }}
-          >
+        review.contentBanned ? (
+          <Text>Review n°{review.id} has been Banned</Text>
+        ) : (
+          <>
+            <Flex
+              flexDirection={{ base: "column", lg: "row" }}
+              justifyContent={{ base: "start", lg: "space-between" }}
+            >
+              <Box>
+                <Heading as="h2">{review.title}</Heading>
+
+                <Text>
+                  by{" "}
+                  <Link
+                    as={RouterLink}
+                    color={link}
+                    to={`/profile/${review.authorID}`}
+                  >
+                    {review.firstName} {review.lastName}
+                  </Link>{" "}
+                  | {review.date} | {review.comments.length} comments
+                </Text>
+              </Box>
+
+              <Box textAlign={{ base: "start", lg: "end" }}>
+                <Heading as="h2" fontSize="xl">
+                  Review #{review.id}
+                </Heading>
+                <Flex alignItems="center">
+                  <Text>Blockchain Informations</Text>
+                  <Box>
+                    <Popover placement="top-start">
+                      <PopoverTrigger>
+                        <IconButton
+                          variant="Link"
+                          color={link}
+                          icon={<InfoIcon />}
+                        />
+                      </PopoverTrigger>
+                      <PopoverContent w="100%" textAlign="start" p="2">
+                        <PopoverHeader fontWeight="semibold">
+                          Blockchain Informations
+                        </PopoverHeader>
+                        <PopoverArrow />
+                        <PopoverCloseButton />
+                        <PopoverBody>
+                          <Text>
+                            Address of author: {review.author}{" "}
+                            <Link
+                              color={link}
+                              isExternal
+                              href={`https://rinkeby.etherscan.io/address/${review.author}`}
+                            >
+                              (Etherscan)
+                            </Link>{" "}
+                          </Text>
+                          <Text>
+                            Mined in block n° {review.blockNumber}{" "}
+                            <Link
+                              color={link}
+                              isExternal
+                              href={`https://rinkeby.etherscan.io/txs?block=${review.blockNumber}`}
+                            >
+                              (Etherscan)
+                            </Link>{" "}
+                          </Text>
+
+                          <Text>
+                            Transaction hash: {review.txHash}{" "}
+                            <Link
+                              color={link}
+                              isExternal
+                              href={`https://rinkeby.etherscan.io/tx/${review.txHash}`}
+                            >
+                              (Etherscan)
+                            </Link>
+                          </Text>
+                        </PopoverBody>
+                      </PopoverContent>
+                    </Popover>
+                  </Box>
+                </Flex>
+              </Box>
+            </Flex>
+
+            <Text mt="10">{review.content}</Text>
+            <VoteOnReview id={review.id} review={review} />
+            <Button
+              colorScheme={scheme}
+              variant="link"
+              onClick={onToggle}
+              my="4"
+            >
+              {review.comments.length === 0
+                ? ""
+                : `${review.comments.length} comments`}
+            </Button>
+            <Collapse in={isOpen} animateOpacity>
+              <CommentList on={review} />
+            </Collapse>
             <Box>
-              <Heading as="h2">{review.title}</Heading>
-
-              <Text>
-                by{" "}
-                <Link
-                  as={RouterLink}
-                  color={link}
-                  to={`/profile/${review.authorID}`}
-                >
-                  {review.firstName} {review.lastName}
-                </Link>{" "}
-                | {review.date} | {review.comments.length} comments
-              </Text>
-            </Box>
-
-            <Box textAlign={{ base: "start", lg: "end" }}>
-              <Heading as="h2" fontSize="xl">
-                Review #{review.id}
-              </Heading>
-              <Flex alignItems="center">
-                <Text>Blockchain Informations</Text>
-                <Box>
-                  <Popover placement="top-start">
-                    <PopoverTrigger>
-                      <IconButton
-                        variant="Link"
-                        color={link}
-                        icon={<InfoIcon />}
-                      />
-                    </PopoverTrigger>
-                    <PopoverContent w="100%" textAlign="start" p="2">
-                      <PopoverHeader fontWeight="semibold">
-                        Blockchain Informations
-                      </PopoverHeader>
-                      <PopoverArrow />
-                      <PopoverCloseButton />
-                      <PopoverBody>
-                        <Text>
-                          Address of author: {review.author}{" "}
-                          <Link
-                            color={link}
-                            isExternal
-                            href={`https://rinkeby.etherscan.io/address/${review.author}`}
-                          >
-                            (Etherscan)
-                          </Link>{" "}
-                        </Text>
-                        <Text>
-                          Mined in block n° {review.blockNumber}{" "}
-                          <Link
-                            color={link}
-                            isExternal
-                            href={`https://rinkeby.etherscan.io/txs?block=${review.blockNumber}`}
-                          >
-                            (Etherscan)
-                          </Link>{" "}
-                        </Text>
-
-                        <Text>
-                          Transaction hash: {review.txHash}{" "}
-                          <Link
-                            color={link}
-                            isExternal
-                            href={`https://rinkeby.etherscan.io/tx/${review.txHash}`}
-                          >
-                            (Etherscan)
-                          </Link>
-                        </Text>
-                      </PopoverBody>
-                    </PopoverContent>
-                  </Popover>
-                </Box>
-              </Flex>
-            </Box>
-          </Flex>
-
-          <Text mt="10">{review.content}</Text>
-          <VoteOnReview id={review.id} review={review} />
-          <Button colorScheme={scheme} variant="link" onClick={onToggle} my="4">
-            {review.comments.length === 0
-              ? ""
-              : `${review.comments.length} comments`}
-          </Button>
-          <Collapse in={isOpen} animateOpacity>
-            <CommentList on={review} />
-          </Collapse>
-          <Box>
-            {owner !== governance.address ? (
-              isOwner ? (
-                <Button
-                  onClick={() => banPost(review.id)}
-                  isLoading={
-                    status.startsWith("Waiting") || status.startsWith("Pending")
-                  }
-                  loadingText={status}
-                  disabled={
-                    status.startsWith("Waiting") || status.startsWith("Pending")
-                  }
-                >
-                  Ban
-                </Button>
-              ) : (
-                ""
-              )
-            ) : (
-              <>
-                <Button
-                  colorScheme="red"
-                  variant="outline"
-                  onClick={() => voteToBanReview(review.id)}
-                  isLoading={
-                    status.startsWith("Waiting") || status.startsWith("Pending")
-                  }
-                  loadingText={status}
-                  disabled={
-                    status.startsWith("Waiting") || status.startsWith("Pending")
-                  }
-                >
-                  Vote to ban this review
-                </Button>
-                {banVote ? (
-                  <CircularProgress ms="4" value={banVote} max="5" color="red">
-                    <CircularProgressLabel>{banVote}/5</CircularProgressLabel>
-                  </CircularProgress>
+              {owner !== governance.address ? (
+                isOwner ? (
+                  <Button
+                    onClick={() => banPost(review.id)}
+                    isLoading={
+                      status.startsWith("Waiting") ||
+                      status.startsWith("Pending")
+                    }
+                    loadingText={status}
+                    disabled={
+                      status.startsWith("Waiting") ||
+                      status.startsWith("Pending")
+                    }
+                  >
+                    Ban
+                  </Button>
                 ) : (
                   ""
-                )}
-              </>
-            )}
+                )
+              ) : (
+                <>
+                  <Button
+                    colorScheme="red"
+                    variant="outline"
+                    onClick={() => voteToBanReview(review.id)}
+                    isLoading={
+                      status.startsWith("Waiting") ||
+                      status.startsWith("Pending")
+                    }
+                    loadingText={status}
+                    disabled={
+                      status.startsWith("Waiting") ||
+                      status.startsWith("Pending")
+                    }
+                  >
+                    Vote to ban this review
+                  </Button>
+                  {banVote ? (
+                    <CircularProgress
+                      ms="4"
+                      value={banVote}
+                      max="5"
+                      color="red"
+                    >
+                      <CircularProgressLabel>{banVote}/5</CircularProgressLabel>
+                    </CircularProgress>
+                  ) : (
+                    ""
+                  )}
+                </>
+              )}
 
-            <Text
-              mt="4"
-              fontSize="sm"
-              color="gray.500"
-              textAlign="end"
-              fontStyle="uppercase"
-            >
-              Review n°{review.id}{" "}
-            </Text>
-            <SendComment targetAddress={reviews.address} id={review.id} />
-          </Box>
-          <Divider my="2" borderColor="gray.500" border="3px" mt="2" />
-        </>
+              <Text
+                mt="4"
+                fontSize="sm"
+                color="gray.500"
+                textAlign="end"
+                fontStyle="uppercase"
+              >
+                Review n°{review.id}{" "}
+              </Text>
+              <SendComment targetAddress={reviews.address} id={review.id} />
+            </Box>
+            <Divider my="2" borderColor="gray.500" border="3px" mt="2" />
+          </>
+        )
       ) : (
         <Skeleton height="200px" />
       )}

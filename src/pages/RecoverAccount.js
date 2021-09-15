@@ -3,32 +3,27 @@ import {
   Heading,
   Container,
   useColorModeValue,
-  FormControl,
   FormLabel,
-  Input,
+  Text,
   Button,
   RadioGroup,
-  Radio,
+  Radio
 } from "@chakra-ui/react"
-import { ethers } from "ethers"
 import { useState } from "react"
+import { useGovernanceContract } from "../hooks/useGovernanceContract"
 import { useUsersContract } from "../hooks/useUsersContract"
 import { useCall } from "../web3hook/useCall"
 
 const RecoverAccount = () => {
   const bg = useColorModeValue("white", "gray.800")
-  const [users, , userList] = useUsersContract()
+  const { userList } = useUsersContract()
+  const { governance } = useGovernanceContract()
   const [status, contractCall] = useCall()
 
-  const [password, setPassword] = useState("")
-  const [userID, setUserID] = useState()
+  const [userID, setUserID] = useState(0)
 
   async function forgotWallet() {
-    await contractCall(users, "forgotWallet", [
-      ethers.utils.id(password),
-      userID,
-    ])
-    setPassword("")
+    await contractCall(governance, "askToRecoverAccount", [userID])
   }
 
   return (
@@ -44,36 +39,32 @@ const RecoverAccount = () => {
                 flexDirection="column"
                 mb="4"
               >
-                <FormLabel>Profile to recover</FormLabel>
+                <FormLabel htmlFor="choice">Profile to recover</FormLabel>
                 {userList.map((user) => {
                   return (
                     <Radio
+                      id="choice"
                       onClick={() => setUserID(user.id)}
                       value={user.id}
                       key={user.id}
                       my="4"
                     >
-                      {user.firstName} {user.lastName}{" "}
+                      {user.id}. {user.firstName} {user.lastName}{" "}
                     </Radio>
                   )
                 })}
               </RadioGroup>
-              <FormControl mb="4">
-                <FormLabel>Password</FormLabel>
-                <Input
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="************"
-                />
-              </FormControl>
+              <Text>You will ask to recover the account n°{userID}</Text>
               <Button
+                colorScheme="colorMain"
                 isLoading={
                   status.startsWith("Waiting") || status.startsWith("Pending")
                 }
                 loadingText={status}
                 disabled={
-                  !password.length ||
                   status.startsWith("Waiting") ||
-                  status.startsWith("Pending")
+                  status.startsWith("Pending") ||
+                  userID === 0
                 }
                 onClick={forgotWallet}
               >

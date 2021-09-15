@@ -34,7 +34,10 @@ const User = ({ user }) => {
     updateVote()
     governance?.on("UserVoted", updateVote)
 
-    return () => governance?.off("UserVoted", updateVote)
+    return () => {
+      setVote({ accept: 0, ban: 0 })
+      governance?.off("UserVoted", updateVote)
+    }
   }, [governance, user.id])
 
   // contract users
@@ -64,13 +67,13 @@ const User = ({ user }) => {
       mb="5"
       as={LinkBox}
       alignItems={{ base: "space-around", lg: "center" }}
-      justifyContent={"space-around"}
+      justifyContent={{ base: "center", lg: "space-between" }}
       _hover={{ backgroundColor: txt }}
       transition="0.3s"
       bg={bgUser}
       direction={{ base: "column", lg: "row" }}
     >
-      <Text w="7%" fontSize="3xl">
+      <Text w="11%" fontSize="3xl">
         #{user.id}
       </Text>
       <Flex w="25%" flexDirection="column">
@@ -106,37 +109,41 @@ const User = ({ user }) => {
 
       {owner !== governance?.address ? (
         isOwner ? (
-          <Button
-            onClick={() => banUser(user.id)}
-            isLoading={
-              status.startsWith("Waiting") || status.startsWith("Pending")
-            }
-            loadingText={status}
-            disabled={
-              user.status === "Not approved" ||
-              status.startsWith("Waiting") ||
-              status.startsWith("Pending")
-            }
-            colorScheme={txt}
-          >
-            Ban
-          </Button>
+          user.status === "Approved" ? (
+            <Button
+              onClick={() => banUser(user.id)}
+              isLoading={
+                status.startsWith("Waiting") || status.startsWith("Pending")
+              }
+              loadingText={status}
+              disabled={
+                user.status === "Not approved" ||
+                status.startsWith("Waiting") ||
+                status.startsWith("Pending")
+              }
+              colorScheme={txt}
+            >
+              Ban
+            </Button>
+          ) : (
+            <Button
+              onClick={() => acceptUser(user.id)}
+              isLoading={
+                status.startsWith("Waiting") || status.startsWith("Pending")
+              }
+              loadingText={status}
+              disabled={
+                user.status === "Not approved" ||
+                status.startsWith("Waiting") ||
+                status.startsWith("Pending")
+              }
+              colorScheme={txt}
+            >
+              Accept
+            </Button>
+          )
         ) : (
-          <Button
-            onClick={() => acceptUser(user.id)}
-            isLoading={
-              status.startsWith("Waiting") || status.startsWith("Pending")
-            }
-            loadingText={status}
-            disabled={
-              user.status === "Not approved" ||
-              status.startsWith("Waiting") ||
-              status.startsWith("Pending")
-            }
-            colorScheme={txt}
-          >
-            Accept
-          </Button>
+          ""
         )
       ) : user.status === "Approved" ? (
         <Flex alignItems="center" flexDirection="row">

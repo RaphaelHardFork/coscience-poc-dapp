@@ -165,6 +165,14 @@ const AccountForm = () => {
               Register
             </Button>
           </Box>
+          <Heading my="10" textAlign="center" mb="2">
+            Or recover your account
+          </Heading>
+          <Box mx="auto" maxW="50%" display="flex" flexDirection="column">
+            <Button my="4" as={Link} to="/recover" colorScheme="colorSecond">
+              Select an account to recover
+            </Button>
+          </Box>
         </SlideFade>
       </Box>
     </>

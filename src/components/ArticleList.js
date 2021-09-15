@@ -44,7 +44,39 @@ const ArticleList = ({ articleList }) => {
         mb="10"
       >
         {articleList.map((article) => {
-          return (
+          return article.contentBanned ? (
+            <Box
+              borderRadius="7"
+              boxShadow="lg"
+              key={article.id}
+              p="5"
+              _hover={{ border: "2px", borderColor: hover }}
+              transition="0.3s"
+              bg={bgError}
+              border="2px"
+              borderColor={border}
+            >
+              <Flex justifyContent="space-between">
+                <Text
+                  as="span"
+                  fontSize="xs"
+                  textTransform="uppercase"
+                  color="gray"
+                >
+                  Article n°{article.id}
+                </Text>
+                <Text
+                  as="span"
+                  fontSize="xs"
+                  textTransform="uppercase"
+                  color="gray"
+                >
+                  {article.date}
+                </Text>
+              </Flex>
+              <Heading mt="10">Article Banned</Heading>
+            </Box>
+          ) : (
             <Box
               borderRadius="7"
               boxShadow="lg"

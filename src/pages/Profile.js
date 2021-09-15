@@ -4,7 +4,7 @@ import {
   Box,
   useColorModeValue,
   Flex,
-  Skeleton,
+  Skeleton
 } from "@chakra-ui/react"
 import { useState } from "react"
 import { useEffect } from "react"
@@ -35,6 +35,8 @@ const Profile = () => {
       }
       userData()
     }
+
+    return () => setUser()
   }, [id, getUserData, users, readIPFS])
 
   const bg = useColorModeValue("white", "gray.800")
