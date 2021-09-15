@@ -1,29 +1,34 @@
-import React, { useState } from "react"
+import React, { useState } from 'react'
 import {
   Container,
   Heading,
   Button,
   Text,
-  Link,
   NumberInputField,
   NumberInputStepper,
   NumberIncrementStepper,
   NumberInput,
   NumberDecrementStepper,
   Slider,
+  Flex,
+  Box,
+  Icon,
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
-  useColorModeValue
-} from "@chakra-ui/react"
-import { ethers } from "ethers"
-import { useWeb3 } from "../web3hook/useWeb3"
+  useColorModeValue,
+  HStack,
+  SlideFade
+} from '@chakra-ui/react'
+import { ethers } from 'ethers'
+import { FaEthereum } from 'react-icons/fa'
+import { useWeb3 } from '../web3hook/useWeb3'
 
 const About = () => {
   const { state } = useWeb3()
   const { providerType, providerSrc, account, networkName } = state
-  const scheme = useColorModeValue("colorMain", "colorSecond")
-  const bg = useColorModeValue("white", "grayBlue.900")
+  const scheme = useColorModeValue('colorMain', 'colorSecond')
+  const bg = useColorModeValue('white', 'grayBlue.900')
 
   const [amount, setAmount] = useState(0)
   const handleChange = (value) => setAmount(value)
@@ -34,20 +39,20 @@ const About = () => {
 
   async function donate() {
     try {
-      setStatus("Pending")
+      setStatus('Pending')
       const response = await state.signer.sendTransaction({
         from: state.account,
-        to: "0x5F6922217C1CFCC7ebC457585c76841b73b179A3",
+        to: '0x5F6922217C1CFCC7ebC457585c76841b73b179A3',
         value: ethers.utils.parseEther(amount.toString()) // 2441406250
       })
       await response.wait()
-      setStatus("Success")
+      setStatus('Success')
     } catch (e) {
       console.log(e.code)
-      if (e.code === "INSUFFICIENT_FUNDS") {
-        setStatus("INSUFFICIENT_FUNDS")
+      if (e.code === 'INSUFFICIENT_FUNDS') {
+        setStatus('INSUFFICIENT_FUNDS')
       } else {
-        setStatus("Failed")
+        setStatus('Failed')
       }
     }
   }
@@ -55,89 +60,129 @@ const About = () => {
   return (
     <>
       <Container
-        m="auto"
-        shadow="lg"
-        maxW="container.md"
+        m='auto'
+        shadow='lg'
+        maxW='container.md'
         bg={bg}
-        p="10"
-        borderRadius="20"
+        p='10'
+        borderRadius='20'
       >
-        <Heading mb="4" textAlign="center">
-          About CoScience
-        </Heading>
-        <Link
-          isExternal
-          href="https://github.com/RaphaelHardFork/coscience-poc-dapp/tree/version-0.1"
-          variant="link"
-          color="main"
-          fontWeight="bold"
-          my="4"
+        <SlideFade
+          threshold='0.1'
+          delay={{ enter: 0.1 }}
+          transition={{
+            enter: { duration: 0.7 }
+          }}
+          offsetY='-100px'
+          offsetX='0px'
+          in
         >
-          Github
-        </Link>
-        <Text my="2">Support CoScience</Text>
-        <NumberInput
-          maxW="100px"
-          mr="2rem"
-          value={amount}
-          onChange={handleChange}
-          step={0.001}
-          max={Number(ethers.utils.formatEther(state.balance))}
-          min={0}
-          mb="2"
-        >
-          <NumberInputField />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
-        </NumberInput>
-        <Slider
-          flex="1"
-          focusThumbOnChange={false}
-          value={amount}
-          onChange={handleChange}
-          step={0.001}
-          max={Number(ethers.utils.formatEther(state.balance))}
-          min={0}
-        >
-          <SliderTrack>
-            <SliderFilledTrack />
-          </SliderTrack>
-          <SliderThumb fontSize="sm" boxSize="20px" children={amount} />
-        </Slider>
-        <Button
-          onClick={donate}
-          display="flex"
-          mx="auto"
-          size="lg"
-          colorScheme={scheme}
-        >
-          Donate
-        </Button>
-        <Text my="2">{status ? `Status: ${status}` : ""}</Text>
+          <Heading mb='4' textAlign='center'>
+            About CoScience
+          </Heading>
+
+          <Text my='2'>Support CoScience</Text>
+          <Flex mb='3' alignItems='center'>
+            <NumberInput
+              maxW='100px'
+              value={amount}
+              onChange={handleChange}
+              step={0.001}
+              max={Number(ethers.utils.formatEther(state.balance))}
+              min={0}
+              me='2'
+            >
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+            <Icon h='2rem' w='2rem' as={FaEthereum} />
+            <Text me='4' fontSize='xl'>
+              ETH
+            </Text>
+          </Flex>
+          <Slider
+            flex='1'
+            focusThumbOnChange={false}
+            value={amount}
+            onChange={handleChange}
+            step={0.001}
+            max={Number(ethers.utils.formatEther(state.balance))}
+            min={0}
+          >
+            <SliderTrack>
+              <SliderFilledTrack />
+            </SliderTrack>
+            <SliderThumb fontSize='sm' boxSize='20px' children={amount} />
+          </Slider>
+          <Button
+            onClick={donate}
+            display='flex'
+            mx='auto'
+            size='lg'
+            colorScheme={scheme}
+          >
+            Donate
+          </Button>
+          <Text my='2'>{status ? `Status: ${status}` : ''}</Text>
+        </SlideFade>
       </Container>
+
       <Container
-        m="auto"
-        shadow="lg"
-        maxW="container.md"
+        m='auto'
+        shadow='lg'
+        maxW='container.md'
         bg={bg}
-        p="10"
-        borderRadius="20"
+        p='10'
+        borderRadius='20'
       >
-        <Heading>Connection to blockchain</Heading>
-        <Text fontSize="lg" mt="4">
-          Provider: {providerType}
-        </Text>
-        <Text fontSize="lg" mt="4">
-          Network: {networkName}
-        </Text>
-        <Text fontSize="lg" mt="4">
-          Wallet: {providerSrc}
-        </Text>
-        <Text fontSize="lg" mt="4">
-          Your address: {account}
-        </Text>
+        <SlideFade
+          threshold='0.1'
+          delay={{ enter: 0.1 }}
+          transition={{
+            enter: { duration: 0.7 }
+          }}
+          offsetY='100px'
+          offsetX='0px'
+          in
+        >
+          <Heading textAlign='center'>Connection to blockchain</Heading>
+          <Flex mt='5' alignItems='center'>
+            <Text me='4' fontSize='lg'>
+              Provider:
+            </Text>
+            <Box p='2' borderRadius='5' bg='green.200' shadow='md'>
+              {providerType}
+            </Box>
+          </Flex>
+          <Flex mt='5' alignItems='center'>
+            <Text fontSize='lg' me='4'>
+              Network:
+            </Text>
+            <Box p='2' borderRadius='5' bg='orange.200' shadow='md'>
+              {networkName}
+            </Box>
+          </Flex>
+          <Flex mt='5' alignItems='center'>
+            <Text fontSize='lg' me='4'>
+              Wallet:
+            </Text>
+            <Box p='2' borderRadius='5' bg='orange.400' shadow='md'>
+              {providerSrc}
+            </Box>
+          </Flex>
+
+          <Flex mt='5' alignItems='center'>
+            <Text fontSize='lg' me='4'>
+              Your address:
+            </Text>
+            <Box p='2' borderRadius='5' bg='blue.200' shadow='md'>
+              {account}
+            </Box>
+          </Flex>
+        </SlideFade>
       </Container>
     </>
   )

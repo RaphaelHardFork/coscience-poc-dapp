@@ -1,14 +1,47 @@
-import React from "react"
-import { Box, Container } from "@chakra-ui/react"
+import React from 'react'
+import {
+  Box,
+  Container,
+  Image,
+  Heading,
+  Button,
+  useColorModeValue
+} from '@chakra-ui/react'
+
+import { Link } from 'react-router-dom'
 
 const Page404 = () => {
+  // colorValue
+  const scheme = useColorModeValue('colorMain', 'colorSecond')
+  const bg = useColorModeValue('white', 'grayBlue.900')
+  const bgTitle = useColorModeValue('grayOrange.100', 'grayBlue.800')
   return (
     <>
-      <Box p="10" m="auto">
-        <Container maxW="container.lg">
-          <Box shadow="lg" borderRadius="50" py="10">
-            Page404
-          </Box>
+      <Box p='10' m='auto'>
+        <Container
+          d='flex'
+          flexDirection='column'
+          alignItems='center'
+          maxW='container.2xl'
+          p='10'
+          bg={bg}
+          borderRadius='20'
+        >
+          <Heading bg={bgTitle} p='5' borderRadius='10'>
+            PAGE NOT FOUND
+          </Heading>
+          <Image
+            mx='auto'
+            w='350px'
+            h='350px'
+            animation='rotation 2s'
+            transform='rotate(360deg)'
+            src='https://ipfs.io/ipfs/QmXRXx7tgHgFoaceDZZfpcoKMMkwWcsmLr5MSveGgiFEZx'
+          />
+
+          <Button as={Link} to='/' colorScheme={scheme}>
+            GO TO HOME PAGE
+          </Button>
         </Container>
       </Box>
     </>

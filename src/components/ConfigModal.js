@@ -14,23 +14,13 @@ const ConfigModal = () => {
 
   const back = useColorModeValue('white', 'black')
 
-  // switch network: will goes soon in a hook
-  /*
-  const switchNetwork = async () => {
-    try {
-      await state.ethersProvider.provider.request({
-        method: "wallet_switchEthereumChain",
-        params: [{ chainId: "0x4" }],
-      })
-    } catch (e) {
-      console.log(e)
-    }
-  }
-  */
-
   return (
     <>
-      {networkName === 'rinkeby' ? (
+      {networkName === 'rinkeby' ||
+      networkName === 'kovan' ||
+      networkName === 'goerli' ||
+      networkName === 'maticmum' ||
+      networkName === 'bnbt' ? (
         ''
       ) : (
         <>
@@ -79,17 +69,56 @@ const ConfigModal = () => {
                     fontSize='4xl'
                     my='4'
                   >
-                    Please switch to Rinkeby network
+                    Please switch to one of these network
                   </Text>
-                  <Button
-                    onClick={() => switchNetwork('0x4', 'rinkeby')}
-                    colorScheme='yellow'
-                    display='flex'
-                    mx='auto'
-                    my='4'
-                  >
-                    Switch to Rinkeby
-                  </Button>
+
+                  <Flex>
+                    <Button
+                      onClick={() => switchNetwork('0x4', 'rinkeby')}
+                      colorScheme='yellow'
+                      display='flex'
+                      mx='1'
+                      my='4'
+                    >
+                      Switch to Rinkeby
+                    </Button>
+                    <Button
+                      onClick={() => switchNetwork('0x2a', 'kovan')}
+                      colorScheme='purple'
+                      display='flex'
+                      mx='1'
+                      my='4'
+                    >
+                      Switch to Kovan
+                    </Button>
+                    <Button
+                      onClick={() => switchNetwork('0x5', 'goerli')}
+                      colorScheme='blue'
+                      display='flex'
+                      mx='1'
+                      my='4'
+                    >
+                      Switch to Goerli
+                    </Button>
+                    <Button
+                      onClick={() => switchNetwork('0x61', 'bnbt')}
+                      colorScheme='orange'
+                      display='flex'
+                      mx='1'
+                      my='4'
+                    >
+                      Switch to BSC Testnet
+                    </Button>
+                    <Button
+                      onClick={() => switchNetwork('0x13881', 'maticmum')}
+                      colorScheme='pink'
+                      display='flex'
+                      mx='1'
+                      my='4'
+                    >
+                      Switch to Polygon Mumbai
+                    </Button>
+                  </Flex>
                 </>
               </Flex>
             </Box>
