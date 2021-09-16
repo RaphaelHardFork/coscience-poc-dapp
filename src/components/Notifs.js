@@ -1,67 +1,69 @@
-import { Box, Flex, Link, Text } from "@chakra-ui/layout"
-import { Link as RouterLink } from "react-router-dom"
-import { useEffect, useState } from "react"
-import { useIPFS } from "../hooks/useIPFS"
-import { useUsersContract } from "../hooks/useUsersContract"
-import { CircularProgress, CircularProgressLabel } from "@chakra-ui/progress"
+import { Box, Flex, Link, Text, Icon } from '@chakra-ui/react'
+import { Link as RouterLink } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useIPFS } from '../hooks/useIPFS'
+import { useUsersContract } from '../hooks/useUsersContract'
+import { CircularProgress, CircularProgressLabel } from '@chakra-ui/progress'
+import { FaUserSlash, FaUserCheck, FaUserClock, FaBan } from 'react-icons/fa'
+import Loading from '../components/Loading'
 
 const Notifs = ({ notif, onClose }) => {
   const { users } = useUsersContract()
   const [, readIPFS] = useIPFS()
 
   const [notifInfo, setNotifInfo] = useState({
-    link: "/",
-    bg: "gray",
-    voterName: "IPFS problem",
-    userName: "",
-    itemDescription: "",
+    link: '/',
+    bg: 'gray',
+    voterName: 'IPFS problem',
+    userName: '',
+    itemDescription: '',
     date: 0
   })
 
   // get IPFS information
   useEffect(() => {
     ;(async () => {
-      let bg = "gray"
-      let link = "/"
-      let userName = ""
-      let itemDescription = ""
+      let bg = 'gray'
+      let link = '/'
+      let userName = ''
+      let itemDescription = ''
       let date = new Date(notif.timestamp * 1000)
       date = date.toLocaleString()
 
       // who voted
       const voter = await users.userInfo(notif.who)
       const names = await readIPFS(voter.nameCID)
-      let voterName = names.firstName + " " + names.lastName
+      let voterName = names.firstName + ' ' + names.lastName
 
-      if (!notif.notifType.startsWith("Ban")) {
+      if (!notif.notifType.startsWith('Ban')) {
         // user related
         const struct = await users.userInfo(notif.itemID)
         const result = await readIPFS(struct.nameCID)
-        userName = result.firstName + " " + result.lastName
+        userName = result.firstName + ' ' + result.lastName
       } else {
         // ban item
       }
 
       switch (notif.notifType) {
-        case "User registration pending":
-          bg = "yellow.100"
+        case 'User registration pending':
+          bg = 'yellow.100'
           link = `/profile/${notif.who}`
-          voterName = ""
+          voterName = ''
           setNotifInfo({ userName, bg, link, voterName, date })
           break
-        case "Vote for ban an user":
-          bg = "orange.100"
+        case 'Vote for ban an user':
+          bg = 'red.300'
           link = `/profile/${notif.who}`
           setNotifInfo({ userName, bg, link, voterName, date })
           break
-        case "Vote for accept an user":
-          bg = "green.100"
+        case 'Vote for accept an user':
+          bg = 'green.100'
           link = `/profile/${notif.who}`
           setNotifInfo({ userName, bg, link, voterName, date })
           break
 
-        case "Ban an article":
-          bg = "red.100"
+        case 'Ban an article':
+          bg = 'red.100'
           link = `/article/${notif.itemID}`
           itemDescription = `Article n°${notif.itemID}`
           setNotifInfo((a) => {
@@ -69,8 +71,8 @@ const Notifs = ({ notif, onClose }) => {
           })
           break
 
-        case "Ban a review":
-          bg = "red.200"
+        case 'Ban a review':
+          bg = 'red.200'
           link = `/article/${notif.itemID}`
           itemDescription = `Review n°${notif.itemID}`
           setNotifInfo((a) => {
@@ -78,8 +80,8 @@ const Notifs = ({ notif, onClose }) => {
           })
           return
 
-        case "Ban a comment":
-          bg = "orange.200"
+        case 'Ban a comment':
+          bg = 'orange.200'
           link = `/article/${notif.itemID}`
           itemDescription = `Comment n°${notif.itemID}`
           setNotifInfo((a) => {
@@ -92,45 +94,89 @@ const Notifs = ({ notif, onClose }) => {
     })()
     return () => {
       setNotifInfo({
-        link: "/",
-        bg: "gray",
-        voterName: "IPFS problem",
-        userName: "",
-        itemDescription: ""
+        link: '/',
+        bg: 'gray',
+        voterName: 'IPFS problem',
+        userName: '',
+        itemDescription: ''
       })
     }
   }, [readIPFS, users, notif])
 
+  // colorValue
+  // const scheme = useColorModeValue('colorMain', 'colorSecond')
+  // const txt = useColorModeValue('grayBlue.900', 'white')
+  // const bgTitle = useColorModeValue('grayOrange.800', 'grayBlue.800')
+
   return (
-    <Box mb="4" borderRadius="5" p="2" bg={notifInfo.bg}>
-      <Flex justifyContent="space-between">
-        <Flex flexDirection="column">
-          <Text fontWeight="bold" fontSize="lg">
+    <Box
+      mb='4'
+      borderRadius='5'
+      p='5'
+      bg={notifInfo.bg}
+      color='grayBlue.800'
+      boxShadow='lg'
+    >
+      <Flex justifyContent='space-between'>
+        <Flex flexDirection='column' flex='1'>
+          <Text fontWeight='bold' fontSize='lg'>
             {notif.notifType}
-          </Text>
-          <Text as="span" fontSize="xs" textTransform="uppercase" color="gray">
-            {notifInfo.date}
           </Text>
           <Text>
             {notifInfo.voterName
               ? `Vote emitted by ${notifInfo.voterName}`
-              : ""}
+              : ''}
           </Text>
-          <Link onClick={onClose} as={RouterLink} to={notifInfo.link}>
+          <Link
+            onClick={onClose}
+            as={RouterLink}
+            to={notifInfo.link}
+            aria-label='notification subject redirection'
+          >
             {notifInfo.userName
               ? notifInfo.userName
               : notifInfo.itemDescription}
           </Link>
+          <Text as='span' fontSize='xs' textTransform='uppercase' color='gray'>
+            {notifInfo.date}
+          </Text>
         </Flex>
-        <CircularProgress
-          me="4"
-          value={notif.progression}
-          max="5"
-          color="black"
-          my="auto"
-        >
-          <CircularProgressLabel>{notif.progression}/5</CircularProgressLabel>
-        </CircularProgress>
+        <Flex flexDirection='row' alignItems='center'>
+          <Box>
+            {notif.notifType === 'User registration pending' ? (
+              <Icon as={FaUserClock} w='8' h='8' />
+            ) : (
+              ''
+            )}
+            {notif.notifType === 'Vote for ban an user' ? (
+              <Icon as={FaUserSlash} w='8' h='8' />
+            ) : (
+              ''
+            )}
+            {notif.notifType === 'Ban an article' ||
+            notif.notifType === 'Ban a review' ||
+            notif.notifType === 'Ban a comment' ? (
+              <Icon as={FaBan} w='8' h='8' />
+            ) : (
+              ''
+            )}
+            {notif.notifType === 'Vote for accept an user' ? (
+              <Icon as={FaUserCheck} w='8' h='8' />
+            ) : (
+              ''
+            )}
+          </Box>
+          <CircularProgress
+            me='4'
+            value={notif.progression}
+            max='5'
+            color='black'
+            my='auto'
+            ms='5'
+          >
+            <CircularProgressLabel>{notif.progression}/5</CircularProgressLabel>
+          </CircularProgress>
+        </Flex>
       </Flex>
     </Box>
   )

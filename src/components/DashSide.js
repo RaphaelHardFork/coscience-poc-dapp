@@ -34,19 +34,19 @@ import {
   useColorModeValue,
   SlideFade,
   Tag
-} from "@chakra-ui/react"
-import { useState } from "react"
+} from '@chakra-ui/react'
+import { useState } from 'react'
 import {
   EmailIcon,
   ChatIcon,
   InfoIcon,
   LinkIcon,
   SettingsIcon
-} from "@chakra-ui/icons"
-import { useUsersContract } from "../hooks/useUsersContract"
-import UserSetting from "./UserSetting"
-import mailgo from "mailgo"
-import React, { useEffect } from "react"
+} from '@chakra-ui/icons'
+import { useUsersContract } from '../hooks/useUsersContract'
+import UserSetting from './UserSetting'
+import mailgo from 'mailgo'
+import React, { useEffect } from 'react'
 
 const DashSide = ({ user }) => {
   const { userData } = useUsersContract()
@@ -64,94 +64,104 @@ const DashSide = ({ user }) => {
 
   //                     colorValue
 
-  const button = useColorModeValue("colorMain", "colorSecond")
-  const link = useColorModeValue("main", "second")
-  const bg = useColorModeValue("grayOrange.200", "grayBlue.700")
+  const button = useColorModeValue('colorMain', 'colorSecond')
+  const link = useColorModeValue('main', 'second')
+  const bg = useColorModeValue('grayOrange.200', 'grayBlue.700')
 
   return (
     <>
-      <Box p="10" w={{ base: "full", lg: "25vw" }} bg={bg}>
+      <Box p='10' w={{ base: 'full', lg: '25vw' }} bg={bg}>
         <SlideFade
-          threshold="0.1"
+          threshold='0.1'
           delay={{ enter: 0.1 }}
           transition={{
             enter: { duration: 0.7 }
           }}
-          offsetY="0px"
-          offsetX="-100px"
+          offsetY='0px'
+          offsetX='-100px'
           in
         >
-          <Flex flexDirection="column">
-            <Flex justifyContent="space-between" mb="4">
+          <Flex flexDirection='column'>
+            <Flex justifyContent='space-between' mb='4'>
               <Avatar
-                me="4"
-                size="2xl"
-                name="Segun Adebayo"
-                src="https://bit.ly/sage-adebayo"
-              />{" "}
-              <Flex justifyContent="space-between" flexDirection="column">
+                me='4'
+                size='2xl'
+                name='Segun Adebayo'
+                src='https://bit.ly/sage-adebayo'
+                alt='avatar'
+              />{' '}
+              <Flex justifyContent='space-between' flexDirection='column'>
                 <Badge
-                  borderRadius="full"
-                  shadow="lg"
-                  p="3"
+                  borderRadius='full'
+                  shadow='lg'
+                  p='3'
                   bg={
-                    user.status === "Pending"
-                      ? "orange.500"
-                      : user.status === "Approved"
-                      ? "green.400"
-                      : "red.400"
+                    user.status === 'Pending'
+                      ? 'orange.500'
+                      : user.status === 'Approved'
+                      ? 'green.400'
+                      : 'red.400'
                   }
+                  alt='status of user'
                 >
                   {user.status}
                 </Badge>
 
                 <Tag
-                  shadow="lg"
-                  borderRadius="full"
+                  shadow='lg'
+                  borderRadius='full'
                   colorScheme={button}
-                  p="3"
-                  fontWeight="bold"
+                  p='3'
+                  fontWeight='bold'
+                  alt='ID of user'
                 >
                   ID #{user.id}
                 </Tag>
               </Flex>
             </Flex>
-            <Flex alignItems="center" justifyContent="space-between">
-              <Heading my="4" as="h2">
-                {user.firstName} {user.lastName}{" "}
+            <Flex alignItems='center' justifyContent='space-between'>
+              <Heading my='4' as='h2'>
+                {user.firstName} {user.lastName}{' '}
               </Heading>
 
-              <Popover placement="top-start">
+              <Popover placement='top-start'>
                 <PopoverTrigger>
-                  <IconButton variant="Link" color={link} icon={<InfoIcon />} />
+                  <IconButton
+                    variant='Link'
+                    color={link}
+                    icon={<InfoIcon />}
+                    aria-label='info ipfs icon button'
+                  />
                 </PopoverTrigger>
-                <PopoverContent w="100%" textAlign="start" p="2">
-                  <PopoverHeader fontWeight="semibold">
+                <PopoverContent w='100%' textAlign='start' p='2'>
+                  <PopoverHeader fontWeight='semibold'>
                     IPFS Informations
                   </PopoverHeader>
                   <PopoverArrow />
                   <PopoverCloseButton />
                   <PopoverBody>
                     <Text>
-                      Profile:{" "}
+                      Profile:{' '}
                       <Link
                         color={link}
                         isExternal
                         href={`https://ipfs.io/ipfs/${user.profileCID}`}
+                        aria-label='ipfs redirection link'
                       >
                         ipfs.io
-                      </Link>{" "}
+                      </Link>{' '}
                       (gateway)
                     </Text>
                     <Text>
-                      Name:{" "}
+                      Name:{' '}
                       <Link
                         color={link}
                         isExternal
                         href={`https://ipfs.io/ipfs/${user.nameCID}`}
+                        aria-label='ipfs redirection link'
                       >
                         ipfs.io
-                      </Link>{" "}
+                      </Link>{' '}
                       (gateway)
                     </Text>
                   </PopoverBody>
@@ -161,22 +171,22 @@ const DashSide = ({ user }) => {
               {Number(user.id) === userData.id ? (
                 <IconButton
                   colorScheme={button}
-                  aria-label="Call Segun"
-                  size="lg"
+                  aria-label='setting button'
+                  size='lg'
                   icon={<SettingsIcon />}
                   onClick={setIsOpenSetting}
-                  borderRadius="100"
+                  borderRadius='100'
                 />
               ) : (
-                ""
+                ''
               )}
             </Flex>
             {/* SETTINGS MODAL */}
-            <Modal size="lg" isOpen={isOpenSetting} onClose={onCloseSetting}>
+            <Modal size='lg' isOpen={isOpenSetting} onClose={onCloseSetting}>
               <ModalOverlay />
               <ModalContent>
                 <ModalHeader>Settings</ModalHeader>
-                <ModalCloseButton />
+                <ModalCloseButton aria-label='modal close button' />
                 <ModalBody pb={6}>
                   <UserSetting user={user} />
                 </ModalBody>
@@ -185,29 +195,33 @@ const DashSide = ({ user }) => {
 
             {/* USER PROFILE */}
 
-            <Flex my="4" alignItems="center">
-              <EmailIcon me="4" />
-              <Link href={`mailto:${user.email}`}>
+            <Flex my='4' alignItems='center'>
+              <EmailIcon me='4' alt='email icon' />
+              <Link
+                href={`mailto:${user.email}`}
+                aria-label='email redirection'
+              >
                 {user.email}
-                <LinkIcon mx="2px" />
+                <LinkIcon mx='2px' alt='link icon' />
               </Link>
             </Flex>
-            <Text my="2">Laboratory: {user.laboratory}</Text>
+            <Text my='2'>Laboratory: {user.laboratory}</Text>
 
-            <Text my="4" fontWeight="bold">
-              <ChatIcon /> Bio:
+            <Text my='4' fontWeight='bold'>
+              <ChatIcon alt='biography icon' /> Bio:
             </Text>
 
-            <Box borderRadius="5" bg={bg} w="100%" p={4}>
+            <Box borderRadius='5' bg={bg} w='100%' p={4}>
               <Text>{user.bio}</Text>
             </Box>
 
             <Button
-              my="6"
-              rounded={"full"}
+              my='6'
+              rounded={'full'}
               px={6}
               colorScheme={button}
               onClick={setIsOpen}
+              aria-label='wallet list button'
             >
               Wallet List
             </Button>
@@ -218,28 +232,29 @@ const DashSide = ({ user }) => {
                 <AlertDialogHeader>Here your Wallet List</AlertDialogHeader>
                 <AlertDialogCloseButton />
                 <AlertDialogBody>
-                  <UnorderedList listStyleType="none">
+                  <UnorderedList listStyleType='none'>
                     {user.walletList !== undefined
                       ? user.walletList.map((wallet) => {
                           return (
-                            <Flex key={wallet} as="li" mb={2}>
+                            <Flex key={wallet} as='li' mb={2}>
                               <Input
                                 onClick={(e) => setValue(e.target.value)}
                                 value={wallet}
                                 isReadOnly
-                                placeholder="test"
+                                placeholder='test'
                               />
                               <Button
                                 disabled={value !== wallet}
                                 onClick={onCopy}
                                 ml={2}
+                                aria-label='copy button'
                               >
-                                {hasCopied ? "Copied" : "Copy"}
+                                {hasCopied ? 'Copied' : 'Copy'}
                               </Button>
                             </Flex>
                           )
                         })
-                      : ""}
+                      : ''}
                   </UnorderedList>
                 </AlertDialogBody>
               </AlertDialogContent>

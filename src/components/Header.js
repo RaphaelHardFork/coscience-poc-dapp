@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect } from 'react'
 import {
   Box,
   Badge,
@@ -18,27 +18,27 @@ import {
   DrawerCloseButton,
   Text,
   Link
-} from "@chakra-ui/react"
-import { HamburgerIcon, MoonIcon, SunIcon, BellIcon } from "@chakra-ui/icons"
+} from '@chakra-ui/react'
+import { HamburgerIcon, MoonIcon, SunIcon, BellIcon } from '@chakra-ui/icons'
 
-import { useColorMode } from "@chakra-ui/react"
-import { Link as RouterLink } from "react-router-dom"
-import { useUsersContract } from "../hooks/useUsersContract"
-import HeaderLinks from "./HeaderLinks"
-import Notifs from "./Notifs"
-import { useGovernanceContract } from "../hooks/useGovernanceContract"
-import { useArticlesContract } from "../hooks/useArticlesContract"
-import { useReviewsContract } from "../hooks/useReviewsContract"
-import Loading from "./Loading"
+import { useColorMode } from '@chakra-ui/react'
+import { Link as RouterLink } from 'react-router-dom'
+import { useUsersContract } from '../hooks/useUsersContract'
+import HeaderLinks from './HeaderLinks'
+import Notifs from './Notifs'
+import { useGovernanceContract } from '../hooks/useGovernanceContract'
+import { useArticlesContract } from '../hooks/useArticlesContract'
+import { useReviewsContract } from '../hooks/useReviewsContract'
+import Loading from './Loading'
 
 // Pure functions
 const itemType = (address, articles, reviews) => {
   if (address === articles.address) {
-    return "Ban an article"
+    return 'Ban an article'
   } else if (address === reviews.address) {
-    return "Ban a review"
+    return 'Ban a review'
   } else {
-    return "Ban a comment"
+    return 'Ban a comment'
   }
 }
 
@@ -78,7 +78,7 @@ const Header = () => {
       const eventTab = []
 
       // Item events
-      const banItemEvents = await governance.queryFilter("Voted")
+      const banItemEvents = await governance.queryFilter('Voted')
       for (const event of banItemEvents) {
         const block = await event.getBlock()
         const notifType = itemType(
@@ -88,7 +88,7 @@ const Header = () => {
         )
         const nbOfVote = await voteProgression(
           governance,
-          "Voted",
+          'Voted',
           event.args.contractAddress,
           event.args.itemID.toNumber(),
           null
@@ -106,16 +106,16 @@ const Header = () => {
       }
 
       // user events
-      const userEvents = await governance.queryFilter("UserVoted")
+      const userEvents = await governance.queryFilter('UserVoted')
       for (const event of userEvents) {
         const block = await event.getBlock()
         const notifType =
           event.args.voteType === 0
-            ? "Vote for accept an user"
-            : "Vote for ban an user"
+            ? 'Vote for accept an user'
+            : 'Vote for ban an user'
         const nbOfVote = await voteProgression(
           governance,
-          "UserVoted",
+          'UserVoted',
           null,
           event.args.subjectUserID.toNumber(),
           null
@@ -133,7 +133,7 @@ const Header = () => {
       }
 
       // register event
-      const registerEvents = await users.queryFilter("Registered")
+      const registerEvents = await users.queryFilter('Registered')
       for (const event of registerEvents) {
         // check if id is approved
         const { status } = await users.userInfo(event.args.userID.toNumber())
@@ -143,13 +143,13 @@ const Header = () => {
         const block = await event.getBlock()
         const nbOfVote = await voteProgression(
           governance,
-          "UserVoted",
+          'UserVoted',
           null,
           event.args.userID.toNumber(),
           null
         )
         const obj = {
-          notifType: "User registration pending",
+          notifType: 'User registration pending',
           who: event.args.userID.toNumber(),
           itemID: event.args.userID.toNumber(),
           progression: nbOfVote.length,
@@ -166,18 +166,18 @@ const Header = () => {
     }
     if (governance && articles && reviews) {
       getNotifs()
-      governance.on("Voted", getNotifs)
-      governance.on("UserVoted", getNotifs)
-      users.on("Registered", getNotifs)
-      users.on("Approved", getNotifs)
+      governance.on('Voted', getNotifs)
+      governance.on('UserVoted', getNotifs)
+      users.on('Registered', getNotifs)
+      users.on('Approved', getNotifs)
     }
     return () => {
       // clean up
       setNotifs([])
-      governance?.off("Voted", getNotifs)
-      governance?.off("UserVoted", getNotifs)
-      users?.off("Registered", getNotifs)
-      users?.off("Approved", getNotifs)
+      governance?.off('Voted', getNotifs)
+      governance?.off('UserVoted', getNotifs)
+      users?.off('Registered', getNotifs)
+      users?.off('Approved', getNotifs)
     }
   }, [governance, articles, users, reviews])
 
@@ -186,32 +186,37 @@ const Header = () => {
     // count number of pending and recover initiated (and ban initiated)
     setCount(0)
     userList.forEach((el) => {
-      if (el.status === "Pending") {
+      if (el.status === 'Pending') {
         setCount((c) => c + 1) // update count
       }
     })
   }, [userList])
 
   //    Color Value
-  const bg = useColorModeValue("white", "grayBlue.900")
-  const co = useColorModeValue("main", "second")
-  const button = useColorModeValue("colorMain", "colorSecond")
+  const bg = useColorModeValue('white', 'grayBlue.900')
+  const co = useColorModeValue('main', 'second')
+  const button = useColorModeValue('colorMain', 'colorSecond')
 
   return (
     <>
       <Box
-        zIndex="400"
+        zIndex='400'
         bg={bg}
-        w="full"
+        w='full'
         px={{ base: 2, sm: 4 }}
         py={4}
-        shadow="md"
+        shadow='md'
       >
-        <Flex alignItems="center" justifyContent="space-between" mx="auto">
+        <Flex alignItems='center' justifyContent='space-between' mx='auto'>
           <Flex>
-            <Heading fontWeight="bold" fontFamily="title" as="h1" ml="2">
-              <Link _hover={{ textDecoration: "none" }} as={RouterLink} to="/">
-                <Text as="span" color={co}>
+            <Heading fontWeight='bold' fontFamily='title' as='h1' ml='2'>
+              <Link
+                _hover={{ textDecoration: 'none' }}
+                as={RouterLink}
+                to='/'
+                aria-label='coscience logo to Home'
+              >
+                <Text as='span' color={co}>
                   Co
                 </Text>
                 Science
@@ -219,43 +224,43 @@ const Header = () => {
             </Heading>
           </Flex>
 
-          <HStack display="flex" alignItems="center" spacing={1}>
+          <HStack display='flex' alignItems='center' spacing={1}>
             <HStack
               spacing={3}
               mr={1}
-              color="brand.500"
-              display={{ base: "none", lg: "inline-flex" }}
+              color='brand.500'
+              display={{ base: 'none', lg: 'inline-flex' }}
             >
               <HeaderLinks user={userData} />
             </HStack>
 
-            <Box display={{ base: "inline-flex", lg: "none" }} zIndex="sticky">
+            <Box display={{ base: 'inline-flex', lg: 'none' }} zIndex='sticky'>
               <IconButton
-                display={{ base: "flex", lg: "none" }}
-                aria-label="Open menu"
-                fontSize="20px"
-                color={useColorModeValue("gray.800", "inherit")}
-                variant="ghost"
+                display={{ base: 'flex', lg: 'none' }}
+                aria-label='Open menu'
+                fontSize='20px'
+                color={useColorModeValue('gray.800', 'inherit')}
+                variant='ghost'
                 icon={<HamburgerIcon />}
                 onClick={mobileNav.onOpen}
               />
 
               <VStack
-                pos="absolute"
+                pos='absolute'
                 top={0}
                 left={0}
                 right={0}
-                display={mobileNav.isOpen ? "flex" : "none"}
+                display={mobileNav.isOpen ? 'flex' : 'none'}
                 p={2}
                 pb={4}
                 m={2}
                 bg={bg}
                 spacing={3}
-                rounded="sm"
-                shadow="sm"
+                rounded='sm'
+                shadow='sm'
               >
                 <CloseButton
-                  aria-label="Close menu"
+                  aria-label='Close menu'
                   onClick={mobileNav.onClose}
                 />
 
@@ -268,61 +273,63 @@ const Header = () => {
             </Box>
             <HStack
               spacing={3}
-              display={mobileNav.isOpen ? "none" : "flex"}
-              alignItems="center"
+              display={mobileNav.isOpen ? 'none' : 'flex'}
+              alignItems='center'
             >
               <IconButton
-                variant="ghost"
-                size="sm"
+                variant='ghost'
+                size='sm'
                 onClick={toggleColorMode}
-                borderRadius="full"
+                borderRadius='full'
+                aria-label='change to darkmode'
               >
-                {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+                {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
               </IconButton>
 
-              <Box position="relative" display="inline-block">
+              <Box position='relative' display='inline-block'>
                 <IconButton
                   boxSize={6}
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  variant="outline"
+                  fill='none'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  viewBox='0 0 24 24'
+                  stroke='currentColor'
+                  variant='outline'
                   color={button}
-                  aria-label="Bell notification"
+                  aria-label='Bell notification'
                   icon={<BellIcon />}
                   onClick={onOpen}
-                  to="/list-of-users"
-                  borderRadius="full"
+                  to='/list-of-users'
+                  borderRadius='full'
                 />
                 <Badge
-                  position="absolute"
-                  top="-1px"
-                  right="-1px"
+                  position='absolute'
+                  top='-1px'
+                  right='-1px'
                   px={2}
                   py={1}
-                  fontSize="xs"
-                  fontWeight="bold"
-                  lineHeight="none"
-                  color="red.100"
-                  transform="translate(50%,-50%)"
-                  bg="red.600"
-                  rounded="full"
-                  colorScheme="purple"
+                  fontSize='xs'
+                  fontWeight='bold'
+                  lineHeight='none'
+                  color='red.100'
+                  transform='translate(50%,-50%)'
+                  bg='red.600'
+                  rounded='full'
+                  colorScheme='purple'
+                  aria-label='number of notifications'
                 >
                   {count}
                 </Badge>
                 {/* DRAWER NOTIFS */}
                 <Drawer
-                  size="md"
+                  size='md'
                   isOpen={isOpen}
-                  placement="right"
+                  placement='right'
                   onClose={onClose}
                 >
                   <DrawerOverlay />
-                  <DrawerContent>
+                  <DrawerContent bg={bg} p='1'>
                     <DrawerCloseButton />
                     <DrawerHeader>Governance notifications</DrawerHeader>
 
