@@ -6,65 +6,64 @@ import {
   Link,
   useColorModeValue,
   HStack
-} from '@chakra-ui/react'
-import { Link as RouterLink } from 'react-router-dom'
-import { FaGithub } from 'react-icons/fa'
+} from "@chakra-ui/react"
+import { Link as RouterLink } from "react-router-dom"
+import { FaGithub } from "react-icons/fa"
 
 const Footer = () => {
   //color Mode
-  const bg = useColorModeValue('white', 'grayBlue.900')
-  const button = useColorModeValue('main', 'second')
+  const bg = useColorModeValue("white", "grayBlue.900")
 
   return (
     <>
       <Box
-        zIndex='500'
+        zIndex="500"
         sx={{
-          boxShadow: `0px -1px 7px ${bg === 'white' ? '#DDDDDD' : '#444444'}`
+          boxShadow: `0px -1px 7px ${bg === "white" ? "#DDDDDD" : "#444444"}`
         }}
         bg={bg}
-        mt='auto'
+        mt="auto"
       >
         <Container
           as={Stack}
-          maxW={'6xl'}
+          maxW={"6xl"}
           py={4}
-          direction={{ base: 'column', md: 'row' }}
+          direction={{ base: "column", md: "row" }}
           spacing={4}
-          justify={{ base: 'center', md: 'space-between' }}
-          align={{ base: 'center', md: 'center' }}
+          justify={{ base: "center", md: "space-between" }}
+          align={{ base: "center", md: "center" }}
         >
-          <Stack direction='row' spacing={6}>
+          <Stack direction="row" spacing={6}>
             <Link
               as={RouterLink}
-              to='/about'
-              aria-label='About page redirection'
+              to="/about"
+              aria-label="About page redirection"
             >
               What is Coscience?
             </Link>
             <Link
               as={RouterLink}
-              to='/about'
-              aria-label='About page redirection'
+              to="/about"
+              aria-label="About page redirection"
             >
               Terms of use
             </Link>
             <Link
               as={RouterLink}
-              to='/about'
-              aria-label='About page redirection'
+              to="/about"
+              aria-label="About page redirection"
             >
               Privacy
             </Link>
             <HStack>
-              <FaGithub alt='github icon' />
+              <FaGithub alt="github icon" />
               <Link
                 isExternal
-                href='https://github.com/RaphaelHardFork/coscience-poc-dapp/tree/version-0.1'
-                variant='link'
-                fontWeight='bold'
-                my='4'
-                aria-label='Github website redirection'
+                href="https://github.com/RaphaelHardFork/coscience-poc-dapp/tree/version-0.1"
+                variant="link"
+                fontWeight="bold"
+                my="4"
+                aria-label="Github website redirection"
               >
                 Github
               </Link>

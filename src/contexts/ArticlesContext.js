@@ -86,11 +86,13 @@ const ArticlesContextProvider = ({ children }) => {
     if (contract && networkName === "rinkeby") {
       createArticleList()
       contract.on("Published", createArticleList)
+      contract.on("ArticleBanned", createArticleList)
     }
 
     return () => {
       setArticleList(undefined)
       contract?.off("Published", createArticleList)
+      contract?.off("ArticleBanned", createArticleList)
     }
   }, [contract, networkName])
 

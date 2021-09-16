@@ -21,24 +21,24 @@ import {
   Tab,
   TabPanels,
   TabPanel
-} from '@chakra-ui/react'
-import { useState, useEffect, useRef } from 'react'
-import { useParams, Link as RouterLink } from 'react-router-dom'
-import { useArticlesContract } from '../hooks/useArticlesContract'
-import { useIPFS } from '../hooks/useIPFS'
+} from "@chakra-ui/react"
+import { useState, useEffect, useRef } from "react"
+import { useParams, Link as RouterLink } from "react-router-dom"
+import { useArticlesContract } from "../hooks/useArticlesContract"
+import { useIPFS } from "../hooks/useIPFS"
 
-import { useUsersContract } from '../hooks/useUsersContract'
-import Loading from '../components/Loading'
+import { useUsersContract } from "../hooks/useUsersContract"
+import Loading from "../components/Loading"
 
-import ArticleHeader from '../components/ArticleHeader'
-import ReviewList from '../components/ReviewList'
-import CommentList from '../components/CommentList'
-import SendReview from '../components/SendReview'
-import SendComment from '../components/SendComment'
-import { useCall } from '../web3hook/useCall'
-import { useGovernanceContract } from '../hooks/useGovernanceContract'
-import { useReviewsContract } from '../hooks/useReviewsContract'
-import { useCommentsContract } from '../hooks/useCommentsContract'
+import ArticleHeader from "../components/ArticleHeader"
+import ReviewList from "../components/ReviewList"
+import CommentList from "../components/CommentList"
+import SendReview from "../components/SendReview"
+import SendComment from "../components/SendComment"
+import { useCall } from "../web3hook/useCall"
+import { useGovernanceContract } from "../hooks/useGovernanceContract"
+import { useReviewsContract } from "../hooks/useReviewsContract"
+import { useCommentsContract } from "../hooks/useCommentsContract"
 
 const Article = () => {
   const { id } = useParams()
@@ -125,17 +125,17 @@ const Article = () => {
     if (articles) {
       articleData()
       // listen the event with the filter
-      articles.on('ImportanceVoted', articleData)
-      articles.on('ValidityVoted', articleData)
-      reviews?.on('Posted', articleData)
-      comments?.on('Posted', articleData)
+      articles.on("ImportanceVoted", articleData)
+      articles.on("ValidityVoted", articleData)
+      reviews?.on("Posted", articleData)
+      comments?.on("Posted", articleData)
     }
     return () => {
       setArticle()
-      articles?.off('ImportanceVoted', articleData)
-      articles?.off('ValidityVoted', articleData)
-      reviews?.off('Posted', articleData)
-      comments?.off('Posted', articleData)
+      articles?.off("ImportanceVoted", articleData)
+      articles?.off("ValidityVoted", articleData)
+      reviews?.off("Posted", articleData)
+      comments?.off("Posted", articleData)
     }
   }, [articles, getArticleData, id, readIPFS, users, reviews, comments])
 
@@ -152,21 +152,21 @@ const Article = () => {
     }
     if (governance) {
       getBanVotes()
-      governance.on('Voted', getBanVotes)
+      governance.on("Voted", getBanVotes)
     }
     return () => {
       setBanVote(0)
-      governance?.off('Voted', getBanVotes)
+      governance?.off("Voted", getBanVotes)
     }
   }, [governance, articles, id])
 
   // ban
   async function banArticle(id) {
-    await contractCall(articles, 'banArticle', [id])
+    await contractCall(articles, "banArticle", [id])
   }
 
   async function voteToBanArticle(id) {
-    await contractCall(governance, 'voteToBanArticle', [id])
+    await contractCall(governance, "voteToBanArticle", [id])
   }
 
   function openDrawer(index) {
@@ -175,22 +175,22 @@ const Article = () => {
   }
 
   //                  Color Value
-  const bg = useColorModeValue('white', 'grayOrange.900')
-  const txt = useColorModeValue('main', 'second')
-  const scheme = useColorModeValue('colorMain', 'colorSecond')
-  const bgdrawer = useColorModeValue('grayOrange.100', 'grayBlue.800')
+  const bg = useColorModeValue("white", "grayOrange.900")
+  const txt = useColorModeValue("main", "second")
+  const scheme = useColorModeValue("colorMain", "colorSecond")
+  const bgdrawer = useColorModeValue("grayOrange.100", "grayBlue.800")
 
   // --------------------------------------------------------------RETURN
   return (
     <>
-      <Box shadow='lg' bg={bg}>
+      <Box shadow="lg" bg={bg}>
         {article?.id !== 0 ? (
           <ArticleHeader id={id} article={article} eventList={articleEvents} />
         ) : (
-          ''
+          ""
         )}
 
-        <Container py='10' maxW='container.xl'>
+        <Container py="10" maxW="container.xl">
           {article ? (
             article.id !== 0 ? (
               article?.isBanned ? (
@@ -199,42 +199,42 @@ const Article = () => {
                 <>
                   <Box>
                     <Heading
-                      fontFamily='title'
-                      fontSize='6xl'
-                      textAlign='center'
-                      p='5'
+                      fontFamily="title"
+                      fontSize="6xl"
+                      textAlign="center"
+                      p="5"
                     >
                       {article.title}
                     </Heading>
 
                     {/* Authors of the articles */}
-                    <Text my='4' fontSize='lg'>
+                    <Text my="4" fontSize="lg">
                       <Link
-                        fontWeight='bold'
+                        fontWeight="bold"
                         as={RouterLink}
                         to={`/profile/${article.authorID}`}
-                        aria-label='author profile redirection button'
+                        aria-label="author profile redirection button"
                       >
                         {article.firstName} {article.lastName}
                       </Link>
-                      <Text as='sup'> 1 </Text>,{' '}
+                      <Text as="sup"> 1 </Text>,{" "}
                       {article.coAuthors.map((coAuthor, index) => {
                         return (
-                          <Box as='span' key={coAuthor.id}>
+                          <Box as="span" key={coAuthor.id}>
                             <Link
                               as={RouterLink}
                               to={`/profile/${coAuthor.id}`}
-                              aria-label='coAuthor profile redirection button'
+                              aria-label="coAuthor profile redirection button"
                             >
                               {coAuthor.firstName} {coAuthor.lastName}
                             </Link>
-                            <Text as='sup'> {index + 2} </Text>,{' '}
+                            <Text as="sup"> {index + 2} </Text>,{" "}
                           </Box>
                         )
                       })}
                     </Text>
 
-                    <Heading fontSize='lg' as='h3'>
+                    <Heading fontSize="lg" as="h3">
                       Authors' affiliations
                     </Heading>
                     <Text>1. {article.laboratory}</Text>
@@ -245,98 +245,97 @@ const Article = () => {
                         </Text>
                       )
                     })}
-                    {article.pdfFile !== 'No PDF joined' ||
-                    article.pdfFile !== undefined ? (
+                    {article?.pdfFile !== "No PDF joined" ? (
                       <Button
                         as={Link}
                         isExternal
                         href={`https://ipfs.io/ipfs/${article.pdfFile}`}
-                        mt='4'
-                        variant='link'
+                        mt="4"
+                        variant="link"
                         color={txt}
-                        aria-label='pdf article content link'
+                        aria-label="pdf article content link"
                       >
                         PDF Link
                       </Button>
                     ) : (
-                      <Text color='gray' mt='4'>
+                      <Text color="gray" mt="4">
                         No PDF File
                       </Text>
                     )}
 
                     <Heading
-                      fontSize='lg'
-                      as='h3'
-                      textTransform='uppercase'
-                      textAlign='center'
+                      fontSize="lg"
+                      as="h3"
+                      textTransform="uppercase"
+                      textAlign="center"
                     >
                       Abstract
                     </Heading>
-                    <Text textAlign='center' my='4'>
+                    <Text textAlign="center" my="4">
                       {article.abstract}
                     </Text>
 
                     <Heading
-                      fontSize='lg'
-                      as='h3'
-                      textTransform='uppercase'
-                      textAlign='center'
-                      mt='20'
+                      fontSize="lg"
+                      as="h3"
+                      textTransform="uppercase"
+                      textAlign="center"
+                      mt="20"
                     >
                       Content
                     </Heading>
                     {article.content ? (
-                      <Text my='4'>{article.content}</Text>
+                      <Text my="4">{article.content}</Text>
                     ) : (
-                      <Text color='gray'>
+                      <Text color="gray">
                         IPFS cannot be read at this time, try later
                       </Text>
                     )}
 
                     <Heading
-                      fontSize='lg'
-                      as='h3'
-                      textTransform='uppercase'
-                      textAlign='center'
-                      mt='20'
-                      color='gray.300'
+                      fontSize="lg"
+                      as="h3"
+                      textTransform="uppercase"
+                      textAlign="center"
+                      mt="20"
+                      color="gray.300"
                     >
                       Bibliographie
                     </Heading>
-                    <Text mb='10' textAlign='center'>
+                    <Text mb="10" textAlign="center">
                       Not implemented yet...
                     </Text>
 
-                    <Flex mb='10'>
+                    <Flex mb="10">
                       <Button
                         onClick={() => openDrawer(0)}
                         colorScheme={scheme}
-                        me='4'
-                        variant='link'
-                        aria-label='reviews drawer button'
+                        me="4"
+                        variant="link"
+                        aria-label="reviews drawer button"
                       >
                         Reviews (
-                        {article !== undefined ? article.reviews.length : '...'}
+                        {article !== undefined ? article.reviews.length : "..."}
                         )
                       </Button>
                       <Button
                         onClick={() => openDrawer(1)}
                         colorScheme={scheme}
-                        variant='link'
-                        aria-label='comments drawer button'
+                        variant="link"
+                        aria-label="comments drawer button"
                       >
                         Comments (
                         {article !== undefined
                           ? article.comments.length
-                          : '...'}
+                          : "..."}
                         )
                       </Button>
                     </Flex>
 
                     <Flex
-                      flexDirection={{ base: 'column', lg: 'row' }}
-                      justifyContent='space-between'
-                      mb='10'
+                      flexDirection={{ base: "column", lg: "row" }}
+                      justifyContent="space-between"
+                      mb="10"
                     >
                       <SendReview id={id} />
                       <SendComment id={id} targetAddress={articles.address} />
@@ -348,53 +347,53 @@ const Article = () => {
                           <Button
                             onClick={() => banArticle(id)}
                             isLoading={
-                              status.startsWith('Waiting') ||
-                              status.startsWith('Pending')
+                              status.startsWith("Waiting") ||
+                              status.startsWith("Pending")
                             }
                             loadingText={status}
                             disabled={
-                              status.startsWith('Waiting') ||
-                              status.startsWith('Pending')
+                              status.startsWith("Waiting") ||
+                              status.startsWith("Pending")
                             }
-                            aria-label='ban button'
+                            aria-label="ban button"
                           >
                             Ban
                           </Button>
                         ) : (
-                          ''
+                          ""
                         )
                       ) : (
                         <>
                           <Button
-                            colorScheme='red'
-                            variant='outline'
+                            colorScheme="red"
+                            variant="outline"
                             onClick={() => voteToBanArticle(id)}
                             isLoading={
-                              status.startsWith('Waiting') ||
-                              status.startsWith('Pending')
+                              status.startsWith("Waiting") ||
+                              status.startsWith("Pending")
                             }
                             loadingText={status}
                             disabled={
-                              status.startsWith('Waiting') ||
-                              status.startsWith('Pending')
+                              status.startsWith("Waiting") ||
+                              status.startsWith("Pending")
                             }
-                            aria-label='ban vote article button'
+                            aria-label="ban vote article button"
                           >
                             Vote to ban this article
                           </Button>
                           {banVote ? (
                             <CircularProgress
-                              ms='4'
+                              ms="4"
                               value={banVote}
-                              max='5'
-                              color='red'
+                              max="5"
+                              color="red"
                             >
                               <CircularProgressLabel>
                                 {banVote}/5
                               </CircularProgressLabel>
                             </CircularProgress>
                           ) : (
-                            ''
+                            ""
                           )}
                         </>
                       )}
@@ -403,7 +402,7 @@ const Article = () => {
                 </>
               )
             ) : (
-              <Heading textAlign='center'>
+              <Heading textAlign="center">
                 Oups this article doesn't exist
               </Heading>
             )
@@ -418,24 +417,24 @@ const Article = () => {
         isOpen={isOpen}
         onClose={onClose}
         finalFocusRef={btnRef}
-        placement='bottom'
+        placement="bottom"
       >
         <DrawerOverlay />
-        <DrawerContent maxH='60vh' bg={bgdrawer}>
+        <DrawerContent maxH="60vh" bg={bgdrawer}>
           <DrawerCloseButton />
-          <DrawerHeader shadow='sm'>Reviews & Comments</DrawerHeader>
+          <DrawerHeader shadow="sm">Reviews & Comments</DrawerHeader>
 
           <DrawerBody>
             {/* TABS */}
-            <Tabs defaultIndex={index} size='md' variant='enclosed'>
+            <Tabs defaultIndex={index} size="md" variant="enclosed">
               <TabList>
-                <Tab aria-label='tab reviews'>
+                <Tab aria-label="tab reviews">
                   Reviews (
-                  {article !== undefined ? article.reviews.length : '...'})
+                  {article !== undefined ? article.reviews.length : "..."})
                 </Tab>
-                <Tab aria-label='tab comments'>
+                <Tab aria-label="tab comments">
                   Comments (
-                  {article !== undefined ? article.comments.length : '...'})
+                  {article !== undefined ? article.comments.length : "..."})
                 </Tab>
               </TabList>
               <TabPanels>
